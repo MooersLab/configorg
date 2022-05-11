@@ -692,7 +692,7 @@ Notethat scholar-import is configured to work with citar.
 
 #+BEGIN_SRC emacs-lisp
 (use-package awesome-tab
-  :load-path "~/mar30-emacs/elisp/awesome-tab"
+  :load-path "~/.emacs.d/elisp/awesome-tab"
   :config
   (awesome-tab-mode t))
 #+END_SRC
@@ -1328,7 +1328,7 @@ Enter C-x p to move the cursor to the previously visited window.
 # 2. Add the config below to your your emacs init file.
 # 
 # #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/mar30-emacs/elisp/eglot-grammarly")
+# (add-to-list 'load-path "~/.emacs.d/elisp/eglot-grammarly")
 # (require 'eglot-grammarly
 #   :ensure t
 #   :hook (text-mode . (lambda ()
@@ -1601,8 +1601,8 @@ I succeeded in compiling and installing the code as directed.
 
 #+BEGIN_SRC emacs-lisp
 ;; Grammar Checker
-(add-to-list 'load-path "~/mar30-emacs/elisp/grammar")
-(add-to-list 'exec-path "~/mar30-emacs/elisp/grammar")
+(add-to-list 'load-path "~/.emacs.d/elisp/grammar")
+(add-to-list 'exec-path "~/.emacs.d/elisp/grammar")
 (autoload 'grammar-mode "grammar" nil t)
 #+END_SRC
 
@@ -2240,6 +2240,40 @@ See his [[https://www.youtube.com/watch?v=INTu30BHZGk][video on magit]] starting
 # #+END_SRC
 
 
+*** mathpix
+
+This is an interfae to Mathpix \footnote{\url{https://github.com/jethrokuan/mathpix.el}}.
+It requires the Mathpix.app and the key (i.e., you have to subscribe to this service).
+
+
+Here is the configuration to load the package from github via straight.
+Remember that use-package is a macro that can be used with either straight or package.
+I want to avoid the use of straight.el.
+I download via git clone the mathpix.el repo.
+I renamed it mathpix.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elisp/mathpix")
+(use-package mathpix
+  :custom ((mathpix-app-id "app-id")
+           (mathpix-app-key "app-key"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+#+END_SRC
+
+
+#. #+BEGIN_SRC emacs-lisp
+#. (use-package mathpix.el
+#.   :straight (:host github :repo "jethrokuan/mathpix.el")
+#.   :custom ((mathpix-app-id "app-id")
+#.            (mathpix-app-key "app-key"))
+#.   :bind
+#.   ("C-x m" . mathpix-screenshot))
+#. #+END_SRC
+
+
+Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
+
 
 
 *** mode-line clean-up
@@ -2327,7 +2361,7 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 (add-hook 'nov-mode-hook 'visual-fill-column-mode)
 
 ;; Tell emacs where is your personal elisp lib dir
-(add-to-list 'load-path "~/mar30-emacs/justify-kp/")
+(add-to-list 'load-path "~/.emacs.d/justify-kp/")
 (load "justify-kp")
 
 ;; Add some justification to epub documents.
@@ -4643,7 +4677,7 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
 # Prot's tmr.el file has a path to a oga audio file.
 # These files are saved using the Ogg audio container format.
 # `ffplay` will read in *.wav files.
-# I set the path to =~/mar30-emacs/canary.wav=.
+# I set the path to =~/.emacs.d/canary.wav=.
 # The start and end times appear in the minibuffer.
 # Unfortunately, this timer requires an Emacs compiled with support for dbus to get the sound player to work.
 # 
@@ -4654,7 +4688,7 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
 # Make Elisp files in that directory available to the user.
 # 
 # #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/mar30-emacs/lisp/tmr")
+# (add-to-list 'load-path "~/.emacs.d/lisp/tmr")
 # 
 # ;; Load the `tmr' library
 # (require 'tmr)
@@ -4766,7 +4800,7 @@ my-lookup-X are my extensions.
 The curlicue below is a placeholder for the lookup word query string.
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/mar30-emacs/elisp/lookup-word-on-internet")
+(add-to-list 'load-path "~/.emacs.d/elisp/lookup-word-on-internet")
 (require 'xah-lookup)
 (define-key help-map (kbd "7") 'xah-lookup-web) ; C-h 7
 (global-set-key (kbd "<f2>") 'xah-lookup-wikipedia) ; F2
@@ -5069,7 +5103,7 @@ It has a nice table view of the snippets available for the current mode and a fu
 (use-package yasnippet
     :init
     (add-to-list 'load-path
-              "~/mar30-emacs/plugins/yasnippet")
+              "~/.emacs.d/plugins/yasnippet")
     :config
     (yas-global-mode 1))
 (require 'yasnippet)
