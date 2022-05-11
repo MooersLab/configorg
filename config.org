@@ -17,7 +17,7 @@ Org-mode is a specialized markup language for Emacs.
 It is more powerful than plain markdown and less verbose than LaTeX.
 
 The initial conversion took several hours, but the resulting /config.org/ file is much easier to maintain than the original /init.el/.
-I found that I broke my /init.el/ file less frequently after making the switch to the ~config.org~ file..
+I found that I broke my /init.el/ file less frequently after making the switch to the /config.org/ file..
 This improvement freed up time and mental bandwidth to learn about new Emacs packages.
  
 Using the /config.org/ file for the configuration has several advantages.
@@ -52,10 +52,6 @@ Kill the daemon with the following command ~launchctl unload ~/Library/LaunchAge
 You have to do these steps in reverse order when updaing your configuaration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
-
-
-
-
 
 # This command starts the server if it is not already running.
 #
