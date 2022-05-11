@@ -393,6 +393,69 @@ The /use-package/ package has a number of [[https://jwiegley.github.io/use-packa
 
 ** A
 
+*** atomic-chrome
+
+The atomic-chrome package enables instant updates in the browser text area while typing in the corresponding Emacs buffer.
+This package is newer than edit-server package and seems to have some advantages.
+You have to install the ghosttext extension for Chrome.
+There is suppose to be an extension for Firefox too.
+Then you have to manage the extension by enabling access to the local files.
+Next, you have to pin the extension to the task bar.
+
+You also have to install from MELPA the atomic-chrome package in Emacs.
+Then you issue the command M-x atomic-chrome-start-server.
+
+Back in the browser, click on the ghost icon in the toolbar.
+The edges of the text area will be highlighted in blue.
+You will be able to see the new text as it is typed in Emacs.
+The current bottom of the text area is shown.
+If you have to type in an earlier part of the text area, you may not see this part of the text area in the browser without scrolling up.
+That is,  the browser does not automatically refocus on the area of active typing.
+In other words, it does not track the position of the cursor.
+
+In the case of 750words, it frequently saves the text.
+750words also updates the word count upon each save.
+This is an alternate means of monitoring the number of words written.
+
+You can likewise type inside of the text area in the browser, and your writing will appear in the Emacs buffer.
+The cmd-s shortcut works in the browser. 
+It is used to save the current text.
+
+To exit the server, enter C-c C-c in Emacs.
+
+One way around the refocusing issue is to type your new chunk of text at the bottom of the text area.
+When finished, you can then cut and paste this text in the desired location in the earlier part of the text area.
+
+One advantage of atomic-chrome over the edit-server is that you can type in either Emacs or the text area.
+The edit-server expects you to do all of your typing in Emacs.
+All of the installed editing tools may not be available at both sites.
+For example, on 11 May 2022, the lsp-grammarly was not working in Emacs, but the grammarly plugin for Chrome was working. I could take advantage of this plugin by typing in the text area for 750words.
+
+On the other hand, edit-server allowed you to use a hook to recognize that the 750word documents are suppose be opened in the latex-mode.
+The latex-mode needs to be activated to be able to take advantage of the yasnippet snippets in Emacs.
+However, I see that you can configure atomic-chrome to set the major mode by website.
+
+#+BEGIN_SRC emacs-lisp
+(require 'atomic-chrome)
+(atomic-chrome-start-server)
+(setq atomic-chrome-url-major-mode-alist
+      '(("github\\.com" . gfm-mode)
+        ("750words.com" . latex-mode)))
+#+END_SRC
+
+Select the style of opening the editing buffer by atomic-chrome-buffer-open-style.
+
+full: Open in the selected window.
+split: Open in the new window by splitting the selected window (default).
+frame: Create a new frame and window in it. Must be using some windowing pacakge.
+
+
+#+BEGIN_SRC emacs-lisp
+(setq atomic-chrome-buffer-open-style 'full)
+#+END_SRC
+
+
+
 *** Autocompletion stack
 
 The /consult/, /vertico/, and /marginalia/ autocompletion set of packages is the new toolchain for autocompletion.
