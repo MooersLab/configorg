@@ -403,7 +403,7 @@ Then you have to manage the extension by enabling access to the local files.
 Next, you have to pin the extension to the task bar.
 
 You also have to install from MELPA the atomic-chrome package in Emacs.
-Then you issue the command M-x atomic-chrome-start-server.
+Then you issue the command ~M-x atomic-chrome-start-server~.
 
 Back in the browser, click on the ghost icon in the toolbar.
 The edges of the text area will be highlighted in blue.
@@ -418,10 +418,9 @@ In the case of 750words, it frequently saves the text.
 This is an alternate means of monitoring the number of words written.
 
 You can likewise type inside of the text area in the browser, and your writing will appear in the Emacs buffer.
-The cmd-s shortcut works in the browser. 
-It is used to save the current text.
+The ~cmd-s~ shortcut works in the browser to save the current text.
 
-To exit the server, enter C-c C-c in Emacs.
+To exit the server, enter ~C-c C-c~ in Emacs.
 
 One way around the refocusing issue is to type your new chunk of text at the bottom of the text area.
 When finished, you can then cut and paste this text in the desired location in the earlier part of the text area.
