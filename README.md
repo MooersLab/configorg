@@ -1,19 +1,42 @@
 # Blaine's initialization file for Emacs
 
-Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that leads to a black hole). 
-It is also a software integrated development environment (IDE) and a software toolkit for building applications with Emacs Lisp or elisp. 
-Although you can run small programs written in elisp outside of Emacs, you may be better off using Common Lisp or Clojure.
+## Introduction to Emacs
+
+Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that leads to a black hole).
+It has highly developed support for editing plain text, LaTeX, asciidoc, markdown, rtf, html, org-mode, and other kinds of text files.
+This support includes autocompletion, access to grammarly for several document types, snippets, and access to several LSPs.
+There is also support for managing citations and reading PDFs and ebooks inside of Emacs.
+The edit-sever packages enables you to edit text areas in webpages using Emacs.
+
+Emacs is also a software integrated development environment (IDE).
+It supports syntax highlighting, code snippets, and autocompletion for many programming languages.
+
+Emacs also supports several approaches to literate programming.
+One of the most developed approaches is found in org-mode where the emac-jupyter package enables you to tap into your Jupyter Notebook kernels to access scores of programming languages.
+You can switch kernels between code blocks inside one org document and thereby do polyglot literate programming.
+
+Emacs was designed to be a software toolkit for building extensions to base text editor.
+These applications are written in with Emacs Lisp or elisp. 
+ELisp is a variant of LISP, which stands for list processing.
+Elips descended from MacLisp (no relation to Mac computers) in the 1970s and emerged at about the same time as common lisp.
+Elisp has been costumized for programming text editors like Emacs.
+Most of the the Emacs code base is written in elisp with a small percentage written in C for speed.
+The elisp compiler cannot handle parallel processing, so elisp is not suitable as a moden multipurpose programming language.
+However, the core Emacs developer and package developers have extensively optimized the performance of elisp.
+Although you can run small programs written in elisp outside of Emacs, you may be better off using Common Lisp or Clojure for general programming.
 
 ![Figure 1](https://github.com/MooersLab/configorg/blob/main/emacs-learning-curve.jpg)
 
 Emacs is a configurable workspace in addition to being an editor.
-You can do most of your tasks on a computer inside of Emacs.
-It is almost an operating system that runs on top of several operating systems.
-You can replicate your Emacs setup on Windows, Mac, Linux, and BSD to maintain a uniform working environment regardless of the underlying operating system.
+You can do most of your computing tasks inside of Emacs.
+Emacs is almost an operating system.
+You can replicate your Emacs configuration on Windows, Mac, Linux, and BSD to maintain a uniform working environment regardless of the underlying operating system.
 
-ELisp is a variant of LISP that is costumized for programming text editors like Emacs.
-Most of the the Emacs code base is written in elisp with a small percentage written in C for speed.
-The elisp compiler cannot handle parallel processing so elisp is not suitable as a moden multipurpose programming language.
+
+
+
+
+## My fling with chemacs
 
 I changed my setup in January 2022.
 I switched to using the *chemacs.el* package to swap emacs configurations on the fly.
