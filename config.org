@@ -391,8 +391,22 @@ The /use-package/ package has a number of [[https://jwiegley.github.io/use-packa
 
 *** atomic-chrome
 
+In brief, after installing GhostText in Chrome and atomic-chrome in Emacs, do the followwing'
+
++ enter ~M-x atomic-chrome-start-server~ to start the server
++ click on the ghost icon in the tool bar above the textarea in a browser. This opens a buffer in Emacs. It will have the same name as the webpage in Emacs.
++ enter ~M-x latex-mode~
+
 The atomic-chrome package enables instant updates in the browser text area while typing in the corresponding Emacs buffer.
 This package is newer than edit-server package and seems to have some advantages.
+It supports instant updating and bidrectional editing.
+For the configuration options, see [[https://github.com/alpha22jp/atomic-chrome][its repo.]]
+
+The competitor packages are ~emacs-everywhere~ and ~emacs-anywhere~.
+The latter two packages depend on running emacsclient whereas this is not required with atomic-chrome.
+It is not obvious how to configure the latter two packages to use the latex-mode.
+They seem to be limited to editing text boxes on webpages.
+
 You have to install the ghosttext extension for Chrome.
 There is suppose to be an extension for Firefox too.
 Then you have to manage the extension by enabling access to the local files.
@@ -400,7 +414,6 @@ Next, you have to pin the extension to the task bar.
 
 You also have to install from MELPA the atomic-chrome package in Emacs.
 Then you issue the command ~M-x atomic-chrome-start-server~.
-
 Back in the browser, click on the ghost icon in the toolbar.
 The edges of the text area will be highlighted in blue.
 You will be able to see the new text as it is typed in Emacs.
@@ -413,7 +426,7 @@ In the case of 750words, it frequently saves the text.
 750words also updates the word count upon each save.
 This is an alternate means of monitoring the number of words written.
 
-You can likewise type inside of the text area in the browser, and your writing will appear in the Emacs buffer.
+You can, likewise, type inside of the text area in the browser, and your writing will appear in the Emacs buffer.
 The ~cmd-s~ shortcut works in the browser to save the current text.
 
 To exit the server, enter ~C-c C-c~ in Emacs.
@@ -424,17 +437,22 @@ When finished, you can then cut and paste this text in the desired location in t
 One advantage of atomic-chrome over the edit-server is that you can type in either Emacs or the text area.
 The edit-server expects you to do all of your typing in Emacs.
 All of the installed editing tools may not be available at both sites.
-For example, on 11 May 2022, the lsp-grammarly was not working in Emacs, but the grammarly plugin for Chrome was working. I could take advantage of this plugin by typing in the text area for 750words.
+For example, on 11 May 2022, the lsp-grammarly was not working in Emacs, but the grammarly plugin for Chrome was working. 
+I could take advantage of this plugin by typing in the text area for 750words.
 
-On the other hand, edit-server allowed you to use a hook to recognize that the 750word documents are suppose be opened in the latex-mode.
+On the other hand, edit-server allowed you to use a hook to recognize that the text area on 750word are to be opened in the latex-mode.
 The latex-mode needs to be activated to be able to take advantage of the yasnippet snippets in Emacs.
-However, I see that you can configure atomic-chrome to set the major mode by website.
+Enter ~M-x latex-mode~.
+You can use the configuration below to set the default major mode.
+You can also configure atomic-chrome to set the major mode by website.
 
 #+BEGIN_SRC emacs-lisp
-(require 'atomic-chrome)
+(use-package 'atomic-chrome)
 (atomic-chrome-start-server)
+(setq atomic-chrome-default-major-mode 'latex-mode)
 (setq atomic-chrome-url-major-mode-alist
       '(("github\\.com" . gfm-mode)
+        ("overleaf.com" . latex-mode)
         ("750words.com" . latex-mode)))
 #+END_SRC
 
@@ -633,7 +651,7 @@ Consult users will also want the embark-consult package.
 **** orderless
 
 
-https://github.com/oantolin/orderless
+[[https://github.com/oantolin/orderless][orderless] GitHub repo.
 
 
 #+BEGIN_SRC emacs-lisp
@@ -4443,10 +4461,23 @@ To enforce the use of one whitespace, enter the following:
 
 slime stands for Superior Lisp Interaction Mode for Emacs.
 I already had sbcl installed.
+It provides a repl for Commn Lisp.
+There are about a dozen lisp systems.
+I use sbcl. 
+I had installed it with macports.
+
+I had installed earlier the quicklisp package in sbcl.
+However, I had to install a slime helper.
+I entered sbcl and issued the following command.
+
+#+BEGIN_SRC common-lisp
+(ql:quickload "quicklisp-slime-helper")
+#+END_SRC
 
 
 #+BEGIN_SRC emacs-lisp
-(setq inferior-lisp-program "sbcl")
+(load (expand-file-name "~/quicklisp/slime-helper.el"))
+(setq inferior-lisp-program "/opt/local/bin/sbcl")
 ;;(require 'slime-autoloads)
 ;;(slime-setup '(slime-fancy))
 #+END_SRC
