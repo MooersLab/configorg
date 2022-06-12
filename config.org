@@ -3166,33 +3166,32 @@ The level of the node can be shifted with the Meta and right and left arrow keys
 During the outline of a book, the org file can be used to initiate the outline.
 The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brain storming.
 
-After the mindmap has matured, it can be exported to a mardown file. 
+After the mindmap has matured, it can be exported to a markdown file. 
 The markdown file can be converted to a LaTeX file via pandoc.
 Then outline can be used directly, although I like to parse the chapters into individual documents.
 
-Alternatively, the markdown file can be coverted into an org file by using pandoc: ~pandoc --from=markdown --to=org -o testOutline.org xtallizationPlan.md~.
+Alternatively, the markdown file can be converted into an org file by using pandoc: ~pandoc --from=markdown --to=org -o testOutline.org xtallizationPlan.md~.
 Each node will acquire a properites drawer with an unique identifier.
 This exported org file needs a title line added.
-Otherwise, it is competent for exporting mindmap files.
+Otherwise, it is competent for exporting mindmap files vua graphviz.
 
-The text that is added below a headling will appear in a box below the node.
-I used this area to list the notebook references for the relevant crystallization tray(s).
+The text that is added below a headline will appear in a box below the node.
 You can also include links to images.
 The links have to indented to the same degree as the headline.
 
 Can an org file be imported into iThoughtsX?
-You can export a org file to markdown and then import the markdown into iThoughtsX.
+You can export an org file to markdown and then import the markdown into iThoughtsX.
 Perhaps a package for going from org to iThoughtsX is needed.
 
 I had to enable the markdown backend. 
 Enter ~M-x customize-option~ and ~org-export-backends~.
 Check the markdown box.
-Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-e C-e~.
+Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-c C-e~.
 
 A simple org file without much customization can be easily converted to markdown file by manual editing.
 Delete the title line and do a search-and-replace to swamp the asterisks for pound signs.
-Then save the file with a md file extension.
-This file can be imported into ithoughtsX and then saved as a itmz file.
+Then save the file with a ~md~ file extension.
+This file can be imported into ithoughtsX and then saved as a ~itmz~ file.
 
 
 #+BEGIN_SRC emacs-lisp
