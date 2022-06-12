@@ -2451,7 +2451,7 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-ac)
+(use-package org-ac)
 (org-ac/config-default)
 #+END_SRC
 
@@ -2803,16 +2803,11 @@ I have mapped these to the ~C-c s~.
 
 To drag and drop images into org files, see the associate [[https://github.com/abo-abo/org-download][GitHub page]].
 
-
-
 #+BEGIN_SRC emacs-lisp
-(require 'org-download)
+(use-package org-download)
 ;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+END_SRC
-
-
-
 
 
 *** org-elp-mode
@@ -2820,11 +2815,11 @@ To drag and drop images into org files, see the associate [[https://github.com/a
 To launch previewing of equations in org-mode, enter ~M-x org-elp-mode~ to toggle on and off.
 
 #+BEGIN_SRC emacs-lisp
-;;(add-to-list 'org-preview-latex-process-alist dvisvgm)
-;;(use-package org-elp
-;;  :config
-;;  (setq org-elp-idle-time 0.5
-;;        org-elp-split-fraction 0.25))
+(add-to-list 'org-preview-latex-process-alist dvisvgm)
+(use-package org-elp
+  :config
+  (setq org-elp-idle-time 0.5
+        org-elp-split-fraction 0.25))
 #+END_SRC
 
 
@@ -3095,9 +3090,9 @@ I finally found that there was a of the first two lines after Emacs 24.
 *** org-export-latex-no-toc 
 
 #+BEGIN_SRC emacs-lisp
-  (defun org-export-latex-no-toc (depth)
-    (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
+(defun org-export-latex-no-toc (depth)
+  (when depth
+    (format "%% Org-mode is exporting headings to %s levels.\n"
               depth)))
 #+END_SRC
 
@@ -3151,6 +3146,8 @@ Requires org-edna.
 
 
 This is an Emacs package that creates graphviz directed graphs from the headings of an org file.
+You need graphviz installed.
+On the Mac, install graphviz with macports or home brew.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-mind-map
@@ -3172,16 +3169,25 @@ This is an Emacs package that creates graphviz directed graphs from the headings
   
 Then, run ~M-x org-mind-map-write~ within the org-mode file you would like to make a mind-map for.
 If all works as expected, a PDF file will be generated in the same directory as the org file.
-See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this project for more information.
+You will be prompted for the file type for the exported graph, so you are not limited to PDFs.
+You can use tags for the nodes and you can import images.
+See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this project for more information and examples.
 
+**** Cautions with setting up the hierarchy of the outline to be mapped
+- The mother node is the only one at the top level with a single asterisk.
+- Child nodes of the same name under different parent nodes will be shared between parents by multiple sets of arrows. This problem can be solved by renaming the child nodes to be different names or using different tags.
+- Tags have no spaces or dashes.
+- Graphs with more than twentry nodes in a level will not fit on a page of the US letter size.
+- Large graphs need to be exported to vector graphics files to avoid pixelation. 
+- You can overwrite prior graph files without being warned that you are about to do so.
+- You may be limited to three or four levels of nodes on a 8.5 inch wide page.
+- To brainstrom a very large project, the IthoughtsX software may be more useful.
 
+*** org-notebook
 
-
-
-
-
-
-
+This is an intriguing project designed to ease note-taking in class.
+I do not have much use for this functionality but there as several clever features with regards to setting up an org centered project.
+The package is not maintained nor is it well [[https://github.com/Rahi374/org-notebook][documented]], so you need to read the elisp code.
 
 
 *** org-pdftools and org-noter-pdftools integration
@@ -3213,27 +3219,24 @@ Anyways, see pdftools for an improved experience for navigating PDFs in Emacs wi
 
 *** org-noter
 
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :ensure t
+  :config
+  ;; Your org-noter config ........
+  :config 
+  (setq 
+    org_notes (concat (getenv "HOME") "/org-roam/")
+    zot_bib (concat (getenv "HOME") "/Dropbox/global.bib")
+    org-directory org_notes
+    deft-directory org_notes
+    org-roam-directory org_notes
+    ;; keep an empty line between headings and content in Org file
+    org-noter-separate-notes-from-heading t))
 
-
-
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-noter
-#   :after org
-#   :ensure t
-#   :config
-#   ;; Your org-noter config ........
-#   :config 
-#   (setq 
-#     org_notes (concat (getenv "HOME") "/org-roam/")
-#     zot_bib (concat (getenv "HOME") "/Dropbox/global.bib")
-#     org-directory org_notes
-#     deft-directory org_notes
-#     org-roam-directory org_notes
-#     ;; keep an empty line between headings and content in Org file
-#     org-noter-separate-notes-from-heading t))
-# 
-# ;;(use-package org-noter-pdf-tools)
-# #+END_SRC
+;;(use-package org-noter-pdf-tools)
+#+END_SRC
 
 
 **** Org-noter keybindings and commands @@html:<a name="keys">@@
@@ -3357,20 +3360,13 @@ This search engine can scan org-roam entries.
 #+END_SRC
 
 
-
-
-
-
-
-
-
 *** org-noter-pdftools
 
 This package integrates org-noter and pdftools.
 
 The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
 
-#
+# 
 # #+BEGIN_SRC emacs-lisp
 # (use-package org-noter
 #   :after org
@@ -3387,10 +3383,10 @@ The following configuration follows the example located in the ~README.org~ file
 #     ;; keep an empty line between headings and content in Org file
 #     org-noter-separate-notes-from-heading t)
 #   (require 'org-noter-pdftools))
-#
+# 
 # (use-package org-pdftools
 #   :hook (org-mode . org-pdftools-setup-link))
-#
+# 
 # (use-package org-noter-pdftools
 #   :after org-noter
 #   :config
@@ -3404,7 +3400,7 @@ The following configuration follows the example located in the ~README.org~ file
 #            (org-pdftools-use-isearch-link t)
 #            (org-pdftools-use-freepointer-annot t))
 #        (org-noter-insert-note (org-noter--get-precise-info)))))
-#
+# 
 #   ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
 #   (defun org-noter-set-start-location (&optional arg)
 #     "When opening a session with this document, go to the current location.
@@ -3630,27 +3626,6 @@ The configuration for org-roam, the most advanced zettlekasten system for Emacs.
   (require 'org-roam-protocol))
 #+END_SRC
 
-
-# #+BEGIN_SRC emacs-lisp
-# ;; org-roam
-# (use-package org-roam
-#   :ensure t
-#   :init
-#   (setq org-roam-v2-ack t)
-#   :custom
-#   (setq org-roam-directory "~/org-roam")
-#   (org-roam-completion-everywhere t)
-#   :bind (("C-c n l" . org-roam-buffer-toggle)
-#          ("C-c n f" . org-roam-node-find)
-#          ("C-c n i" . org-roam-node-insert)
-#          ()
-#          :map org-mode-map
-#          ("C-M-i"    . completion-at-point))
-#   :config
-#   (org-roam-setup))
-# #+END_SRC
-# 
-# 
 
 *** org-roam-bibtex (orb)
 
