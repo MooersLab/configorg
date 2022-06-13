@@ -3156,28 +3156,28 @@ You control the layout of the graph with the settings below.
 This package looks like a very useful way to prepare small graphs to illustrate manuscripts and books by just using org to layout the graph.
 This spares you of the several hours required to relearn the dot language.
 
-To brainstorm a very large project, the IthoughtsX software may be more useful becausing you interact with the nodes in a GUI.
-They easy to drag around and shift to different levels of the heirarchy.
+To brainstorm a very large project, the IthoughtsX software may be more useful because you interact with the nodes in a GUI.
+They are easy to drag around and shift to different levels of the hierarchy.
 
 However, org can be used to quickly layout a graph by copying and pasting subtrees of nodes.
 The nodes are easy shuffle around by using the Meta and up and down arrow keys.
 The level of the node can be shifted with the Meta and right and left arrow keys.
 
 During the outline of a book, the org file can be used to initiate the outline.
-The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brain storming.
+The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brainstorming.
 
 After the mindmap has matured, it can be exported to a markdown file. 
 The markdown file can be converted to a LaTeX file via pandoc.
 Then outline can be used directly, although I like to parse the chapters into individual documents.
 
 Alternatively, the markdown file can be converted into an org file by using pandoc: ~pandoc --from=markdown --to=org -o testOutline.org xtallizationPlan.md~.
-Each node will acquire a properites drawer with an unique identifier.
+Each node will acquire a properties drawer with a unique identifier.
 This exported org file needs a title line added.
-Otherwise, it is competent for exporting mindmap files vua graphviz.
+Otherwise, it is competent for exporting mindmap files via graphviz.
 
 The text that is added below a headline will appear in a box below the node.
 You can also include links to images.
-The links have to indented to the same degree as the headline.
+The links have to be indented to the same degree as the headline.
 
 Can an org file be imported into iThoughtsX?
 You can export an org file to markdown and then import the markdown into iThoughtsX.
@@ -3188,7 +3188,7 @@ Enter ~M-x customize-option~ and ~org-export-backends~.
 Check the markdown box.
 Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-c C-e~.
 
-A simple org file without much customization can be easily converted to markdown file by manual editing.
+A simple org file without much customization can be easily converted into a markdown file by manual editing.
 Delete the title line and do a search-and-replace to swamp the asterisks for pound signs.
 Then save the file with a ~md~ file extension.
 This file can be imported into ithoughtsX and then saved as a ~itmz~ file.
@@ -3219,6 +3219,10 @@ Other file types include png, jpeg, svg, eps, gif, and tiff.
 You can use tags for the nodes, and you can import images.
 See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this project for more information and examples.
 
+Note that the GitHub repo mentions a size limit of 100 x 100 pixels for the embedded images.
+I found that the images do not have to be square.
+Also note that the exape images is about 300 by 300 so this size limit is no longer present. 
+
 **** Cautions with setting up the hierarchy of the outline to be mapped
 - It takes several seconds for the  ~M-x org-mind-map-write~ command to complete so wait for the message "Org mind map finished." to appear in the minibuffer.
 - The mother node should be the only one at the top heading level with a single asterisk.
@@ -3226,24 +3230,24 @@ See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this projec
 - Child nodes of the same name under different parent nodes will be shared between parents with multiple sets of arrows. Solve this problem by renaming the child nodes to different names or by using unique tags.
 - Tags have no spaces or dashes. The tags are text between two colons.
 - Graphs with more than twenty nodes in a level will not fit on a page of the US letter size.
-- Large graphs need to be exported to vector graphics files to avoid pixellation. 
+- Large graphs need to be exported to vector graphics files to avoid pixelation. 
 - You can overwrite prior graph files without being warned that you are about to do so.
 - You may be limited to three or four levels of nodes on an 8.5-inch wide page.
 - Links have to be indented to the same degree as the headline above it.
-- Text enter above or below a link to an image will always appear above the image. This text area can be used as a caption.
+- Text entered above or below a link to an image will always appear above the image. This text area can be used as a caption.
 - The org Caption keyword does not work as expected.
 
 
 *** org-notebook
 
 This is an intriguing project designed to ease note-taking in class.
-I do not have much use for this functionality but there as several clever features with regards to setting up an org centered project.
+I do not have much use for this functionality but there as several clever features with regards to setting up an org-centered project.
 The package is not maintained nor is it well [[https://github.com/Rahi374/org-notebook][documented]], so you need to read the elisp code.
 
 
 *** org-pdftools and org-noter-pdftools integration
 
-This YouTube [[https://www.youtube.com/watch?v=lCc3UoQku-E][video]] by Alexander Fu demonstrates the integration of these two packaes.
+This YouTube [[https://www.youtube.com/watch?v=lCc3UoQku-E][video]] by Alexander Fu demonstrates the integration of these two packages.
 Note that the video is not narrated, so be patient with it.
 
 You can generate a skeleton of an opened PDF in the current buffer by entering org-noter-skeleton-create.
