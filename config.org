@@ -6,13 +6,12 @@
 #+Startup: nohideblocks
 
 
-
 I first posted this config file on GitHub on 20 July 2021.
 My init.el file had grown to over 700 lines in two weeks.
 It was time to clean it up and bring some order to it.
 
 I followed an alternate approach to managing my /init.el/ file that was inspired by [[https://gitlab.com/dwt1/dotfiles][Derek Taylor]].
-This approach involves putting the elisp code of the /init.el/ into source blocks in a org-mode file called /config.org/.
+This approach involves putting the elisp code of the /init.el/ into source blocks in an org-mode file called /config.org/.
 Org-mode is a specialized markup language for Emacs.
 It is more powerful than plain markdown and less verbose than LaTeX.
 
@@ -34,24 +33,25 @@ Recently, I changed my Emacs directory to ~/Users/blaine/mar30-emacs~ because I 
 This capability allows me to explore alternate Emacs configurations without displacing my default configuration.
 It also allows me to switch to a minimal configuration for continued productivity when I have broken my default configuration and have not had time to debug it.
  
-You still need some settings in your /init.el/ file, including one that calls /config.org/.
+You still need some settings in your ~/init.el/~ file, including one that calls ~/config.org/~.
 I used a function to do so.
 I obtained this function from [[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][Karl Voit]].
 This function is supposed to load the code chunks more rapidly.
 
 You can add the DISABLED tag to some code chunks to block them from being tangled to reduce Emacs startup time.
 
-Alternatively, you can start a emacsclient daemon that is always up.
+Alternatively, you can start an emacsclient daemon that is always up.
 This approach can eliminate the start-up lag.
-See the README.md file for template code for the ~gnu.emacs.daemon.plist~
+See the README.md file for template code for the ~gnu.emacs.daemon.plist~.
 
 
 On the Mac, launch the daemon with the following command ~launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist~.
 Kill the daemon with the following command ~launchctl unload ~/Library/LaunchAgents/gnu.emacs.daemon.plist~.
 
-You have to do these steps in reverse order when updaing your configuaration.
+You have to do these steps in reverse order when updating your configuration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
+
 
 # This command starts the server if it is not already running.
 #
@@ -98,20 +98,20 @@ Toggle the ~COMMENT~ keyword at the beginning of an entry.
   (exec-path-from-shell-initialize))
 #+END_SRC
 
-
 * Bibtex configuration
 
 #+BEGIN_SRC emacs-lisp
-(defconst blaine/bib-libraries (list "~/Dropbox/global.bib" "~/Dropbox/global-temp.bib")) ; All of my bib databases.
-(defconst blaine/main-bib-library (nth 0 blaine/bib-libraries)) ; The main db is always the first
-(defconst blaine/main-pdfs-library-paths `("~/Dropbox/bookPDFs/" "~/Dropbox/paperPDFs/"  "~/Dropbox/tempPDFs/" "~/relabelPDFs/" "~/relabelBooks/")) ; PDFs directories in a list
-(defconst blaine/main-pdfs-library-path (nth 0 blaine/main-pdfs-library-paths)) ; Main PDFs directory
-(defconst blaine/bib-notes-dir "~/org-roam/bib-notes") ; I use org-roam to manage all my notes, including bib notes.
-(setq bibtex-completion-bibliography blaine/bib-libraries ; My bibliography PDF location
-        bibtex-completion-library-path blaine/main-pdfs-library-paths ; My PDF lib location
-        bibtex-completion-notes-path blaine/bib-notes-dir
-        bibtex-completion-pdf-open-function  (lambda (fpath)
-                                              (call-process "open" nil 0 nil fpath)))
+(defconst blaine/bib-libraries (list "~/Documents/global.bib")) ; All of my bib databases.
+
+;; (defconst blaine/main-bib-library (nth 0 blaine/bib-libraries)) ; The main db is always the first
+;; (defconst blaine/main-pdfs-library-paths `("~/Dropbox/bookPDFs/" "~/Dropbox/paperPDFs/"  "~/Dropbox/tempPDFs/" "~/relabelPDFs/" "~/relabelBooks/")) ; PDFs directories in a list
+;; (defconst blaine/main-pdfs-library-path (nth 0 blaine/main-pdfs-library-paths)) ; Main PDFs directory
+;; (defconst blaine/bib-notes-dir "~/org-roam/bib-notes") ; I use org-roam to manage all my notes, including bib notes.
+;; (setq bibtex-completion-bibliography blaine/bib-libraries ; My bibliography PDF location
+;;        bibtex-completion-library-path blaine/main-pdfs-library-paths ; My PDF lib location
+;;        bibtex-completion-notes-path blaine/bib-notes-dir
+;;        bibtex-completion-pdf-open-function  (lambda (fpath)
+;;                                              (call-process "open" nil 0 nil fpath)))
 #+END_SRC
 
 
@@ -195,7 +195,8 @@ A faked full screen.
 ;; (global-set-key (kbd "M-RET") 'my-toggle-fullscreen)
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 #+END_SRC  
-  
+
+
 
 
 ** Define a region to evaluate with C-x E
@@ -938,6 +939,10 @@ Source https://www.emacswiki.org/emacs/CuaMode
 #+END_SRC
 
 
+
+
+
+
 ** D
 
 *** Dashboard configuration
@@ -1179,6 +1184,9 @@ The prefix gives you access to the following key combinations:
 |-----------------------+-----------------------|
 
 You can customize the prefix by adding:
+
+#+BEGIN_COMMENT
+
 
 #+BEGIN_SRC emacs-lisp
 ;; (setq dotnet-mode-keymap-prefix (kbd "<ADD YOUR PREFIX HERE>"))
@@ -1749,7 +1757,7 @@ The build takes 11 minutes or more.
 I am baffled as to want to do next.
 This route is for Java developers, which I am not, yet.
 
-#+BEGIN_COMMENT
+
 # #+BEGIN_SRC emacs-lisp
 ;; (setq langtool-language-tool-jar "/Users/blaine/software/languagetool-commandline.jar")
 ;; (require 'langtool)
@@ -1825,48 +1833,48 @@ I am not sure what this is adding.
   ([remap describe-key] . helpful-key))
 #+END_SRC
 
-*** highlight-indent-guides
-
-
-This is a new and well developed minor mode that is activated for most modes by the command below.
-For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-#+END_SRC
-
-
-
-*** hydra
-
-Hydra empowers you to make custom keybindings that are repeated by entering a single key.
-For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
-[[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
-[[Hydra github site][Https://github.com/abo-abo/hydra]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package hydra)
-
-
-(defhydra hydra-zoom (global-map "<f2>")
-      "zoom"
-      ("g" text-scale-increase "in")
-      ("l" text-scale-decrease "out"))
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-#+END_SRC#+BEGIN_SRC emacs-lisp
-** I
-
-*** ivy
-
-Ivy is a popular autocompletion package.
-
-Make M-x and other mini-buffers sortable, filterable
-
+# *** highlight-indent-guides
+# 
+# 
+# This is a new and well developed minor mode that is activated for most modes by the command below.
+# For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+# #+END_SRC
+# 
+# 
+# 
+# *** hydra
+# 
+# Hydra empowers you to make custom keybindings that are repeated by entering a single key.
+# For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
+# [[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
+# [[Hydra github site][Https://github.com/abo-abo/hydra]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package hydra)
+# 
+# 
+# (defhydra hydra-zoom (global-map "<f2>")
+#       "zoom"
+#       ("g" text-scale-increase "in")
+#       ("l" text-scale-decrease "out"))
+# 
+# (defhydra hydra-text-scale (:timeout 4)
+#   "scale text"
+#   ("j" text-scale-increase "in")
+#   ("k" text-scale-decrease "out")
+#   ("f" nil "finished" :exit t))
+# #+END_SRC#+BEGIN_SRC emacs-lisp
+# ** I
+# 
+# *** ivy
+# 
+# Ivy is a popular autocompletion package.
+# 
+# Make M-x and other mini-buffers sortable, filterable
+# 
 # +BEGIN_SRC emacs-lisp
 # (use-package ivy
 #  :init
@@ -1880,419 +1888,420 @@ Make M-x and other mini-buffers sortable, filterable
 # (use-package ivy-bibtex)
 # +END_SRC
 
-Add vim key binding for use in ivy menus.
-
-#+BEGIN_SRC emacs-lisp
-(use-package command-log-mode)
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)	
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-   (setq ivy-height 15
-         ivy-use-virtual-buffers t
-         ivy-use-selectable-prompt t)
-   (ivy-mode 1))
-#+END_SRC
-
-
-*** ivy-bibtex
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-bibtex)
-#+END_SRC
-
-*** ivy-rich
-
-Display documentation strings with commands when running counsel-M-x.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-#+END_SRC
-
-** J
-
-
-*** JavaScript Configuration
-
-
-**** js2-mode
-[[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]]
-
-Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
-
-#+BEGIN_SRC emacs-lisp
-(use-package js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-#+END_SRC
-
-Hook for shell scripts run via ~Node.js~.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
-#+END_SRC
-
-
-For a better imenu, use.
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-#+END_SRC
-
-Add these two packages to enhance the use of ~js2-mode~.
-
-#+BEGIN_SRC emacs-lisp
-(use-package js2-refactor)
-(use-package xref-js2)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
-(js2r-add-keybindings-with-prefix "C-c C-r")
-(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-#+END_SRC
-
-
-~js-mode~ (which js2 is based on) binds ~M-.~, which conflicts with the package /xref/, so unbind it.
-
-#+BEGIN_SRC emacs-lisp
-(define-key js-mode-map (kbd "M-.") nil)
-
-(add-hook 'js2-mode-hook (lambda ()
-			   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-
-(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-#+END_SRC
-
-***** ac-js2
-Autocompletion for /js2-mode/.
-Enable /ac-js2/ in js2-mode as follows:
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'js2-mode-hook 'ac-js2-mode)
-#+END_SRC
-
-
-***** Setting up autocompletion with company on js files
-
-[[https://emacs.cafe/emacs/javascript/setup/2017/05/09/emacs-setup-javascript-2.html][source]]
-This option seems to be defunct.
-I could not find the company tern package.
-Perhaps the indium package provides autocompletion.
-
-**** Indium 2
-
-Indium is an IDE for Emacs that uses the indium.js package and server.
-I installed [[https://indium.readthedocs.io/en/latest/setup.html#chrome-configuration][indium]] from MELPA.
-/Indium/ uses the /company/ packagefor autocompletion.
-
-#+BEGIN_SRC emacs-lisp
-(use-package indium)
-(add-hook 'js-mode-hook #'indium-interaction-mode)
-#+END_SRC
-
-
-**** nodejs-repl
-
-Enter ~M-x nodejs-repl~ to open a buffer with [[https://github.com/abicky/nodejs-repl.el][node REPL]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package nodejs-repl)
-#+END_SRC
-
-Key bindings to send JavaScript codes to REPL like below:
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'js-mode-hook
-          (lambda ()
-            (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
-            (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-            (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-            (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
-            (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-            (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
-#+END_SRC
-
-When a version manager such as nvm is used to run different versions of ~Node.js~, it is often desirable to start the REPL of the version specified in the ~.nvmrc~ file per project.
-In such cases, customize the ~nodejs-repl-command~ variable with a function symbol.
-That function should query nvm for the ~Node.js~ command to run. For example:
-
-#+BEGIN_SRC emacs-lisp
-(use-package nodejs-repl)
-(defun nvm-which ()
-  (let* ((shell (concat (getenv "SHELL") " -l -c 'nvm which'"))
-         (output (shell-command-to-string shell)))
-    (cadr (split-string output "[\n]+" t))))
-(setq nodejs-repl-command #'nvm-which)
-#+END_SRC
-
-The ~nvm-which~ function can be simpler if using bash:
-
-#+BEGIN_SRC emacs-lisp
-(defun nvm-which ()
-  (let ((output (shell-command-to-string "source ~/.nvm/nvm.sh; nvm which")))
-    (cadr (split-string output "[\n]+" t))))
-#+END_SRC
-
-
-** K
-
-*** keycast
-
-The [[https://metaredux.com/posts/2019/12/07/dead-simple-emacs-screencasts.html][keycast]] package enables the display of your keystrokes.
-These can be displayed on the mode line when the bufer is in the keycast-mode.
-This does not work by default when doom-mode-line is in use. 
-The keycast-tab-bar-mode works with doom-mode-line.
-The following code shows the keystrokes on the doom-mode-line.
-[[https://github.com/tarsius/keycast/issues/7][Source of the above code]].
-
-Note that entering ~M-x keycast-tab-bar-mode~ sends the keystrokes to the tab bar.
-Both keycast-mode and keycast-tab-bar-mode can run simultaneously.
-I think the number of keystrokes shown needs to be expanded and the height of the modeline and the tabbar needs to be increased for this package to be useful.
-
-I recommend the command-log-mode over keycast for screencasts.
-I also recommend zooming in on the text.
-
-#+BEGIN_SRC emacs-lisp
-(use-package keycast
-  :config
-  (define-minor-mode keycast-mode
-    "Show current command and its key binding in the mode line (fix for use with doom-mode-line)."
-    :global t
-    (if keycast-mode
-        (add-hook 'pre-command-hook 'keycast--update t)
-      (remove-hook 'pre-command-hook 'keycast--update)))
-  (add-to-list 'global-mode-string '("" keycast-mode-line)))
-#+END_SRC
-
-
-
-** L
-
-*** which-key
-
-This package provides a menu of available options after a short pause following the typing the first part of a command like ~C-x~.
-A short demo is found at 7:30 in the [[https://www.youtube.com/watch?v=LtTjM245MC0][video]].
-This is a helpful package for beginners.
-It might be annoying for experienced users.
-
-**** which-key integration:
-
-Enhances the access to help information about keybindings, functions, and variables.
-
-# #+BEGIN_SRC emacs-lisp
-# (use-package which-key
-#    :defer 0
-#    :diminish which-key-mode
-#    :config
-#    (which-key-mode)
-#      (setq which-key-idle-delay 0.3))
+# Add vim key binding for use in ivy menus.
 # 
-# ;;   (add-hook 'c-mode-hook 'lsp)
-# ;; (add-hook 'c++-mode-hook 'lsp)
-# (add-hook 'clojure-mode-hook 'lsp)
-# ;; (add-hook 'julia-mode-hook 'lsp)
-# (add-hook 'latex-mode-hook 'lsp)
-# (add-hook 'python-mode-hook 'lsp)
-# ;; (add-hook 'R-mode-hook 'lsp) 
+# #+BEGIN_SRC emacs-lisp
+# (use-package command-log-mode)
+# (use-package ivy
+#   :diminish
+#   :bind (("C-s" . swiper)
+#          :map ivy-minibuffer-map
+#          ("TAB" . ivy-alt-done)	
+#          ("C-l" . ivy-alt-done)
+#          ("C-j" . ivy-next-line)
+#          ("C-k" . ivy-previous-line)
+#          :map ivy-switch-buffer-map
+#          ("C-k" . ivy-previous-line)
+#          ("C-l" . ivy-done)
+#          ("C-d" . ivy-switch-buffer-kill)
+#          :map ivy-reverse-i-search-map
+#          ("C-k" . ivy-previous-line)
+#          ("C-d" . ivy-reverse-i-search-kill))
+#   :config
+#    (setq ivy-height 15
+#          ivy-use-virtual-buffers t
+#          ivy-use-selectable-prompt t)
+#    (ivy-mode 1))
 # #+END_SRC
+# 
+# 
+# *** ivy-bibtex
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package ivy-bibtex)
+# #+END_SRC
+# 
+# *** ivy-rich
+# 
+# Display documentation strings with commands when running counsel-M-x.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package ivy-rich
+#   :init
+#   (ivy-rich-mode 1))
+# #+END_SRC
+# 
+# ** J
+# 
+# 
+# *** JavaScript Configuration
+# 
+# 
+# **** js2-mode
+# [[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]]
+# 
+# Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package js2-mode)
+# (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+# #+END_SRC
+# 
+# Hook for shell scripts run via ~Node.js~.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+# #+END_SRC
+# 
+# 
+# For a better imenu, use.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+# #+END_SRC
+# 
+# Add these two packages to enhance the use of ~js2-mode~.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package js2-refactor)
+# (use-package xref-js2)
+# #+END_SRC
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'js2-mode-hook #'js2-refactor-mode)
+# (js2r-add-keybindings-with-prefix "C-c C-r")
+# (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+# #+END_SRC
+# 
+# 
+# ~js-mode~ (which js2 is based on) binds ~M-.~, which conflicts with the package /xref/, so unbind it.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (define-key js-mode-map (kbd "M-.") nil)
+# 
+# (add-hook 'js2-mode-hook (lambda ()
+# 			   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
+# 
+# (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+# #+END_SRC
+# 
+# ***** ac-js2
+# Autocompletion for /js2-mode/.
+# Enable /ac-js2/ in js2-mode as follows:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'js2-mode-hook 'ac-js2-mode)
+# #+END_SRC
+# 
+# 
+# ***** Setting up autocompletion with company on js files
+# 
+# [[https://emacs.cafe/emacs/javascript/setup/2017/05/09/emacs-setup-javascript-2.html][source]]
+# This option seems to be defunct.
+# I could not find the company tern package.
+# Perhaps the indium package provides autocompletion.
+# 
+# **** Indium 2
+# 
+# Indium is an IDE for Emacs that uses the indium.js package and server.
+# I installed [[https://indium.readthedocs.io/en/latest/setup.html#chrome-configuration][indium]] from MELPA.
+# /Indium/ uses the /company/ packagefor autocompletion.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package indium)
+# (add-hook 'js-mode-hook #'indium-interaction-mode)
+# #+END_SRC
+# 
+# 
+# **** nodejs-repl
+# 
+# Enter ~M-x nodejs-repl~ to open a buffer with [[https://github.com/abicky/nodejs-repl.el][node REPL]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package nodejs-repl)
+# #+END_SRC
+# 
+# Key bindings to send JavaScript codes to REPL like below:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'js-mode-hook
+#           (lambda ()
+#             (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+#             (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+#             (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+#             (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+#             (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+#             (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
+# #+END_SRC
+# 
+# When a version manager such as nvm is used to run different versions of ~Node.js~, it is often desirable to start the REPL of the version specified in the ~.nvmrc~ file per project.
+# In such cases, customize the ~nodejs-repl-command~ variable with a function symbol.
+# That function should query nvm for the ~Node.js~ command to run. For example:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package nodejs-repl)
+# (defun nvm-which ()
+#   (let* ((shell (concat (getenv "SHELL") " -l -c 'nvm which'"))
+#          (output (shell-command-to-string shell)))
+#     (cadr (split-string output "[\n]+" t))))
+# (setq nodejs-repl-command #'nvm-which)
+# #+END_SRC
+# 
+# The ~nvm-which~ function can be simpler if using bash:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (defun nvm-which ()
+#   (let ((output (shell-command-to-string "source ~/.nvm/nvm.sh; nvm which")))
+#     (cadr (split-string output "[\n]+" t))))
+# #+END_SRC
+# 
+# 
+# ** K
 
-
-*** LaTeX customizations
-
-**** PATH to info
-
-Set path to info for texlive.
-This path is needed by the LSP for LaTeX.
-[[https://github.com/astoff/digestif][See for more information.]] 
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'Info-directory-list "/opt/local/share/texmf-texlive/doc/info")
-#+END_SRC
-
-**** LSP in LaTeX
-digestif is an LSP for LaTeX.
-Install it via this command in the terminal ~luarocks install digestif~.
-To see what lsp can do in C++, [[https://www.youtube.com/watch?v=SVeiNWU4BBg][watch]].
-
-#+BEGIN_SRC emacs-lisp
-(setq lsp-tex-server 'digestif)
-#+END_SRC
-
-**** automate snippet insertion
-
-If you want automatic snippet insertion upon choosing a completion candidate, 
-make sure to activate yas-minor-mode before starting up Eglot.
-
-#+BEGIN_SRC emacs-lisp
-;; (yas-reload-all)
-(add-hook 'LaTeX-mode-hook #'yas-minor-mode)
-#+END_SRC
-
-**** eglot in LaTeX mode
-
-Emacs's polyglot lsp server.
-[[https://github.com/joaotavora/eglot][Eglot]] provides completion, documentation, and navigation commands in LaTeX documents.
-Must come after yas-minor-mode.
-Add a hook for to invoke eglot in LaTeX-mode.
-But you must install digestif first
-[[https://www.manueluberti.eu/emacs/2022/03/12/eglot-digestif/][Source]].
-Invoke eglot with ~M-x eglot~ or make it available on startup:
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'LaTeX-mode-hook #'eglot-ensure)
-#+END_SRC
-
-Note that eglot has no dependences, but bleeding-edge Emacs versions have dependencies that can mess it up.
-Enter ~M-x find-libraries~
-
-**** Enlarge equation preview
-
-Set the scale of the preview of the LaTeX equation so you can see it.
-Place the  point in equation and enter ~C-c C-x C-l~ to render.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.0))
-#+END_SRC
-
-
-**** Grammer checking with language-tool
-
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'LaTeX-mode-hook
-          (lambda () 
-             (add-hook 'after-save-hook 'langtool-check nil 'make-it-local)))
-#+END_SRC
-
-
-**** Spell check with flyspell
-
-Run the command ~M-x flyspell-buffer~ or ~M-x flys-bu~.
-
-
-**** Turn on ispell for tex fileset
-
-This recommendation is from the 2020 edtion of Petersen's book /Mastering Emacs/, page 250.
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'tex-mode-hook
-	  #'(lambda () (setq ispell-parser 'tex)))
-#+END_SRC
-
-
-
-
-*** Word count in LaTeX files
-
-Run texcount.pl on an open tex document in the current buffer to get a report of word counts by section.
-Enter ~C-c w~. [[https://newbedev.com/word-count-for-latex-within-emacs][Source]].  
-
-#+BEGIN_SRC emacs-lisp
-(defun my-latex-setup ()
-  (defun latex-word-count ()
-    (interactive)
-    (let* ((this-file (buffer-file-name))
-           (word-count
-            (with-output-to-string
-              (with-current-buffer standard-output
-                (call-process "texcount" nil t nil "-brief" this-file)))))
-      (string-match "\n$" word-count)
-      (message (replace-match "" nil nil word-count))))
-    (define-key LaTeX-mode-map "\C-cw" 'latex-word-count))
-(add-hook 'LaTeX-mode-hook 'my-latex-setup t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun latex-word-count ()
-  (interactive)
-  (shell-command (concat "/usr/local/bin/texcount.pl"))
-                          (buffer-file-name))))
-#+END_SRC
-*** lsp
-
-For each programming language, you have to install the corresponding LSP server.
-Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
-Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
-Some languages have alternate LSPs.
-
-|--------------+-------------|
-| Language     |  Sever      |
-|--------------+-------------|
-| C/C++        | clangd      |
-| Clojure      | clojure-lsp |
-| LaTeX        | digestif    |
-| Python       | mspyls      |
-|--------------+-------------|
-
-The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
-The server make take a minute or so to spin up while analyzing the current file.
-If you get the error message, file not in project or it is backlisted, and
-if there is a ~.git~ repo present, the file is in a project. 
-Then there is an issue with the project being blacklisted.
-Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
-
-
-**** Main config
-
-The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
-  (setq lsp-keymap-prefix "s-l")
-  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-         (latex-mode . lsp)
-         (python-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp)
-  )
-#+END_SRC 
-
-Add lsp-ui for the full experience.
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-ui :commands lsp-ui-mode)
-#+END_SRC 
-
-Use lsp-treemacs.
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-treemacs
-  :ensure t)
-#+END_SRC 
-
-**** For ivy users
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-#+END_SRC
-
+# *** keycast
+# 
+# The [[https://metaredux.com/posts/2019/12/07/dead-simple-emacs-screencasts.html][keycast]] package enables the display of your keystrokes.
+# These can be displayed on the mode line when the bufer is in the keycast-mode.
+# This does not work by default when doom-mode-line is in use. 
+# The keycast-tab-bar-mode works with doom-mode-line.
+# The following code shows the keystrokes on the doom-mode-line.
+# [[https://github.com/tarsius/keycast/issues/7][Source of the above code]].
+# 
+# Note that entering ~M-x keycast-tab-bar-mode~ sends the keystrokes to the tab bar.
+# Both keycast-mode and keycast-tab-bar-mode can run simultaneously.
+# I think the number of keystrokes shown needs to be expanded and the height of the modeline and the tabbar needs to be increased for this package to be useful.
+# 
+# I recommend the command-log-mode over keycast for screencasts.
+# I also recommend zooming in on the text.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package keycast
+#   :config
+#   (define-minor-mode keycast-mode
+#     "Show current command and its key binding in the mode line (fix for use with doom-mode-line)."
+#     :global t
+#     (if keycast-mode
+#         (add-hook 'pre-command-hook 'keycast--update t)
+#       (remove-hook 'pre-command-hook 'keycast--update)))
+#   (add-to-list 'global-mode-string '("" keycast-mode-line)))
+# #+END_SRC
+# 
+# 
+# 
+# ** L
+# 
+# *** which-key
+# 
+# This package provides a menu of available options after a short pause following the typing the first part of a command like ~C-x~.
+# A short demo is found at 7:30 in the [[https://www.youtube.com/watch?v=LtTjM245MC0][video]].
+# This is a helpful package for beginners.
+# It might be annoying for experienced users.
+# 
+# **** which-key integration:
+# 
+# Enhances the access to help information about keybindings, functions, and variables.
+# 
+# # #+BEGIN_SRC emacs-lisp
+# # (use-package which-key
+# #    :defer 0
+# #    :diminish which-key-mode
+# #    :config
+# #    (which-key-mode)
+# #      (setq which-key-idle-delay 0.3))
+# # 
+# # ;;   (add-hook 'c-mode-hook 'lsp)
+# # ;; (add-hook 'c++-mode-hook 'lsp)
+# # (add-hook 'clojure-mode-hook 'lsp)
+# # ;; (add-hook 'julia-mode-hook 'lsp)
+# # (add-hook 'latex-mode-hook 'lsp)
+# # (add-hook 'python-mode-hook 'lsp)
+# # ;; (add-hook 'R-mode-hook 'lsp) 
+# # #+END_SRC
+# 
+# 
+# *** LaTeX customizations
+# 
+# **** PATH to info
+# 
+# Set path to info for texlive.
+# This path is needed by the LSP for LaTeX.
+# [[https://github.com/astoff/digestif][See for more information.]] 
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'Info-directory-list "/opt/local/share/texmf-texlive/doc/info")
+# #+END_SRC
+# 
+# **** LSP in LaTeX
+# digestif is an LSP for LaTeX.
+# Install it via this command in the terminal ~luarocks install digestif~.
+# To see what lsp can do in C++, [[https://www.youtube.com/watch?v=SVeiNWU4BBg][watch]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (setq lsp-tex-server 'digestif)
+# #+END_SRC
+# 
+# **** automate snippet insertion
+# 
+# If you want automatic snippet insertion upon choosing a completion candidate, 
+# make sure to activate yas-minor-mode before starting up Eglot.
+# 
+# #+BEGIN_SRC emacs-lisp
+# ;; (yas-reload-all)
+# (add-hook 'LaTeX-mode-hook #'yas-minor-mode)
+# #+END_SRC
+# 
+# **** eglot in LaTeX mode
+# 
+# Emacs's polyglot lsp server.
+# [[https://github.com/joaotavora/eglot][Eglot]] provides completion, documentation, and navigation commands in LaTeX documents.
+# Must come after yas-minor-mode.
+# Add a hook for to invoke eglot in LaTeX-mode.
+# But you must install digestif first
+# [[https://www.manueluberti.eu/emacs/2022/03/12/eglot-digestif/][Source]].
+# Invoke eglot with ~M-x eglot~ or make it available on startup:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'LaTeX-mode-hook #'eglot-ensure)
+# #+END_SRC
+# 
+# Note that eglot has no dependences, but bleeding-edge Emacs versions have dependencies that can mess it up.
+# Enter ~M-x find-libraries~
+# 
+# **** Enlarge equation preview
+# 
+# Set the scale of the preview of the LaTeX equation so you can see it.
+# Place the  point in equation and enter ~C-c C-x C-l~ to render.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (setq org-format-latex-options (plist-put org-format-latex-options :scale 4.0))
+# #+END_SRC
+# 
+# 
+# **** Grammer checking with language-tool
+# 
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'LaTeX-mode-hook
+#           (lambda () 
+#              (add-hook 'after-save-hook 'langtool-check nil 'make-it-local)))
+# #+END_SRC
+# 
+# 
+# **** Spell check with flyspell
+# 
+# Run the command ~M-x flyspell-buffer~ or ~M-x flys-bu~.
+# 
+# 
+# **** Turn on ispell for tex fileset
+# 
+# This recommendation is from the 2020 edtion of Petersen's book /Mastering Emacs/, page 250.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'tex-mode-hook
+# 	  #'(lambda () (setq ispell-parser 'tex)))
+# #+END_SRC
+# 
+# 
+# 
+# 
+# *** Word count in LaTeX files
+# 
+# Run texcount.pl on an open tex document in the current buffer to get a report of word counts by section.
+# Enter ~C-c w~. [[https://newbedev.com/word-count-for-latex-within-emacs][Source]].  
+# 
+# #+BEGIN_SRC emacs-lisp
+# (defun my-latex-setup ()
+#   (defun latex-word-count ()
+#     (interactive)
+#     (let* ((this-file (buffer-file-name))
+#            (word-count
+#             (with-output-to-string
+#               (with-current-buffer standard-output
+#                 (call-process "texcount" nil t nil "-brief" this-file)))))
+#       (string-match "\n$" word-count)
+#       (message (replace-match "" nil nil word-count))))
+#     (define-key LaTeX-mode-map "\C-cw" 'latex-word-count))
+# (add-hook 'LaTeX-mode-hook 'my-latex-setup t)
+# #+END_SRC
+# 
+# #+BEGIN_SRC emacs-lisp
+# (defun latex-word-count ()
+#   (interactive)
+#   (shell-command (concat "/usr/local/bin/texcount.pl"))
+#                           (buffer-file-name))))
+# #+END_SRC
+# 
+# *** lsp
+# 
+# For each programming language, you have to install the corresponding LSP server.
+# Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
+# Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
+# Some languages have alternate LSPs.
+# 
+# |--------------+-------------|
+# | Language     |  Sever      |
+# |--------------+-------------|
+# | C/C++        | clangd      |
+# | Clojure      | clojure-lsp |
+# | LaTeX        | digestif    |
+# | Python       | mspyls      |
+# |--------------+-------------|
+# 
+# The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
+# The server make take a minute or so to spin up while analyzing the current file.
+# If you get the error message, file not in project or it is backlisted, and
+# if there is a ~.git~ repo present, the file is in a project. 
+# Then there is an issue with the project being blacklisted.
+# Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
+# 
+# 
+# **** Main config
+# 
+# The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
+# 
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-mode
+#   :init
+#   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
+#   (setq lsp-keymap-prefix "s-l")
+#   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
+#          (latex-mode . lsp)
+#          (python-mode . lsp)
+#          ;; if you want which-key integration
+#          (lsp-mode . lsp-enable-which-key-integration))
+#   :commands (lsp)
+#   )
+# #+END_SRC 
+# 
+# Add lsp-ui for the full experience.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-ui :commands lsp-ui-mode)
+# #+END_SRC 
+# 
+# Use lsp-treemacs.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-treemacs
+#   :ensure t)
+# #+END_SRC 
+# 
+# **** For ivy users
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+# (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+# #+END_SRC
+# 
 # **** To use debugger
 # Invoke already under the Python config. dap works for only Python and Java.
 # #+BEGIN_SRC emacs-lisp
 # (use-package dap-mode)
 # ;; (use-package dap-python) ;to load the dap adapter for your language
 # #+END_SRC
-
-
+# 
+# 
 # #+BEGIN_SRC emacs-lisp
 # (use-package lsp-mode
 #  :ensure t)
@@ -2304,30 +2313,30 @@ Use lsp-treemacs.
 #   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 #   (yas-global-mode))
 # #+END_SRC
-
-
+# 
+# 
 #  :init
 #  :commands (lsp)
 #  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
 #  (setq lsp-keymap-prefix "C-c l")
 #  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
 #        (c-mode . lsp)
-#	 (c++-mode . lsp)
-#	 (clojure-mode . lsp)
-#	 (julia-mode . lsp)
+# 	 (c++-mode . lsp)
+# 	 (clojure-mode . lsp)
+# 	 (julia-mode . lsp)
 #         (latex-mode . lsp)
 #         (python-mode . lsp)
 #         (R-mode . lsp)
 #         ;; if you want which-key integration
 #         (lsp-mode . lsp-enable-which-key-integration)))
-
-
+# 
+# 
 # busted :custom( (lsp-modeline-diagnostics-enable . t) (lsp-modeline-diagnostics-scope . :project)))
-
-
-
-
-
+# 
+# 
+# 
+# 
+# 
 # #+BEGIN_SRC emacs-lisp
 # (use-package lsp-ui
 #   :commands (lsp)
@@ -2336,58 +2345,58 @@ Use lsp-treemacs.
 #        (latex-mode . lsp)
 #         (python-mode . lsp)))
 # +END_SRC
-
-#	 (c-mode . lsp)
-#	 (c++-mide . lsp)
+# 
+# 	 (c-mode . lsp)
+# 	 (c++-mide . lsp)
 #         (clojure-mode . lsp)
 #         (julia-mode . lsp)
 #         (r-mode . lsp)	 
-
-
-** M
-
-
-*** magit 
-
-This package supports the use of git in Emacs.
-Dave Wilson's [[https://raw.githubusercontent.com/daviwil/emacs-from-scratch/500370fa06889dad313e60473d73090fcfbe106d/init.el][config for magit]].
-See his [[https://www.youtube.com/watch?v=INTu30BHZGk][video on magit]] starting at 30:00.
-
+# 
+# 
+# ** M
+# 
+# 
+# *** magit 
+# 
+# This package supports the use of git in Emacs.
+# Dave Wilson's [[https://raw.githubusercontent.com/daviwil/emacs-from-scratch/500370fa06889dad313e60473d73090fcfbe106d/init.el][config for magit]].
+# See his [[https://www.youtube.com/watch?v=INTu30BHZGk][video on magit]] starting at 30:00.
+# 
+# # #+BEGIN_SRC emacs-lisp
+# # (use-package magit
+# #   :custom
+# #   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+# # 
+# # ;;(use-package evil-magit
+# # ;;  :after magit)
+# # 
+# # ;; NOTE: Make sure to configure a GitHub token before using this package!
+# # ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+# # ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+# # #+END_SRC
+# 
+# 
+# *** mathpix
+# 
+# This is an interfae to Mathpix \footnote{\url{https://github.com/jethrokuan/mathpix.el}}.
+# It requires the Mathpix.app and the key (i.e., you have to subscribe to this service).
+# 
+# 
+# Here is the configuration to load the package from github via straight.
+# Remember that use-package is a macro that can be used with either straight or package.
+# I want to avoid the use of straight.el.
+# I download via git clone the mathpix.el repo.
+# I renamed it mathpix.
+# 
 # #+BEGIN_SRC emacs-lisp
-# (use-package magit
-#   :custom
-#   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-# 
-# ;;(use-package evil-magit
-# ;;  :after magit)
-# 
-# ;; NOTE: Make sure to configure a GitHub token before using this package!
-# ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-# ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+# (add-to-list 'load-path "~/.emacs.d/elisp/mathpix")
+# (use-package mathpix
+#   :custom ((mathpix-app-id "app-id")
+#            (mathpix-app-key "app-key"))
+#   :bind
+#   ("C-x m" . mathpix-screenshot))
 # #+END_SRC
-
-
-*** mathpix
-
-This is an interfae to Mathpix \footnote{\url{https://github.com/jethrokuan/mathpix.el}}.
-It requires the Mathpix.app and the key (i.e., you have to subscribe to this service).
-
-
-Here is the configuration to load the package from github via straight.
-Remember that use-package is a macro that can be used with either straight or package.
-I want to avoid the use of straight.el.
-I download via git clone the mathpix.el repo.
-I renamed it mathpix.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/elisp/mathpix")
-(use-package mathpix
-  :custom ((mathpix-app-id "app-id")
-           (mathpix-app-key "app-key"))
-  :bind
-  ("C-x m" . mathpix-screenshot))
-#+END_SRC
-
+# 
 
 #. #+BEGIN_SRC emacs-lisp
 #. (use-package mathpix.el
@@ -2398,44 +2407,44 @@ I renamed it mathpix.
 #.   ("C-x m" . mathpix-screenshot))
 #. #+END_SRC
 
-
-Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
-
-
-
-*** mode-line clean-up
-
-#+BEGIN_SRC emacs-lisp
-(defvar mode-line-cleaner-alist
-  `((auto-complete-mode . " α")
-    (yas-minor-mode . " γ")
-    (paredit-mode . " Φ")
-    (eldoc-mode . "")
-    (abbrev-mode . "")
-    (undo-tree-mode . " τ")
-    (volatile-highlights-mode . " υ")
-    (elisp-slime-nav-mode . " δ")
-    (nrepl-mode . " ηζ")
-    (nrepl-interaction-mode . " ηζ")
-    ;; Major modes
-    (clojure-mode . "λ")
-    (hi-lock-mode . "")
-    (python-mode . "Py")
-    (emacs-lisp-mode . "EL")
-    (markdown-mode . "md"))
-  "Alist for `clean-mode-line'.
-When you add a new element to the alist, keep in mind that you
-must pass the correct minor/major mode symbol and a string you
-want to use in the modeline *in lieu of* the original.")
-#+END_SRC
-
-Greek letters - `C-u C-\` greek.
-
-`C-\` to revert to default.
-
-`ς ε ρ τ υ θ ι ο π α σ δ φ γ η ξ κ λ ζ χ ψ ω β ν μ`
-
-
+# 
+# Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
+# 
+# 
+# 
+# *** mode-line clean-up
+# 
+# #+BEGIN_SRC emacs-lisp
+# (defvar mode-line-cleaner-alist
+#   `((auto-complete-mode . " α")
+#     (yas-minor-mode . " γ")
+#     (paredit-mode . " Φ")
+#     (eldoc-mode . "")
+#     (abbrev-mode . "")
+#     (undo-tree-mode . " τ")
+#     (volatile-highlights-mode . " υ")
+#     (elisp-slime-nav-mode . " δ")
+#     (nrepl-mode . " ηζ")
+#     (nrepl-interaction-mode . " ηζ")
+#     ;; Major modes
+#     (clojure-mode . "λ")
+#     (hi-lock-mode . "")
+#     (python-mode . "Py")
+#     (emacs-lisp-mode . "EL")
+#     (markdown-mode . "md"))
+#   "Alist for `clean-mode-line'.
+# When you add a new element to the alist, keep in mind that you
+# must pass the correct minor/major mode symbol and a string you
+# want to use in the modeline *in lieu of* the original.")
+# #+END_SRC
+# 
+# Greek letters - `C-u C-\` greek.
+# 
+# `C-\` to revert to default.
+# 
+# `ς ε ρ τ υ θ ι ο π α σ δ φ γ η ξ κ λ ζ χ ψ ω β ν μ`
+# 
+# 
 
 # #+BEGIN_SRC emacs-lisp
 # (defun clean-mode-line ()
@@ -2452,76 +2461,76 @@ Greek letters - `C-u C-\` greek.
 # (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 # #+END_SRC
 
-Alias the new `flymake-report-status-slim' to `flymake-report-status'
-
-#+BEGIN_SRC emacs-lisp
-(defun flymake-report-status-slim (e-w &optional status)
-  "Show \"slim\" flymake status in mode line."
-  (when e-w
-    (setq flymake-mode-line-e-w e-w))
-  (when status
-    (setq flymake-mode-line-status status))
-  (let* ((mode-line " Φ"))
-    (when (> (length flymake-mode-line-e-w) 0)
-      (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
-    (setq mode-line (concat mode-line flymake-mode-line-status))
-    (setq flymake-mode-line mode-line)
-    (force-mode-line-update)))
-(defalias 'flymake-report-status 'flymake-report-status-slim)
-#+END_SRC
-
-
-
-
-** N
-
-*** nov
-
-#+BEGIN_SRC emacs-lisp
-;; Customizations for the nov package that enables the reading of epub files in Emacs.
-;; See https://depp.brause.cc/nov.el/
-(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-(setq nov-text-width 80)
-(setq nov-text-width t)
-(setq visual-fill-column-center-text t)
-(add-hook 'nov-mode-hook 'visual-line-mode)
-(add-hook 'nov-mode-hook 'visual-fill-column-mode)
-
-;; Tell emacs where is your personal elisp lib dir
-(add-to-list 'load-path "~/.emacs.d/justify-kp/")
-(load "justify-kp")
-
-;; Add some justification to epub documents.
-(require 'justify-kp)
-(setq nov-text-width t)
-
-(defun my-nov-window-configuration-change-hook ()
-  (my-nov-post-html-render-hook)
-  (remove-hook 'window-configuration-change-hook
-               'my-nov-window-configuration-change-hook
-               t))
-
-(defun my-nov-post-html-render-hook ()
-  (if (get-buffer-window)
-      (let ((max-width (pj-line-width))
-            buffer-read-only)
-        (save-excursion
-          (goto-char (point-min))
-          (while (not (eobp))
-            (when (not (looking-at "^[[:space:]]*$"))
-              (goto-char (line-end-position))
-              (when (> (shr-pixel-column) max-width)
-                (goto-char (line-beginning-position))
-                (pj-justify)))
-            (forward-line 1))))
-    (add-hook 'window-configuration-change-hook
-              'my-nov-window-configuration-change-hook
-              nil t)))
-
-(add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
-#+END_SRC
-
-
+# Alias the new `flymake-report-status-slim' to `flymake-report-status'
+# 
+# #+BEGIN_SRC emacs-lisp
+# (defun flymake-report-status-slim (e-w &optional status)
+#   "Show \"slim\" flymake status in mode line."
+#   (when e-w
+#     (setq flymake-mode-line-e-w e-w))
+#   (when status
+#     (setq flymake-mode-line-status status))
+#   (let* ((mode-line " Φ"))
+#     (when (> (length flymake-mode-line-e-w) 0)
+#       (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
+#     (setq mode-line (concat mode-line flymake-mode-line-status))
+#     (setq flymake-mode-line mode-line)
+#     (force-mode-line-update)))
+# (defalias 'flymake-report-status 'flymake-report-status-slim)
+# #+END_SRC
+# 
+# 
+# 
+# 
+# ** N
+# 
+# *** nov
+# 
+# #+BEGIN_SRC emacs-lisp
+# ;; Customizations for the nov package that enables the reading of epub files in Emacs.
+# ;; See https://depp.brause.cc/nov.el/
+# (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+# (setq nov-text-width 80)
+# (setq nov-text-width t)
+# (setq visual-fill-column-center-text t)
+# (add-hook 'nov-mode-hook 'visual-line-mode)
+# (add-hook 'nov-mode-hook 'visual-fill-column-mode)
+# 
+# ;; Tell emacs where is your personal elisp lib dir
+# (add-to-list 'load-path "~/.emacs.d/justify-kp/")
+# (load "justify-kp")
+# 
+# ;; Add some justification to epub documents.
+# (require 'justify-kp)
+# (setq nov-text-width t)
+# 
+# (defun my-nov-window-configuration-change-hook ()
+#   (my-nov-post-html-render-hook)
+#   (remove-hook 'window-configuration-change-hook
+#                'my-nov-window-configuration-change-hook
+#                t))
+# 
+# (defun my-nov-post-html-render-hook ()
+#   (if (get-buffer-window)
+#       (let ((max-width (pj-line-width))
+#             buffer-read-only)
+#         (save-excursion
+#           (goto-char (point-min))
+#           (while (not (eobp))
+#             (when (not (looking-at "^[[:space:]]*$"))
+#               (goto-char (line-end-position))
+#               (when (> (shr-pixel-column) max-width)
+#                 (goto-char (line-beginning-position))
+#                 (pj-justify)))
+#             (forward-line 1))))
+#     (add-hook 'window-configuration-change-hook
+#               'my-nov-window-configuration-change-hook
+#               nil t)))
+# 
+# (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
+# #+END_SRC
+# 
+# 
 ** O
 
 *** Org configuration
@@ -2850,37 +2859,38 @@ prot-org.el file.  In the video I explain why I use this style.
 # #+END_SRC
 # 
 
-(add-to-list 'load-path "/usr/local/bin/jupyter")
-(use-package jupyter)
 
-#+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (C . t)
-   (js . t)
-   (emacs-lisp . t)
-   (ditaa . t)
-;;   (ipython . t)
-;;   (python . t)
-   (gnuplot . t)
-   (R . t)
-   (latex . t)
-   (plantuml . t)
-   (shell . t)
-   (clojure . t)
-   (julia . t)
-   (jupyter . t) ) )
-;; enable use of python instead of python-juptyer
-;; (org-babel-jupyter-override-src-block "python")  
-#+END_SRC
-
-I add to add ~:results value scalar~ to get the approapriate output.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-babel-default-header-args:emacs-lisp
-             '(:results . "output"))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# ;; (add-to-list 'load-path "/usr/local/bin/jupyter")
+# ;; (use-package jupyter)
+# 
+# (org-babel-do-load-languages
+#  'org-babel-load-languages
+#  '(
+#    (C . t)
+#    (js . t)
+#    (emacs-lisp . t)
+#    (ditaa . t)
+# ;;   (ipython . t)
+# ;;   (python . t)
+#    (gnuplot . t)
+#    (R . t)
+#    (latex . t)
+#    (plantuml . t)
+#    (shell . t)
+#    (clojure . t)
+#    (julia . t)
+#    (jupyter . t) ) )
+# ;; enable use of python instead of python-juptyer
+# ;; (org-babel-jupyter-override-src-block "python")  
+# #+END_SRC
+# 
+# I add to add ~:results value scalar~ to get the approapriate output.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'org-babel-default-header-args:emacs-lisp
+#              '(:results . "output"))
+# #+END_SRC
 
 
 *** consult-org-headings
@@ -2919,18 +2929,18 @@ To drag and drop images into org files, see the associate [[https://github.com/a
 #+END_SRC
 
 
-*** org-elp-mode
-
-To launch previewing of equations in org-mode, enter ~M-x org-elp-mode~ to toggle on and off.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-preview-latex-process-alist dvisvgm)
-(use-package org-elp
-  :config
-  (setq org-elp-idle-time 0.5
-        org-elp-split-fraction 0.25))
-#+END_SRC
-
+# *** org-elp-mode
+# 
+# To launch previewing of equations in org-mode, enter ~M-x org-elp-mode~ to toggle on and off.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'org-preview-latex-process-alist dvisvgm)
+# (use-package org-elp
+#   :config
+#   (setq org-elp-idle-time 0.5
+#         org-elp-split-fraction 0.25))
+# #+END_SRC
+# 
 
 
 *** org gantt plots
@@ -3247,6 +3257,10 @@ Requires org-edna.
 #+BEGIN_SRC emacs-lisp
 (use-package org-gtd :after 'org)
 #+END_SRC
+
+
+
+
 
 
 
@@ -4193,7 +4207,7 @@ See org-noter section
 #     '(mode-line-inactive ((t (:foreground "#f9f9f9" :background "#666666" :box nil)))))
 # )
 # #+END_SRC
-
+# 
 
 *** projectile
 
@@ -4596,31 +4610,31 @@ To enforce the use of one whitespace, enter the following:
 (setq sentence-end-double-space nil)
 #+END_SRC
 
-*** SLIME
-
-slime stands for Superior Lisp Interaction Mode for Emacs.
-I already had sbcl installed.
-It provides a repl for Commn Lisp.
-There are about a dozen lisp systems.
-I use sbcl. 
-I had installed it with macports.
-
-I had installed earlier the quicklisp package in sbcl.
-However, I had to install a slime helper.
-I entered sbcl and issued the following command.
-
-#+BEGIN_SRC common-lisp
-(ql:quickload "quicklisp-slime-helper")
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "/opt/local/bin/sbcl")
-;;(require 'slime-autoloads)
-;;(slime-setup '(slime-fancy))
-#+END_SRC
-
+# *** SLIME
+# 
+# slime stands for Superior Lisp Interaction Mode for Emacs.
+# I already had sbcl installed.
+# It provides a repl for Commn Lisp.
+# There are about a dozen lisp systems.
+# I use sbcl. 
+# I had installed it with macports.
+# 
+# I had installed earlier the quicklisp package in sbcl.
+# However, I had to install a slime helper.
+# I entered sbcl and issued the following command.
+# 
+# #+BEGIN_SRC common-lisp
+# (ql:quickload "quicklisp-slime-helper")
+# #+END_SRC
+# 
+# 
+# #+BEGIN_SRC emacs-lisp
+# (load (expand-file-name "~/quicklisp/slime-helper.el"))
+# (setq inferior-lisp-program "/opt/local/bin/sbcl")
+# ;;(require 'slime-autoloads)
+# ;;(slime-setup '(slime-fancy))
+# #+END_SRC
+# 
 *** Spelling
 
 **** Set the spelling binary
