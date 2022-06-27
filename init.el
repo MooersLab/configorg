@@ -19,9 +19,7 @@
 ;
 ; ;;(load-theme 'solarized-dark t)
 ;
-; It starts the Emacs server during initialization unless there is already a server running. 
-; This allows you to start another independent Emacs process without conflicting with an existing server.
-
+;
 ;
 ;					;
 ;; This sets up the load path so that we can override it
@@ -46,7 +44,7 @@
 
 (require 'package)
 
-(setq my-user-emacs-directory "~/mar30-emacs/")
+(setq my-user-emacs-directory "~/.emacs.d/")
 
 
 (defmacro append-to-list (target suffix)
@@ -75,19 +73,9 @@
  use-package-verbose t) ;; Package install logging. Packages break, nice to know why.
 
 ;; Any Customize-based settings should live in custom.el, not here.
-(setq custom-file "~/mar30-emacs/custom.el")
+(setq custom-file "~/emacs.d/custom.el")
 (load custom-file 'noerror)
 
-
-
-
-;;  ;; add MELPA package server
-;; (unless (assoc-default "melpa" package-archives)
-;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-;; (unless (assoc-default "org" package-archives)
-;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
-;; (unless (assoc-default "elpa" package-archives)
-;;   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -99,7 +87,7 @@
 
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 
-(add-to-list 'load-path "~/software/org-mode/lisp")
+(add-to-list 'load-path "~/.emacs.d/elisp/org-mode/lisp")
 (require 'org-loaddefs)
 
 (require 'org)
@@ -109,7 +97,7 @@
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
 ;; the criteria described below) to "config.el" which is loaded as Emacs configuration.
 ;; Inspired and copied from: http://www.holgerschurig.de/en/emacs-init-tangle/
-;; This conde is from Karl Voit:  https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el
+;; This code is from Karl Voit:  https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el
 ;; =======================================================================================
 
 
@@ -194,6 +182,11 @@ Note the weekly scope of the command's precision.")
 (add-hook 'after-save-hook 'my-tangle-config-org-hook-func)
 
 (message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time)))
+
+
+
+
+
 
 
 
