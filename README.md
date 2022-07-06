@@ -3,10 +3,17 @@
 ## Introduction to Emacs
 
 Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that leads to a black hole).
-It has highly developed support for editing plain text, LaTeX, asciidoc, markdown, rtf, html, org-mode, and other kinds of text files.
+Emacs has highly developed support for editing plain text, LaTeX, asciidoc, markdown, rtf, html, org-mode, and other kinds of text files.
 This support includes autocompletion, access to grammarly for several document types, snippets, and access to several LSPs.
-There is also support for managing citations and reading PDFs and ebooks inside of Emacs.
-The edit-sever packages enables you to edit text areas in webpages using Emacs.
+There is also support for managing citations via BibTex and reading PDFs and ebooks inside of Emacs.
+
+The edit-sever package enables you to edit text areas in webpages using Emacs.
+Likewise, the atomic-chrome enables doing so via the GhostText plugin for Chrome.
+You click on the ghost icon in your browser;s toolbar to send the text to Emacs.
+You can then edit the text with the full power of Emac's editing features.
+The changed text is updated immediately in the text area in the webpage.
+This capability works with Overleaf, the website for editing LaTeX documents on the web.
+Atomic-chrome can be configured to enter the latex-mode whenever invoked from Overleaf.
 
 Emacs is also a software integrated development environment (IDE).
 It supports syntax highlighting, code snippets, and autocompletion for many programming languages.
