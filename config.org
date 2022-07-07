@@ -2538,9 +2538,6 @@ I am not sure what this is adding.
 #+BEGIN_SRC emacs-lisp
 (use-package org)
 
-
-
-
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 ;; org-capture
@@ -2553,6 +2550,21 @@ I am not sure what this is adding.
 (define-key global-map "\C-cfc" 'filesets-close)
 #+END_SRC
 
+*** org2blog configuration
+
+This package connects the Emacs to your WordPress account.
+You write posts in org and then publish them in WordPress.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org2blog
+             :ensure t)
+
+(setq org2blog/wp-blog-alist
+      '(("myblog"
+         :url "https://wordpress.com/post/bmooerslab.wordpress.com/xmlrpc.php"
+         :username "blaine-mooers@ouhsc.edu")))
+#+END_SRC
 
 # #+BEGIN_SRC emacs-lisp
 # ;; use org mode
