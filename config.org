@@ -409,6 +409,7 @@ It is not obvious how to configure the latter two packages to use the latex-mode
 They seem to be limited to editing text boxes on webpages.
 
 You have to install the ghosttext extension for Chrome.
+This extension works in the new browser Brave.
 There is suppose to be an extension for Firefox too.
 Then you have to manage the extension by enabling access to the local files.
 Next, you have to pin the extension to the task bar.
@@ -921,6 +922,80 @@ It is a peer of ivy.
 (use-package company-box
   :hook (company-mode . company-box-mode))
 #+END_SRC
+
+
+*** Copilot
+
+The requires the GitHub Coplit subscription.
+
+#+BEGIN_SRC emacs-lisp
+(load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
+
+;; Use copilot-mode to automatically provide completions
+(add-hook 'prog-mode-hook 'copilot-mode)
+
+; complete by copilot first, then company-mode
+(defun my-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (company-indent-or-complete-common nil)))
+
+; modify company-mode behaviors
+(with-eval-after-load 'company
+  ;; disable inline previews
+  (delq 'company-preview-if-just-one-frontend company-frontends)
+
+  (define-key company-mode-map (kbd "<tab>") 'my-tab)
+  (define-key company-mode-map (kbd "TAB") 'my-tab)
+  (define-key company-active-map (kbd "<tab>") 'my-tab)
+  (define-key company-active-map (kbd "TAB") 'my-tab))
+#+END_SRC
+
+**** Copilot commands:
+
+- copilot-diagnose
+Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
+
+copilot-login
+Login to GitHub, required for using the plugin.
+
+copilot-mode
+Enable/disable copilot mode.
+
+copilot-complete
+Try to complete at the current point.
+
+copilot-accept-completion
+Accept the current completion.
+
+copilot-clear-overlay
+Clear copilot overlay in the current buffer.
+
+copilot-accept-completion-by-line / copilot-accept-completion-by-word
+Similar to copilot-accept-completion, but accept the completion by line or word. You can use prefix argument to specify the number of lines or words to accept.
+
+copilot-next-completion / copilot-previous-completion
+Cycle through the completion list.
+
+copilot-logout
+Logout from GitHub.
+
+**** Copilot customizations
+
+
+opilot-node-executable
+The executable path of Node.js.
+
+copilot-idle-delay
+Time in seconds to wait before starting completion (default to 0). Note Copilot itself has a ~100ms delay because of network communication.
+
+copilot-enable-predicates
+A list of predicate functions with no argument to enable Copilot in copilot-mode. Copilot will be enabled only if all predicates return t.
+
+copilot-disable-predicates
+A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
+
+
 
 
 *** CUA-mode
