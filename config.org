@@ -245,7 +245,7 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
 
 #+BEGIN_SRC emacs-lisp
 (autoload 'edit-server-maybe-dehtmlize-buffer "edit-server-htmlize" "edit-server-htmlize" t)
-(autoload 'edit-server-maybe-htmlize-buffer   "edit-server-htmlize" "edit-server-htmlize" t)
+(autoload 'edit-server-maybe-htmlize-buffer "edit-server-htmlize" "edit-server-htmlize" t)
 (add-hook 'edit-server-start-hook 'edit-server-maybe-dehtmlize-buffer)
 (add-hook 'edit-server-done-hook  'edit-server-maybe-htmlize-buffer)
 
@@ -468,7 +468,7 @@ You can also configure atomic-chrome to set the major mode by website.
 (atomic-chrome-start-server)
 (setq atomic-chrome-default-major-mode 'python-mode)
 (setq atomic-chrome-extension-type-list '(ghost-text))
-(atomic-chrome-start-httpd)
+;;(atomic-chrome-start-httpd)
 (setq atomic-chrome-server-ghost-text-port 4001)
 (setq atomic-chrome-url-major-mode-alist
       '(("github\\.com" . gfm-mode)
@@ -704,33 +704,33 @@ Consult users will also want the embark-consult package.
 #+END_SRC
 
 
-**** citar
-
-/citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
-Its functionality overlaps with bibtex-ivy and bibtex company.
-It works in markdown, org, and LaTeX.
-
-The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package citar
-  :bind (("C-c b" . citar-insert-citation)
-         :map minibuffer-local-map
-         ("M-b" . citar-insert-preset))
-  :custom
-  (citar-library-paths '("~/Dropbox/bookPDFs" "~/Dropbox/paperPDFs"))
-  (citar-file-extensions '("pdf" "epub"))
-  (citar-bibliography '("~/Dropbox/global.bib")))
-#+END_SRC
-
-Notethat scholar-import is configured to work with citar.
-
+# **** citar
+# 
+# /citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
+# Its functionality overlaps with bibtex-ivy and bibtex company.
+# It works in markdown, org, and LaTeX.
+# 
+# The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package citar
+#   :bind (("C-c b" . citar-insert-citation)
+#          :map minibuffer-local-map
+#          ("M-b" . citar-insert-preset))
+#   :custom
+#   (citar-library-paths '("~/Dropbox/bookPDFs" "~/Dropbox/paperPDFs"))
+#   (citar-file-extensions '("pdf" "epub"))
+#   (citar-bibliography '("~/Dropbox/global.bib")))
+# #+END_SRC
+# 
+# Notethat scholar-import is configured to work with citar.
+# 
 
 *** awesome-tab
 
 #+BEGIN_SRC emacs-lisp
 (use-package awesome-tab
-  :load-path "~/.emacs.d/elisp/awesome-tab"
+  :load-path "~/.emacs.default/elisp/awesome-tab"
   :config
   (awesome-tab-mode t))
 #+END_SRC
@@ -780,133 +780,133 @@ Configure eglot to work with clangd.
 
 
 
-*** Clojure
-
-**** 4clojure
-
-4clojure is an interactive quiz about the basics of Clojure.
-Install this package from MELPA.
-It is also available via an interactive [[https://4clojure.oxal.org/][website]].
-Github site for the 4clojure Emacs [[https://github.com/emacsorphanage/4clojure/][package]] has the usage instructions.
-The suggested configuration below enables running the quiz interactively in cider:
-
-#+BEGIN_SRC emacs-lisp
-(use-package cider)
-
-(defadvice 4clojure-open-question (around 4clojure-open-question-around)
-  "Start a cider/nREPL connection if one hasn't already been started when
-opening 4clojure questions"
-  ad-do-it
-  (unless cider-current-clojure-buffer
-    (cider-jack-in)))
-#+END_SRC
-
-
-**** Cider
-
-Cider supports running a Clojure REPL in a parallel window.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-babel-clojure-backend 'cider)
-(use-package cider
- :ensure t)
-(setq org-edit-src-content-indentation 0
-     org-src-tab-acts-natively t
-     org-src-fontify-natively t
-     org-confirm-babel-evaluate nil)
-(require 'cider)
-(setq nrepl-hide-special-buffers t
-     cider-repl-pop-to-buffer-on-connect nil
-     cider-popup-stacktraces nil
-     cider-repl-popup-stacktraces t)
-;; Useful keybindings when using Clojure from Org
-(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
-(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
-#+END_SRC
-
-**** nbb--cider link up to run ClojureScript via nbb
-
-[[https://github.com/babashka/nbb][nbb]] means not ~babashka~.
-
-/babashka/ is built on a reduced set of Clojure.
-It is independent of the JVM.
-I stored it in /usr/local/bin.
-It is invoked by entering ~bb~. 
-~bb '(vec (dedupe *input*))' <<< '[1 1 1 1 2]'~
-Returns ~[1 2]~.
-
-You can run bash scripts with Clojure code inside.
-Add a shebang with bb.
-~./cst.clj~ returns central time.
-It is the first choice for running Clojure via scripts because it starts up faster (no JVM to spin up).
-There are several other ways to run Clojure from the command line.
-
-In contrast to /babashka/, ~nbb~ runs on top of Node.js rather than the JVM.
-~nnb~ runs ClojureScript.
-
-Install nbb via ~npm install -g nbb~.
-Install ~npm install -g csv-parse shelljs term-size zx~.
-Test with ~nbb -e '(+ 1 2 3)' ~ on the command line.
-Try a multiline test ~nbb -e '(defn exp [x n] (reduce * (repeat n x)))\n (exp 4 10)' ~.
-
-To run ~nbb~ from within Emacs, launch a server via ~nbb nrepl-server :port 1337~ outside Emacs on the terminal.
-Enter ~M-x cider-connect <RET> localhost <RET> 1337~.
-Then change the current buffer to clojure-mode.
-
-There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure. 
-Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find. 
-Enter ~M-x clojure-mode~ to fix this issue.
-
-Note, you can run ~lein repl :connect 1337~ from the terminal.
-
-
-
-**** inf-clojure minor mode
-
-This is the easiest way to run Clojure from Emacs.
-To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~. 
-The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
-
-
-**** modeline tweak for Clojure
-
-[[http://jr0cket.co.uk/2013/01/tweeking-emacs-modeline-for-clojure.html][Clojure]]
-
-**** clojure-lsp
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :hook ((clojure-mode . lsp)
-         (clojurec-mode . lsp)
-         (clojurescript-mode . lsp))
-  :config
-  ;; add paths to your local installation of project mgmt tools, like lein
-  (setenv "PATH" (concat
-                   "/usr/local/bin" path-separator
-                   (getenv "PATH")))
-  (dolist (m '(clojure-mode
-               clojurec-mode
-               clojurescript-mode
-               clojurex-mode))
-     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
-  (setq lsp-clojure-server-command '("/usr/local/Cellar/clojure-lsp-native"))) ; Optional: In case `clojure-lsp` is not in your $PATH
-#+END_SRC 
-
-
-*** Rainbow blocks for Clojure
-
-The package rainbow-blocks does color highlighting by scope rather than syntax.
-
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-blocks)
-;; activate for clojure files
-(add-hook 'clojure-mode-hook 'rainbow-blocks-mode)
-(add-hook 'org-mode-hook 'rainbow-blocks-mode)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
-
-#+END_SRC
-
+# *** Clojure
+# 
+# **** 4clojure
+# 
+# 4clojure is an interactive quiz about the basics of Clojure.
+# Install this package from MELPA.
+# It is also available via an interactive [[https://4clojure.oxal.org/][website]].
+# Github site for the 4clojure Emacs [[https://github.com/emacsorphanage/4clojure/][package]] has the usage instructions.
+# The suggested configuration below enables running the quiz interactively in cider:
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package cider)
+# 
+# (defadvice 4clojure-open-question (around 4clojure-open-question-around)
+#   "Start a cider/nREPL connection if one hasn't already been started when
+# opening 4clojure questions"
+#   ad-do-it
+#   (unless cider-current-clojure-buffer
+#     (cider-jack-in)))
+# #+END_SRC
+# 
+# 
+# **** Cider
+# 
+# Cider supports running a Clojure REPL in a parallel window.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (setq org-babel-clojure-backend 'cider)
+# (use-package cider
+#  :ensure t)
+# (setq org-edit-src-content-indentation 0
+#      org-src-tab-acts-natively t
+#      org-src-fontify-natively t
+#      org-confirm-babel-evaluate nil)
+# (require 'cider)
+# (setq nrepl-hide-special-buffers t
+#      cider-repl-pop-to-buffer-on-connect nil
+#      cider-popup-stacktraces nil
+#      cider-repl-popup-stacktraces t)
+# ;; Useful keybindings when using Clojure from Org
+# (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+# (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+# #+END_SRC
+# 
+# **** nbb--cider link up to run ClojureScript via nbb
+# 
+# [[https://github.com/babashka/nbb][nbb]] means not ~babashka~.
+# 
+# /babashka/ is built on a reduced set of Clojure.
+# It is independent of the JVM.
+# I stored it in /usr/local/bin.
+# It is invoked by entering ~bb~. 
+# ~bb '(vec (dedupe *input*))' <<< '[1 1 1 1 2]'~
+# Returns ~[1 2]~.
+# 
+# You can run bash scripts with Clojure code inside.
+# Add a shebang with bb.
+# ~./cst.clj~ returns central time.
+# It is the first choice for running Clojure via scripts because it starts up faster (no JVM to spin up).
+# There are several other ways to run Clojure from the command line.
+# 
+# In contrast to /babashka/, ~nbb~ runs on top of Node.js rather than the JVM.
+# ~nnb~ runs ClojureScript.
+# 
+# Install nbb via ~npm install -g nbb~.
+# Install ~npm install -g csv-parse shelljs term-size zx~.
+# Test with ~nbb -e '(+ 1 2 3)' ~ on the command line.
+# Try a multiline test ~nbb -e '(defn exp [x n] (reduce * (repeat n x)))\n (exp 4 10)' ~.
+# 
+# To run ~nbb~ from within Emacs, launch a server via ~nbb nrepl-server :port 1337~ outside Emacs on the terminal.
+# Enter ~M-x cider-connect <RET> localhost <RET> 1337~.
+# Then change the current buffer to clojure-mode.
+# 
+# There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure. 
+# Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find. 
+# Enter ~M-x clojure-mode~ to fix this issue.
+# 
+# Note, you can run ~lein repl :connect 1337~ from the terminal.
+# 
+# 
+# 
+# **** inf-clojure minor mode
+# 
+# This is the easiest way to run Clojure from Emacs.
+# To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~. 
+# The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
+# 
+# 
+# **** modeline tweak for Clojure
+# 
+# [[http://jr0cket.co.uk/2013/01/tweeking-emacs-modeline-for-clojure.html][Clojure]]
+# 
+# **** clojure-lsp
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-mode
+#   :ensure t
+#   :hook ((clojure-mode . lsp)
+#          (clojurec-mode . lsp)
+#          (clojurescript-mode . lsp))
+#   :config
+#   ;; add paths to your local installation of project mgmt tools, like lein
+#   (setenv "PATH" (concat
+#                    "/usr/local/bin" path-separator
+#                    (getenv "PATH")))
+#   (dolist (m '(clojure-mode
+#                clojurec-mode
+#                clojurescript-mode
+#                clojurex-mode))
+#      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+#   (setq lsp-clojure-server-command '("/usr/local/Cellar/clojure-lsp-native"))) ; Optional: In case `clojure-lsp` is not in your $PATH
+# #+END_SRC 
+# 
+# 
+# *** Rainbow blocks for Clojure
+# 
+# The package rainbow-blocks does color highlighting by scope rather than syntax.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package rainbow-blocks)
+# ;; activate for clojure files
+# (add-hook 'clojure-mode-hook 'rainbow-blocks-mode)
+# (add-hook 'org-mode-hook 'rainbow-blocks-mode)
+# (add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
+# 
+# #+END_SRC
+# 
 
 
 *** command-log-mode
@@ -942,79 +942,79 @@ It is a peer of ivy.
 #+END_SRC
 
 
-;;  *** Copilot
-;;  
-;;  The requires the GitHub Coplit subscription.
-;;  
-;;  #+BEGIN_SRC emacs-lisp
-;;  (load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
-;;  
-;;  ;; Use copilot-mode to automatically provide completions
-;;  (add-hook 'prog-mode-hook 'copilot-mode)
-;;  
-;;  ; complete by copilot first, then company-mode
-;;  (defun my-tab ()
-;;    (interactive)
-;;    (or (copilot-accept-completion)
-;;        (company-indent-or-complete-common nil)))
-;;  
-;;  ; modify company-mode behaviors
-;;  (with-eval-after-load 'company
-;;    ;; disable inline previews
-;;    (delq 'company-preview-if-just-one-frontend company-frontends)
-;;  
-;;    (define-key company-mode-map (kbd "<tab>") 'my-tab)
-;;    (define-key company-mode-map (kbd "TAB") 'my-tab)
-;;    (define-key company-active-map (kbd "<tab>") 'my-tab)
-;;    (define-key company-active-map (kbd "TAB") 'my-tab))
-;;  #+END_SRC
-;;  
-;;  **** Copilot commands:
-;;  
-;;  - copilot-diagnose
-;;  Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
-;;  
-;;  copilot-login
-;;  Login to GitHub, required for using the plugin.
-;;  
-;;  copilot-mode
-;;  Enable/disable copilot mode.
-;;  
-;;  copilot-complete
-;;  Try to complete at the current point.
-;;  
-;;  copilot-accept-completion
-;;  Accept the current completion.
-;;  
-;;  copilot-clear-overlay
-;;  Clear copilot overlay in the current buffer.
-;;  
-;;  copilot-accept-completion-by-line / copilot-accept-completion-by-word
-;;  Similar to copilot-accept-completion, but accept the completion by line or word. You can use prefix argument to specify the number of lines or words to accept.
-;;  
-;;  copilot-next-completion / copilot-previous-completion
-;;  Cycle through the completion list.
-;;  
-;;  copilot-logout
-;;  Logout from GitHub.
-;;  
-;;  **** Copilot customizations
-;;  
-;;  
-;;  opilot-node-executable
-;;  The executable path of Node.js.
-;;  
-;;  copilot-idle-delay
-;;  Time in seconds to wait before starting completion (default to 0). Note Copilot itself has a ~100ms delay because of network communication.
-;;  
-;;  copilot-enable-predicates
-;;  A list of predicate functions with no argument to enable Copilot in copilot-mode. Copilot will be enabled only if all predicates return t.
-;;  
-;;  copilot-disable-predicates
-;;  A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
-;;  
-;;  
-
+# ;;  *** Copilot
+# ;;  
+# ;;  The requires the GitHub Coplit subscription.
+# ;;  
+# ;;  #+BEGIN_SRC emacs-lisp
+# ;;  (load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
+# ;;  
+# ;;  ;; Use copilot-mode to automatically provide completions
+# ;;  (add-hook 'prog-mode-hook 'copilot-mode)
+# ;;  
+# ;;  ; complete by copilot first, then company-mode
+# ;;  (defun my-tab ()
+# ;;    (interactive)
+# ;;    (or (copilot-accept-completion)
+# ;;        (company-indent-or-complete-common nil)))
+# ;;  
+# ;;  ; modify company-mode behaviors
+# ;;  (with-eval-after-load 'company
+# ;;    ;; disable inline previews
+# ;;    (delq 'company-preview-if-just-one-frontend company-frontends)
+# ;;  
+# ;;    (define-key company-mode-map (kbd "<tab>") 'my-tab)
+# ;;    (define-key company-mode-map (kbd "TAB") 'my-tab)
+# ;;    (define-key company-active-map (kbd "<tab>") 'my-tab)
+# ;;    (define-key company-active-map (kbd "TAB") 'my-tab))
+# ;;  #+END_SRC
+# ;;  
+# ;;  **** Copilot commands:
+# ;;  
+# ;;  - copilot-diagnose
+# ;;  Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
+# ;;  
+# ;;  copilot-login
+# ;;  Login to GitHub, required for using the plugin.
+# ;;  
+# ;;  copilot-mode
+# ;;  Enable/disable copilot mode.
+# ;;  
+# ;;  copilot-complete
+# ;;  Try to complete at the current point.
+# ;;  
+# ;;  copilot-accept-completion
+# ;;  Accept the current completion.
+# ;;  
+# ;;  copilot-clear-overlay
+# ;;  Clear copilot overlay in the current buffer.
+# ;;  
+# ;;  copilot-accept-completion-by-line / copilot-accept-completion-by-word
+# ;;  Similar to copilot-accept-completion, but accept the completion by line or word. You can use prefix argument to specify the number of lines or words to accept.
+# ;;  
+# ;;  copilot-next-completion / copilot-previous-completion
+# ;;  Cycle through the completion list.
+# ;;  
+# ;;  copilot-logout
+# ;;  Logout from GitHub.
+# ;;  
+# ;;  **** Copilot customizations
+# ;;  
+# ;;  
+# ;;  opilot-node-executable
+# ;;  The executable path of Node.js.
+# ;;  
+# ;;  copilot-idle-delay
+# ;;  Time in seconds to wait before starting completion (default to 0). Note Copilot itself has a ~100ms delay because of network communication.
+# ;;  
+# ;;  copilot-enable-predicates
+# ;;  A list of predicate functions with no argument to enable Copilot in copilot-mode. Copilot will be enabled only if all predicates return t.
+# ;;  
+# ;;  copilot-disable-predicates
+# ;;  A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
+# ;;  
+# ;;  
+# 
 
 *** CUA-mode
 
@@ -1126,7 +1126,7 @@ The manual is located [[https://protesilaos.com/emacs/denote][here]].
 
 #+BEGIN_SRC emacs-lisp
 ;; Make Elisp files in that directory available to the user.
-(add-to-list 'load-path "~/.emacs.d/manual-packages/denote")
+(add-to-list 'load-path "~/.emacs.default/manual-packages/denote")
 #+END_SRC
 
 Here is the sample configuration.
@@ -1819,8 +1819,8 @@ I succeeded in compiling and installing the code as directed.
 
 #+BEGIN_SRC emacs-lisp
 ;; Grammar Checker
-(add-to-list 'load-path "~/.emacs.d/elisp/grammar")
-(add-to-list 'exec-path "~/.emacs.d/elisp/grammar")
+(add-to-list 'load-path "~/.emacs.default/elisp/grammar")
+(add-to-list 'exec-path "~/.emacs.default/elisp/grammar")
 (autoload 'grammar-mode "grammar" nil t)
 #+END_SRC
 
@@ -1926,6 +1926,9 @@ I am not sure what this is adding.
   ([remap describe-key] . helpful-key))
 #+END_SRC
 
+
+
+
 # *** highlight-indent-guides
 # 
 # 
@@ -1960,7 +1963,32 @@ I am not sure what this is adding.
 #   ("k" text-scale-decrease "out")
 #   ("f" nil "finished" :exit t))
 # #+END_SRC#+BEGIN_SRC emacs-lisp
-# ** I
+
+** I
+
+*** M-x itemize
+
+Converts a selected list into an itemized list.
+The elements of the list must begin with a dash.
+A similar function could be made to make an enumerated list
+and a description list.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun itemize (beg end) 
+ "wrap the active region in an 'itemize' environment,
+  converting hyphens at the beginning of a line to \item"
+  (interactive "r")
+  (save-restriction
+    (narrow-to-region beg end)
+    (beginning-of-buffer)
+    (insert "\\begin{itemize}\n")
+    (while (re-search-forward "^- " nil t)
+      (replace-match "\\\\item "))
+    (end-of-buffer)
+    (insert "\\end{itemize}\n")))
+#+END_SRC
+
 # 
 # *** ivy
 # 
@@ -4170,26 +4198,34 @@ Another approach is to store the file path and file format in a properites drawe
 Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 
-*** org-wc
-
-Enable org-wc to work in org documents.
-Enter `wc` to get word count returned in org files.
-Enter `C-c w` to the samething.
-
-Similar to wc-mode which works in all docments
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-wc)
-;; Total word count for a org file and word count by headline.
-(add-hook 'org-mode-hook 'org-wc)
-(define-key org-mode-map [("\C-cw")] 'org-wc-display)
-;; (define-key global-map "\C-cw" 'org-wc-display)
-#+END_SRC
+# *** org-wc
+# 
+# Enable org-wc to work in org documents.
+# Enter `wc` to get word count returned in org files.
+# Enter `C-c w` to the samething.
+# 
+# Similar to wc-mode which works in all docments
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-wc)
+# ;; Total word count for a org file and word count by headline.
+# (add-hook 'org-mode-hook 'org-wc)
+# (define-key org-mode-map [("\C-cw")] 'org-wc-display)
+# ;; (define-key global-map "\C-cw" 'org-wc-display)
+# #+END_SRC
 
 See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]]. 
 
 
+**** ox-ipynb
 
+# Package for exporting org to ipynb.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (require 'ox-ipynb)
+# #+END_SRC
+# 
+# 
 
 ** P
 
@@ -4216,7 +4252,7 @@ Marcin Magnus's updated fork of pdb-tools by Charlie Bond and David Love.
 
 #+BEGIN_SRC emacs-lisp
 ;; pdb.el
-(load-file "~/.emacs.d/plugins/emacs-pdb-mode/pdb-mode.el")
+(load-file "~/.emacs.default/plugins/emacs-pdb-mode/pdb-mode.el")
 (setq pdb-rasmol-name "/Applications/PyMOL.app/Contents/bin/pymol")
 (setq auto-mode-alist
      (cons (cons "pdb$" 'pdb-mode) 
@@ -5115,7 +5151,7 @@ my-lookup-X are my extensions.
 The curlicue below is a placeholder for the lookup word query string.
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/elisp/lookup-word-on-internet")
+(add-to-list 'load-path "~/.emacs.default/elisp/lookup-word-on-internet")
 (require 'xah-lookup)
 (define-key help-map (kbd "7") 'xah-lookup-web) ; C-h 7
 (global-set-key (kbd "<f2>") 'xah-lookup-wikipedia) ; F2
@@ -5418,7 +5454,7 @@ It has a nice table view of the snippets available for the current mode and a fu
 (use-package yasnippet
     :init
     (add-to-list 'load-path
-              "~/.emacs.d/plugins/yasnippet")
+              "~/.emacs.default/plugins/yasnippet")
     :config
     (yas-global-mode 1))
 (require 'yasnippet)
@@ -5432,8 +5468,8 @@ Snippets from all directories are pooled.
 
 #+BEGIN_SRC emacs-lisp
 (setq yas-snippet-dirs
-          '("~/.emacs.d/snippets"                           ;; personal snippets. 
-            "~/.emacs.d/yasmate/snippets"      ;; the yasmate collection
+          '("~/.emacs.default/snippets"                           ;; personal snippets. 
+            "~/.emacs.default/yasmate/snippets"      ;; the yasmate collection
                   ))
 #+END_SRC
 
