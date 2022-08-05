@@ -1973,6 +1973,7 @@ The elements of the list must begin with a dash.
 A similar function could be made to make an enumerated list
 and a description list.
 
+Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-region-filling-when-inserting-itemize}
 
 #+BEGIN_SRC emacs-lisp
 (defun itemize (beg end) 
