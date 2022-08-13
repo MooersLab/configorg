@@ -1,6 +1,6 @@
 #+TITLE: Blaine Mooers's GNU Emacs Config
 #+AUTHOR: Blaine Mooers
-#+DATE: 15 March 2022
+#+DATE: 13 August 2022
 #+EMAIL: blaine-mooers at ouhsc.edu
 #+STARTUP: overview
 #+Startup: nohideblocks
@@ -1966,29 +1966,6 @@ I am not sure what this is adding.
 
 ** I
 
-*** M-x itemize
-
-Converts a selected list into an itemized list.
-The elements of the list must begin with a dash.
-A similar function could be made to make an enumerated list
-and a description list.
-
-Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-region-filling-when-inserting-itemize}
-
-#+BEGIN_SRC emacs-lisp
-(defun itemize (beg end) 
- "wrap the active region in an 'itemize' environment,
-  converting hyphens at the beginning of a line to \item"
-  (interactive "r")
-  (save-restriction
-    (narrow-to-region beg end)
-    (beginning-of-buffer)
-    (insert "\\begin{itemize}\n")
-    (while (re-search-forward "^- " nil t)
-      (replace-match "\\\\item "))
-    (end-of-buffer)
-    (insert "\\end{itemize}\n")))
-#+END_SRC
 
 # 
 # *** ivy
@@ -2352,56 +2329,72 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 #   (shell-command (concat "/usr/local/bin/texcount.pl"))
 #                           (buffer-file-name))))
 # #+END_SRC
-# 
-# *** lsp
-# 
-# For each programming language, you have to install the corresponding LSP server.
-# Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
-# Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
-# Some languages have alternate LSPs.
-# 
-# |--------------+-------------|
-# | Language     |  Sever      |
-# |--------------+-------------|
-# | C/C++        | clangd      |
-# | Clojure      | clojure-lsp |
-# | LaTeX        | digestif    |
-# | Python       | mspyls      |
-# |--------------+-------------|
-# 
-# The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
-# The server make take a minute or so to spin up while analyzing the current file.
-# If you get the error message, file not in project or it is backlisted, and
-# if there is a ~.git~ repo present, the file is in a project. 
-# Then there is an issue with the project being blacklisted.
-# Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
-# 
-# 
-# **** Main config
-# 
-# The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
-# 
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-mode
-#   :init
-#   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
-#   (setq lsp-keymap-prefix "s-l")
-#   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-#          (latex-mode . lsp)
-#          (python-mode . lsp)
-#          ;; if you want which-key integration
-#          (lsp-mode . lsp-enable-which-key-integration))
-#   :commands (lsp)
-#   )
-# #+END_SRC 
-# 
-# Add lsp-ui for the full experience.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-ui :commands lsp-ui-mode)
-# #+END_SRC 
-# 
+
+*** lsp
+
+For each programming language, you have to install the corresponding LSP server.
+Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
+Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
+Some languages have alternate LSPs.
+
+|--------------+-------------|
+| Language     |  Sever      |
+|--------------+-------------|
+| C/C++        | clangd      |
+| Clojure      | clojure-lsp |
+| LaTeX        | digestif    |
+| Python       | mspyls      |
+|--------------+-------------|
+
+The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
+The server make take a minute or so to spin up while analyzing the current file.
+If you get the error message, file not in project or it is backlisted, and
+if there is a ~.git~ repo present, the file is in a project.
+Then there is an issue with the project being blacklisted.
+Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
+
+
+**** Main lsp config
+
+The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
+  (setq lsp-keymap-prefix "s-l")
+  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
+         (clojure-mode . lsp)
+         (clojurec-mode . lsp)
+         (clojurescript-mode . lsp)
+         (latex-mode . lsp)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+   :config
+   ;; add paths to your local installation of project mgmt tools, like lein
+   (setenv "PATH" (concat
+                    "/Users/blaine/bin" path-separator
+                    (getenv "PATH")))
+   (dolist (m '(clojure-mode
+                clojurec-mode
+                clojurescript-mode
+                clojurex-mode))
+      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+   (setq lsp-clojure-server-command '("/usr/local/bin/clojure-lsp")) ;; Optional: In case `clojure-lsp` is not in your $PATH
+   :commands (lsp)
+)
+#+END_SRC
+
+Add lsp-ui for the full experience.
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-ui :ensure t :commands lsp-ui-mode)
+(use-package company
+  :ensure t)
+#+END_SRC
+
 # Use lsp-treemacs.
 # 
 # #+BEGIN_SRC emacs-lisp
@@ -2475,6 +2468,89 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 #         (r-mode . lsp)	 
 # 
 # 
+
+*** LaTeX helper functions
+
+
+
+
+
+
+
+**** M-x description
+
+Converts a selected list into a description list.
+The elements of the list must begin with a dash.
+The terms to be inserted into the square brackets
+have to be added after running the function.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun description (beg end) 
+ "wrap the active region in an 'itemize' environment,
+  converting hyphens at the beginning of a line to \item"
+  (interactive "r")
+  (save-restriction
+    (narrow-to-region beg end)
+    (beginning-of-buffer)
+    (insert "\\begin{description}\n")
+    (while (re-search-forward "^- " nil t)
+      (replace-match "\\\\item[ ]"))
+    (end-of-buffer)
+    (insert "\\end{description}\n")))
+#+END_SRC
+
+
+
+**** M-x enumerate
+
+Converts a selected list into an enumerated list.
+The elements of the list must begin with a dash.
+
+#+BEGIN_SRC emacs-lisp
+(defun enumerate (beg end) 
+ "wrap the active region in an 'itemize' environment,
+  converting hyphens at the beginning of a line to \item"
+  (interactive "r")
+  (save-restriction
+    (narrow-to-region beg end)
+    (beginning-of-buffer)
+    (insert "\\begin{enumerate}\n")
+    (while (re-search-forward "^- " nil t)
+      (replace-match "\\\\item "))
+    (end-of-buffer)
+    (insert "\\end{enumerate}\n")))
+#+END_SRC
+
+
+
+**** M-x itemize
+
+Converts a selected list into an itemized list.
+The elements of the list must begin with a dash.
+A similar function could be made to make an enumerated list
+and a description list.
+
+Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-region-filling-when-inserting-itemize}
+
+#+BEGIN_SRC emacs-lisp
+(defun itemize (beg end) 
+ "wrap the active region in an 'itemize' environment,
+  converting hyphens at the beginning of a line to \item"
+  (interactive "r")
+  (save-restriction
+    (narrow-to-region beg end)
+    (beginning-of-buffer)
+    (insert "\\begin{itemize}\n")
+    (while (re-search-forward "^- " nil t)
+      (replace-match "\\\\item "))
+    (end-of-buffer)
+    (insert "\\end{itemize}\n")))
+#+END_SRC
+
+
+
+
 # ** M
 # 
 # 
@@ -2988,43 +3064,43 @@ prot-org.el file.  In the video I explain why I use this style.
 
 *** org-babel
 # 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "/Users/blaine/mar30-emacs/elisp/org-mode/lisp")
-# #+END_SRC
-# 
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/blaine/mar30-emacs/elisp/org-mode/lisp")
+#+END_SRC
 
 
-# #+BEGIN_SRC emacs-lisp
-# ;; (add-to-list 'load-path "/usr/local/bin/jupyter")
-# ;; (use-package jupyter)
-# 
-# (org-babel-do-load-languages
-#  'org-babel-load-languages
-#  '(
-#    (C . t)
-#    (js . t)
-#    (emacs-lisp . t)
-#    (ditaa . t)
-# ;;   (ipython . t)
-# ;;   (python . t)
-#    (gnuplot . t)
-#    (R . t)
-#    (latex . t)
-#    (plantuml . t)
-#    (shell . t)
-#    (clojure . t)
-#    (julia . t)
-#    (jupyter . t) ) )
-# ;; enable use of python instead of python-juptyer
-# ;; (org-babel-jupyter-override-src-block "python")  
-# #+END_SRC
-# 
-# I add to add ~:results value scalar~ to get the approapriate output.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'org-babel-default-header-args:emacs-lisp
-#              '(:results . "output"))
-# #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "//Users/blaine/.emacs.default/elisp/emacs-jupyter")
+(use-package jupyter)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (C . t)
+   (js . t)
+   (emacs-lisp . t)
+   (ditaa . t)
+;;   (ipython . t)
+;;   (python . t)
+   (gnuplot . t)
+   (R . t)
+   (latex . t)
+   (plantuml . t)
+   (shell . t)
+   (clojure . t)
+   (julia . t)
+   (jupyter . t) ) )
+;; enable use of python instead of python-juptyer
+;; (org-babel-jupyter-override-src-block "python")
+#+END_SRC
+
+I add to add ~:results value scalar~ to get the approapriate output.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-babel-default-header-args:emacs-lisp
+             '(:results . "output"))
+#+END_SRC
 
 
 *** consult-org-headings
@@ -3582,8 +3658,8 @@ Source: https://github.com/tmalsburg/helm-bibtex
 (use-package helm-bibtex
   :config
   (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
-        bibtex-completion-bibliography "/Users/blaine/Dropbox/global.bib"
-        bibtex-completion-library-path '("/Users/blaine/Dropbox/bookPDFs/" "/Users/blaine/Dropbox/paperPDFs/")
+        bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
+        bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
         bibtex-completion-pdf-field "file"
         bibtex-completion-notes-template-multiple-files
   (concat
@@ -3605,6 +3681,9 @@ Source: https://github.com/tmalsburg/helm-bibtex
   :bind
       (("C-c n B" . helm-bibtex))
 )
+
+(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
+(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
 #+END_SRC
 
 If the file field is not used but instead the naming scheme bibtex-key + .pdf.
@@ -3814,11 +3893,11 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 #+BEGIN_SRC emacs-lisp
 (use-package org-ref
   :custom
-  (org-ref-default-bibliography "~/Dropbox/global.bib")
+  (org-ref-default-bibliography "~/Documents/global.bib")
   :config
     (setq 
-    bibtex-completion-bibliography '("~/Dropbox/global.bib")
-	bibtex-completion-library-path '("/Users/blaine/Dropbox/RNAdrugComplexCrystallizationPDFs/")
+    bibtex-completion-bibliography '("~/Documents/global.bib")
+	bibtex-completion-library-path '("/Users/blaine/0papers/")
 	bibtex-completion-notes-path "~/bibliography/notes/"
 	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
 
@@ -3859,11 +3938,11 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 # (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 # #+END_SRC
 
-# 
-# *** function for opening the PDF linked to the citation under the point
-# 
-# [[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
-# 
+ 
+*** function for opening the PDF linked to the citation under the point
+ 
+[[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
+ 
 #+BEGIN_SRC emacs-lisp
 (defun my/org-ref-open-pdf-at-point ()
   "Open the pdf for bibtex key under point if it exists."
@@ -4580,6 +4659,15 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
 
 ** Q
 
+*** quarto-mode
+
+Source: \url{https://github.com/quarto-dev/quarto-emacs}
+
+#+BEGIN_SRC emacs-lisp
+(use-package quarto-mode
+  :mode (("\\.Rmd" . poly-quarto-mode))
+  )
+#+END_SRC
 
 # ** R
 # 
