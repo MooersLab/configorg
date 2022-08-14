@@ -2416,7 +2416,7 @@ https://www.taingram.org/blog/emacs-lsp-ide.html
 (setq lsp-ui-doc-show t)
 (setq lsp-ui-doc-frame-mode t)
 (setq lsp-ui-doc-mode t)
-(setq lsp-ui-doc-position 'bottom)
+(setq lsp-ui-doc-position 'right)
 (setq lsp-ui-sideline-enable t)
 (setq lsp-ui-sideline-show-hover t)
 (setq anaconda-mode t)
