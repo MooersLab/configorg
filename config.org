@@ -4651,6 +4651,23 @@ Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with th
 Alternatively, the conda package can be used to set the conda env.
 The command ~M-x conda-env-list~ will list the available conda envs.
 
+
+The package elpy used to be popular.
+This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documented]]. 
+I am not sure where it stands now and if it is really needed.
+It is big on creating and using pyenvs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
+#+END_SRC
+
+
+
+
+
 The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
 Python-mode should be built-in but lets upgrade to the latest version.
 You may need to install debugpy from PyPi.
@@ -4670,6 +4687,36 @@ You may need to install dap-mode from MELPA.
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook #'electric-spacing-mode)
 #+END_SRC
+
+C-c C-p will open a Python REPL in a buffer.
+C-c C-c will send run the code in the buffer to the REPL and return the output in the REPL.
+
+
+**** Use IPython for REPL
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
+#+END_SRC
+
+
+**** Enable Flycheck
+#+BEGIN_SRC emacs-lisp
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+#+END_SRC
+
+
+**** Enable Autopep8
+#+BEGIN_SRC emacs-lisp
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+#+END_SRC
+
+
 
 # (dap-python-executable "python3")
 # (dap-python-debugger 'debugpy)
