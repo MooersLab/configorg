@@ -1458,7 +1458,7 @@ These three functions enable moving lines up and down with M-<up> and M-<down> r
 #+END_SRC
 
 
-**** Open PDF
+**** Compile tex to PDF with current buffer name 
 
 The following function compiles a tex file to a PDF in current directory with buffer name as the prefix of the filename.
 
@@ -1569,6 +1569,26 @@ Enter C-x p to move the cursor to the previously visited window.
 # ;;       . ((autoactivate . "true")))))))
 # #+END_SRC
 # 
+
+*** Electric-pair mode
+Add matching pairs of quotes and parentheses.
+
+#+BEGIN_SRC emacs-lisp
+(electric-pair-mode)
+#+END_SRC
+
+
+*** electric-spacing
+
+An emacs minor-mode to automatically add spacing around operators \footnote{\url{https://github.com/xwl/electric-spacing}}.
+
+#+BEGIN_SRC emacs-lisp
+(use-package electric-spacing
+      :ensure t)
+#+END_SRC
+
+You can add hooks to major modes.
+
 *** Elfeed
 
 #+BEGIN_SRC emacs-lisp
@@ -4645,9 +4665,10 @@ You may need to install dap-mode from MELPA.
   :hook (python-mode . lsp-deferred)
   :custom
   ;; NOTE: Set these if Python 3 is called "python3" on your system!
-  (python-shell-interpreter "python3")
+  (python-shell-interpreter "python")
   )
 (add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook #'electric-spacing-mode)
 #+END_SRC
 
 # (dap-python-executable "python3")
