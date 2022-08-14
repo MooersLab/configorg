@@ -2405,9 +2405,43 @@ The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installa
 )
 #+END_SRC
 
-Add lsp-ui for the full experience.
+***** Add lsp-ui for the full experience.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
+(setq lsp-ui-doc-position 'bottom)
+(setq lsp-ui-sideline-enable nil)
+(setq lsp-ui-sideline-show-hover nil)
+#+END_SRC
 
 Use lsp-treemacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-treemacs
+  :after lsp)
+#+END_SRC
+
+
+**** Tweaks to company mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :after lsp-mode
+  :hook (prog-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+#+END_SRC
+
 
 
 # **** For ivy users
