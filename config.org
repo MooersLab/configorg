@@ -3472,26 +3472,26 @@ I finally found that there was a of the first two lines after Emacs 24.
 #+END_SRC
 
 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'org-latex-classes 
-#              '("apa6"
-#                "\\documentclass{apa6}"
-#                ("\\section{%s}" . "\\section*{%s}")
-#                ("\\subsection{%s}" . "\\subsection*{%s}")
-#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-# 
-# 
-# (add-to-list 'org-latex-classes 
-#             '("Springer"
-#                "\\documentclass[natbib]{svjour3}"
-#                ("\\section{%s}" . "\\section*{%s}")
-#                ("\\subsection{%s}" . "\\subsection*{%s}")
-#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-classes
+             '("apa6"
+               "\\documentclass{apa6}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+(add-to-list 'org-latex-classes
+            '("Springer"
+               "\\documentclass[natbib]{svjour3}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
 
 
 To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
@@ -4314,13 +4314,13 @@ The tables have to be preceded by the appropriate header.
 
 Another approach is to store the file path and file format in a properites drawer for the enclosing section.
 
-#+BEGIN_SRC emacs-lisp
-;; :Properties:
-;; :TABLE_EXPORT_FILE: observations2.csv
-;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
-;; :END:
-#+END_SRC
-
+# #+BEGIN_SRC emacs-lisp
+# ;; :Properties:
+# ;; :TABLE_EXPORT_FILE: observations2.csv
+# ;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
+# ;; :END:
+# #+END_SRC
+#
 Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 
@@ -4618,16 +4618,16 @@ You may need to install dap-mode from MELPA.
   (add-hook 'python-mode-hook 'anaconda-mode)
 #+END_SRC
 
-# **** pyenv
-#
-# The pyenv pacakge support the use of pyenv environments.
-# See the conda configuration under C.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package pyvenv
-#   :config
-#   (pyvenv-mode 1))
-# #+END_SRC
+**** pyenv
+
+The pyenv pacakge support the use of pyenv environments.
+See the conda configuration under C.
+
+#+BEGIN_SRC emacs-lisp
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
+#+END_SRC
 
 
 **** python-x
