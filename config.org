@@ -4676,6 +4676,7 @@ You may need to install dap-mode from MELPA.
 
 
 #+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
 (use-package python-mode
   :ensure t
   :hook (python-mode . lsp-deferred)
@@ -4691,15 +4692,14 @@ C-c C-p will open a Python REPL in a buffer.
 C-c C-c will send run the code in the buffer to the REPL and return the output in the REPL.
 
 
-**** Use IPython for REPL
-#+BEGIN_SRC emacs-lisp
-;; (setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
-(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
-      python-shell-interpreter-args "console --simple-prompt"
-      python-shell-prompt-detect-failure-warning nil)
-(add-to-list 'python-shell-completion-native-disabled-interpreters
-             "jupyter")
-#+END_SRC
+# **** Use IPython for REPL
+# #+BEGIN_SRC emacs-lisp
+# (setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
+#       python-shell-interpreter-args "console --simple-prompt"
+#       python-shell-prompt-detect-failure-warning nil)
+# (add-to-list 'python-shell-completion-native-disabled-interpreters
+#              "jupyter")
+# #+END_SRC
 
 
 **** Enable Flycheck
