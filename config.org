@@ -1713,7 +1713,7 @@ Install via ~npm install -g textlint~.
 (flycheck-define-checker textlint
   "A linter for textlint."
   :command ("npx" "textlint"
-            "--config" "/Users/blaine/.emacs-default/.textlintrc"
+            "--config" "/Users/blaine/.ƒemacs-default/.textlintrc"
             "--format" "unix"
             "--rule" "write-good"
             "--rule" "no-start-duplicated-conjunction"
@@ -2437,10 +2437,10 @@ Use lsp-treemacs.
 #+BEGIN_SRC emacs-lisp
 (use-package eglot
    :ensure t)
-(add-hook 'python-mode-hook 'eglot-enusre)
-(add-hook 'latex-mode-hook 'eglot-enusre)
-(add-hook 'julia-mode-hook 'eglot-enusre)
-(add-hook 'R-mode-hook 'eglot-enusre)
+(add-hook 'python-mode-hook 'eglot-ensure)
+(add-hook 'latex-mode-hook 'eglot-ensure)
+(add-hook 'julia-mode-hook 'eglot-ensure)
+(add-hook 'R-mode-hook 'eglot-ensure)
 #+END_SRC
 
 
@@ -2787,21 +2787,20 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 (define-key global-map "\C-cfc" 'filesets-close)
 #+END_SRC
 
-*** org2blog configuration
-
-This package connects the Emacs to your WordPress account.
-You write posts in org and then publish them in WordPress.
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package org2blog
-             :ensure t)
-
-(setq org2blog/wp-blog-alist
-      '(("myblog"
-         :url "http://bmooerslab.wordpress.com/xmlrpc.php"
-         :username "blaine-mooers@ouhsc.edu")))
-#+END_SRC
+# *** org2blog configuration
+#
+# This package connects the Emacs to your WordPress account.
+# You write posts in org and then publish them in WordPress.
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package org2blog
+#              :ensure t)
+#
+# (setq org2blog/wp-blog-alist
+#       '(("myblog"
+#          :url "http://bmooerslab.wordpress.com/xmlrpc.php"
+#          :username "blaine-mooers@ouhsc.edu")))
+# #+END_SRC
 
 # #+BEGIN_SRC emacs-lisp
 # ;; use org mode
@@ -3102,21 +3101,20 @@ prot-org.el file.  In the video I explain why I use this style.
 
 
 *** org-babel
-# 
+#
+##+BEGIN_SRC emacs-lisp
+#(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
+#(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
+##+END_SRC
+#
+
+
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
-#+END_SRC
-
-
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
 (use-package jupyter)
-
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
-(emacs-lisp . nil)
+(emacs-lisp . t)
    (C . t)
    (js . t)
    (ditaa . t)
@@ -4586,88 +4584,81 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
 
 
 
-# *** Python
-# 
-# See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
-# Also see the section abbove under org-babel for the use of ~emacs-jupyter~.
-# 
-# Emacs has the built-in python-mode.
-# Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-# 
-# Set the default Python interpreter for use in Emacs as follows:
-# 
-# #+BEGIN_SRC emacs-lisp
-# (setq python-shell-interpreter "/opt/local/bin/python3.9")
-# #+END_SRC
+*** Python
+
+See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
+Also see the section abbove under org-babel for the use of ~emacs-jupyter~.
+
+Emacs has the built-in python-mode.
+Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+
+Alternatively, the conda package can be used to set the conda env.
+The command ~M-x conda-env-list~ will list the available conda envs.
+
+The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
+Python-mode should be built-in but lets upgrade to the latest version.
+You may need to install debugpy from PyPi.
+You may aslo need to install a python lsp.
+You may need to install dap-mode from MELPA.
 
 #+BEGIN_SRC emacs-lisp
-(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python" )
+(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
+
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  ;; NOTE: Set these if Python 3 is called "python3" on your system!
+  (python-shell-interpreter "python3")
+  (dap-python-executable "python3")
+  (dap-python-debugger 'debugpy)
+  :config
+  (require 'dap-python)
+  )
+  (add-hook 'python-mode-hook 'anaconda-mode)
 #+END_SRC
 
-
-# Alternatively, the conda package can be used to set the conda env.
-# The command ~M-x conda-env-list~ will list the available conda envs.
-# 
-# The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
-# Python-mode should be built-in but lets upgrade to the latest version.
-# You may need to install debugpy from PyPi.
-# You may aslo need to install a python lsp.
-# You may need to install dap-mode from MELPA.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package python-mode
-#   :ensure t
-#   :hook (python-mode . lsp-deferred)
-#   :custom
-#   ;; NOTE: Set these if Python 3 is called "python3" on your system!
-#   (python-shell-interpreter "python3")
-#   (dap-python-executable "python3")
-#   (dap-python-debugger 'debugpy)
-#   :config
-#   (require 'dap-python)
-# #+END_SRC
-# 
 # **** pyenv
-# 
+#
 # The pyenv pacakge support the use of pyenv environments.
 # See the conda configuration under C.
-# 
+#
 # #+BEGIN_SRC emacs-lisp
 # (use-package pyvenv
 #   :config
 #   (pyvenv-mode 1))
 # #+END_SRC
-# 
-# 
-# **** python-x
-# 
-# This package enhances the Python REPL experience.
-# Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-# You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering . 
-# The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (python-x-setup)
-# (setq python-section-delimiter "##")
-# #+END_SRC
-# 
 
-# **** Running Python in LaTeX and Markdown documents
-# 
+
+**** python-x
+
+This package enhances the Python REPL experience.
+Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
+The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
+
+#+BEGIN_SRC emacs-lisp
+(python-x-setup)
+(setq python-section-delimiter "##")
+#+END_SRC
+
+
+**** Running Python in LaTeX and Markdown documents
+#
 # The package [[emacs-ipython][https://github.com/burakbayramli/emacs-jupyter]] allows execution of Python code inside a LaTeX or MarkDown buffer.
-# It displays the results as text or graphic in the section below. 
+# It displays the results as text or graphic in the section below.
 # The packages uses [[https://github.com/pinard/Pymacs][Pymacs]] to connect to an ipython kernel to execute the code.
 # Four additional Python packages are required.
 # It is recommended that ~Pymacs~ be installed in a ~python_env~ and then the following bash script be run before using ~Pymacs~.
-# # 
+# #
 # # #+BEGIN_SRC bash
 # # #!/bin/bash
 # # source /some/dir/yourenv/bin/activate
 # # /usr/bin/emacs24
 # # #+END_SRC
-# # 
+# #
 # Added the following Emacs function to the config.org file.
-# 
+#
 # #+BEGIN_SRC emacs-lisp
 # (defun reload-pymacs()
 #   (interactive)
@@ -4677,38 +4668,38 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
 #   ;;
 #   ;; load tex or md mode based on the extension
 #   (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
-#       (progn 
-# 	(pymacs-load "[INSTALL DIR]/ipython-tex")
-# 	(global-set-key "\M-," 'ipython-tex-run-py-code)
-# 	(global-set-key [f5] 'ipython-tex-complete-py)
-# 	(tempo-define-template 
-# 	 "tex-listings-python" 
-# 	 '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
-# 	   (s)
-# 	   "\n\\end{minted}\n"
-# 	   )
-# 	 "")	
-# 	))
+#       (progn
+#     (pymacs-load "[INSTALL DIR]/ipython-tex")
+#     (global-set-key "\M-," 'ipython-tex-run-py-code)
+#     (global-set-key [f5] 'ipython-tex-complete-py)
+#     (tempo-define-template
+#      "tex-listings-python"
+#      '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
+#        (s)
+#        "\n\\end{minted}\n"
+#        )
+#      "")
+#     ))
 #   (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
-#       (progn 
-# 	(pymacs-load "[INSTALL DIR]/ipython-md")
-# 	(global-set-key "\M-," 'ipython-md-run-py-code)
-# 	(global-set-key [f5] 'ipython-md-complete-py)
-# 	(tempo-define-template 
-# 	 "tex-listings-python" 
-# 	 '("```python\n"
-# 	   (s)
-# 	   "\n```\n"
-# 	   )
-# 	 "")	
-# 	))
-# 
+#       (progn
+#     (pymacs-load "[INSTALL DIR]/ipython-md")
+#     (global-set-key "\M-," 'ipython-md-run-py-code)
+#     (global-set-key [f5] 'ipython-md-complete-py)
+#     (tempo-define-template
+#      "tex-listings-python"
+#      '("```python\n"
+#        (s)
+#        "\n```\n"
+#        )
+#      "")
+#     ))
+#
 #   )
-# 
+#
 # (global-set-key [f1] 'tempo-template-tex-listings-python)
 # (global-set-key [f11] 'reload-pymacs)
 # #+END_SRC
-# 
+#
 
 ** Q
 
@@ -4722,32 +4713,30 @@ Source: \url{https://github.com/quarto-dev/quarto-emacs}
   )
 #+END_SRC
 
-# ** R
-# 
-# 
-# *** rune 
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package rune)
-# (rune/leader-keys
-#   "ts" '(hydra-text-scale/body :which-key "scale text"))
-# #+END_SRC
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package general
-#   :config
-#   (general-create-definer rune/leader-keys
-#     :keymaps '(normal insert visual emacs)
-#     :prefix "SPC"
-#     :global-prefix "C-SPC")
-# 
-#   (rune/leader-keys
-#     "t"  '(:ignore t :which-key "toggles")
-#     "tt" '(counsel-load-theme :which-key "choose theme") ) )
-# #+END_SRC 
-# 
-
 ** R
+
+
+*** rune
+
+#+BEGIN_SRC emacs-lisp
+(use-package rune)
+(rune/leader-keys
+  "ts" '(hydra-text-scale/body :which-key "scale text"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package general
+  :config
+  (general-create-definer rune/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (rune/leader-keys
+    "t"  '(:ignore t :which-key "toggles")
+    "tt" '(counsel-load-theme :which-key "choose theme") ) )
+#+END_SRC
+
 
 
 ** S
