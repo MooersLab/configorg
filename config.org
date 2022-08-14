@@ -4682,7 +4682,7 @@ You may need to install dap-mode from MELPA.
   :hook (python-mode . lsp-deferred)
   :custom
   ;; NOTE: Set these if Python 3 is called "python3" on your system!
-  (python-shell-interpreter "python")
+  (python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
   )
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook #'electric-spacing-mode)
