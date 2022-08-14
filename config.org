@@ -2407,12 +2407,6 @@ The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installa
 
 Add lsp-ui for the full experience.
 
-#+BEGIN_SRC emacs-lisp
-
-(use-package company
-  :ensure t)
-#+END_SRC
-
 Use lsp-treemacs.
 
 
@@ -3108,70 +3102,70 @@ prot-org.el file.  In the video I explain why I use this style.
 ##+END_SRC
 #
 
-
-#+BEGIN_SRC emacs-lisp
-(use-package jupyter)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-(emacs-lisp . t)
-   (C . t)
-   (js . t)
-   (ditaa . t)
-   (ipython . t)
-   (python . t)
-   (gnuplot . t)
-   (R . t)
-   (latex . t)
-   (plantuml . t)
-   (shell . t)
-   (clojure . t)
-   (julia . t)
-   (jupyter . t) ) )
-;; enable use of python instead of python-juptyer inside of source blocks
-(org-babel-jupyter-override-src-block "python")
-#+END_SRC
-
-I add to add ~:results value scalar~ to get the approapriate output.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-babel-default-header-args:emacs-lisp
-             '(:results . "output"))
-#+END_SRC
-
-*** Turn off security confirmation for langs in list.
-
-#+BEGIN_SRC emacs-lisp
-;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
-(defun my-org-confirm-babel-evaluate (lang body)
-  (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
-(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-#+END_SRC
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package jupyter)
+# (org-babel-do-load-languages
+#  'org-babel-load-languages
+#  '(
+# (emacs-lisp . t)
+#    (C . t)
+#    (js . t)
+#    (ditaa . t)
+#    (ipython . t)
+#    (python . t)
+#    (gnuplot . t)
+#    (R . t)
+#    (latex . t)
+#    (plantuml . t)
+#    (shell . t)
+#    (clojure . t)
+#    (julia . t)
+#    (jupyter . t) ) )
+# ;; enable use of python instead of python-juptyer inside of source blocks
+# (org-babel-jupyter-override-src-block "python")
+# #+END_SRC
+#
+# I add to add ~:results value scalar~ to get the approapriate output.
+#
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'org-babel-default-header-args:emacs-lisp
+#              '(:results . "output"))
+# #+END_SRC
+#
+# *** Turn off security confirmation for langs in list.
+#
+# #+BEGIN_SRC emacs-lisp
+# ;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
+# (defun my-org-confirm-babel-evaluate (lang body)
+#   (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
+# (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+# #+END_SRC
 
 
 *** consult-org-headings
 
-Eric's wrapper for the consult-org-heading function.
-Gives plain text headers listed in minibuffer.
-
-#+BEGIN_SRC emacs-lisp
-;;(defun esf/consult-org-heading ()
-;;  "Eric's wrapper about consult-org-heading."
-;;  (interactive)
-;;  (let ((org-level-faces nil))
-;;    (consult-org-heading))) 
-;;(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
-#+END_SRC
-
-I like the default settings with color coding.
-I have mapped these to the ~C-c s~.
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c s") 'consult-org-heading)
-;;(add-hook 'org-mode-hook
-;;          (lambda ()
-;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
-#+END_SRC
+# Eric's wrapper for the consult-org-heading function.
+# Gives plain text headers listed in minibuffer.
+#
+# #+BEGIN_SRC emacs-lisp
+# ;;(defun esf/consult-org-heading ()
+# ;;  "Eric's wrapper about consult-org-heading."
+# ;;  (interactive)
+# ;;  (let ((org-level-faces nil))
+# ;;    (consult-org-heading)))
+# ;;(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
+# #+END_SRC
+#
+# I like the default settings with color coding.
+# I have mapped these to the ~C-c s~.
+#
+# #+BEGIN_SRC emacs-lisp
+# (global-set-key (kbd "C-c s") 'consult-org-heading)
+# ;;(add-hook 'org-mode-hook
+# ;;          (lambda ()
+# ;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
+# #+END_SRC
 
 
 *** org-download
@@ -3415,83 +3409,83 @@ https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el
 I finally found that there was a of the first two lines after Emacs 24.
 
 
-[[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]] 
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load "ox-latex"
-  (add-to-list 'org-latex-classes
-               '("koma-article" "\\documentclass{scrartcl}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  (add-to-list 'org-latex-classes
-               '("apa6" "\\documentclass{apa6}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  
-  (add-to-list 'org-latex-classes
-               '("report" "\\documentclass{report}"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-  (add-to-list 'org-latex-classes
-               '("memoir" "\\documentclass{memoir}"
-                 ("\\book{%s}" . "\\book*{%s}")
-                 ("\\part{%s}" . "\\part*{%s}")
-                 ("\\chapter{%s} .\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  (add-to-list 'org-latex-classes
-               '("paper" "\\documentclass{paper}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-)
-#+END_SRC
+# [[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
+# #+BEGIN_SRC emacs-lisp
+# (with-eval-after-load "ox-latex"
+#   (add-to-list 'org-latex-classes
+#                '("koma-article" "\\documentclass{scrartcl}"
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#
+#   (add-to-list 'org-latex-classes
+#                '("apa6" "\\documentclass{apa6}"
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#
+#   (add-to-list 'org-latex-classes
+#                '("report" "\\documentclass{report}"
+#                  ("\\chapter{%s}" . "\\chapter*{%s}")
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+#
+#   (add-to-list 'org-latex-classes
+#                '("memoir" "\\documentclass{memoir}"
+#                  ("\\book{%s}" . "\\book*{%s}")
+#                  ("\\part{%s}" . "\\part*{%s}")
+#                  ("\\chapter{%s} .\\chapter*{%s}")
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#
+#   (add-to-list 'org-latex-classes
+#                '("paper" "\\documentclass{paper}"
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+# )
+# #+END_SRC
 
 *** org-export-latex-no-toc 
 
-#+BEGIN_SRC emacs-lisp
-(defun org-export-latex-no-toc (depth)
-  (when depth
-    (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (defun org-export-latex-no-toc (depth)
+#   (when depth
+#     (format "%% Org-mode is exporting headings to %s levels.\n"
+#               depth)))
+# #+END_SRC
 
 
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-latex-classes
-             '("apa6"
-               "\\documentclass{apa6}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-
-(add-to-list 'org-latex-classes
-            '("Springer"
-               "\\documentclass[natbib]{svjour3}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'org-latex-classes
+#              '("apa6"
+#                "\\documentclass{apa6}"
+#                ("\\section{%s}" . "\\section*{%s}")
+#                ("\\subsection{%s}" . "\\subsection*{%s}")
+#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#
+#
+# (add-to-list 'org-latex-classes
+#             '("Springer"
+#                "\\documentclass[natbib]{svjour3}"
+#                ("\\section{%s}" . "\\section*{%s}")
+#                ("\\subsection{%s}" . "\\subsection*{%s}")
+#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+# #+END_SRC
 
 
 To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
@@ -4610,13 +4604,14 @@ You may need to install dap-mode from MELPA.
   :custom
   ;; NOTE: Set these if Python 3 is called "python3" on your system!
   (python-shell-interpreter "python3")
-  (dap-python-executable "python3")
-  (dap-python-debugger 'debugpy)
-  :config
-  (require 'dap-python)
   )
-  (add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'anaconda-mode)
 #+END_SRC
+
+# (dap-python-executable "python3")
+# (dap-python-debugger 'debugpy)
+# :config
+# (require 'dap-python)
 
 **** pyenv
 
@@ -4630,17 +4625,17 @@ See the conda configuration under C.
 #+END_SRC
 
 
-**** python-x
-
-This package enhances the Python REPL experience.
-Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
-The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
-
-#+BEGIN_SRC emacs-lisp
-(python-x-setup)
-(setq python-section-delimiter "##")
-#+END_SRC
+# **** python-x
+#
+# This package enhances the Python REPL experience.
+# Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+# You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
+# The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
+#
+# #+BEGIN_SRC emacs-lisp
+# (python-x-setup)
+# (setq python-section-delimiter "##")
+# #+END_SRC
 
 
 **** Running Python in LaTeX and Markdown documents
@@ -4704,39 +4699,39 @@ The default section delimiter is ~## ---~ but can be changed via python-section-
 ** Q
 
 *** quarto-mode
-
-Source: \url{https://github.com/quarto-dev/quarto-emacs}
-
-#+BEGIN_SRC emacs-lisp
-(use-package quarto-mode
-  :mode (("\\.Rmd" . poly-quarto-mode))
-  )
-#+END_SRC
+#
+# Source: \url{https://github.com/quarto-dev/quarto-emacs}
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package quarto-mode
+#   :mode (("\\.Rmd" . poly-quarto-mode))
+#   )
+# #+END_SRC
 
 ** R
 
 
-*** rune
-
-#+BEGIN_SRC emacs-lisp
-(use-package rune)
-(rune/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package general
-  :config
-  (general-create-definer rune/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (rune/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme") ) )
-#+END_SRC
-
+# *** rune
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package rune)
+# (rune/leader-keys
+#   "ts" '(hydra-text-scale/body :which-key "scale text"))
+# #+END_SRC
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package general
+#   :config
+#   (general-create-definer rune/leader-keys
+#     :keymaps '(normal insert visual emacs)
+#     :prefix "SPC"
+#     :global-prefix "C-SPC")
+#
+#   (rune/leader-keys
+#     "t"  '(:ignore t :which-key "toggles")
+#     "tt" '(counsel-load-theme :which-key "choose theme") ) )
+# #+END_SRC
+#
 
 
 ** S
@@ -5641,9 +5636,10 @@ Enable snippet tab triggers to work in the native code language of the code bloc
 
 
 #+BEGIN_SRC emacs-lisp
-(require 'popup)
+;; (require 'popup)
+;;(require 'yasnippet)
+(use-package popup)
 (require 'yasnippet)
-
 ;; add some shotcuts in popup menu mode
 (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
 (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
@@ -5666,6 +5662,20 @@ Enable snippet tab triggers to work in the native code language of the code bloc
      :isearch t
      )))
 (setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
+#+END_SRC
+
+
+**** Automatically trigger completion at each snippet tabstop
+
+#+BEGIN_SRC emacs-lisp
+(defun complete-if-yas-field (&rest _)
+  (let ((field (yas-current-field)))
+    (when (and field
+               (not (yas--field-modified-p field)))
+      (company-manual-begin))))
+
+(advice-add 'company-complete-selection :after 'complete-if-yas-field)
+(advice-add 'yas-next-field :after 'complete-if-yas-field)
 #+END_SRC
 
 
