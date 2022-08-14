@@ -2375,7 +2375,8 @@ Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
 **** Main lsp config
 
 The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
-
+https://emacs-lsp.github.io/lsp-ui/
+https://www.taingram.org/blog/emacs-lsp-ide.html
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
@@ -2411,9 +2412,16 @@ The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installa
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
+(setq lsp-ui-imenu-mode t)
+(setq lsp-ui-doc-show t)
+(setq lsp-ui-doc-frame-mode t)
+(setq lsp-ui-doc-mode t)
 (setq lsp-ui-doc-position 'bottom)
-(setq lsp-ui-sideline-enable nil)
-(setq lsp-ui-sideline-show-hover nil)
+(setq lsp-ui-sideline-enable t)
+(setq lsp-ui-sideline-show-hover t)
+(setq anaconda-mode t)
+(setq anaconda-eldoc-mode t)
+(setq lsp-eldoc-render-all t)
 #+END_SRC
 
 Use lsp-treemacs.
