@@ -2431,16 +2431,18 @@ https://www.taingram.org/blog/emacs-lsp-ide.html
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode))
-(setq lsp-ui-imenu-mode t)
-(setq lsp-ui-doc-show t)
-(setq lsp-ui-doc-frame-mode t)
-(setq lsp-ui-doc-mode t)
+  :hook (lsp-mode . lsp-ui-mode)
+  :hook (lsp-mode . lsp-ui-imenu)
+  :hook (lsp-mode . lsp-ui-doc-mode)
+  :hook (lsp-mode . lsp-ui-doc-show)
+  :hook (lsp-mode . lsp-ui-doc-frame-mode)
+  :hook (lsp-mode . anaconda-mode)
+  :hook (lsp-mode . anaconda-eldoc-mode)
+)
 (setq lsp-ui-doc-position 'right)
 (setq lsp-ui-sideline-enable t)
 (setq lsp-ui-sideline-show-hover t)
 (setq anaconda-mode t)
-(setq anaconda-eldoc-mode t)
 (setq lsp-eldoc-render-all t)
 #+END_SRC
 
@@ -4657,13 +4659,29 @@ This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documen
 I am not sure where it stands now and if it is really needed.
 It is big on creating and using pyenvs.
 
+Run the following command \mintinline{bash}{pip install jedi rope flake8 yapf importmagic autopep8} oo the terminal.
+
+The config below is from [[https://github.com/kpurdon/.emacs.d/blob/main/development.el][here]]
+
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
-  :ensure t
   :init
-  (elpy-enable))
-#+END_SRC
+  (elpy-enable)
+  :config
+  ;; disable flymake and enable flycheck
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  ;; set the elpy rpc virtualenv path the current path
+  (setq elpy-rpc-virtualenv-path 'current))
 
+(use-package py-autopep8
+  :config
+  (setq py-autopep8-options '("--ignore=E501,W293,W391,W690"))
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+
+(use-package py-isort
+  :config
+  (add-hook 'before-save-hook 'py-isort-before-save))
+#+END_SRC
 
 
 
@@ -4685,21 +4703,22 @@ You may need to install dap-mode from MELPA.
   (python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
   )
 (add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook #'electric-spacing-mode)
+(add-hook 'python-mode-hook 'electric-spacing-mode)
+(add-hook 'python-mode-hook 'blacken-mode)
 #+END_SRC
 
 C-c C-p will open a Python REPL in a buffer.
 C-c C-c will send run the code in the buffer to the REPL and return the output in the REPL.
 
 
-# **** Use IPython for REPL
-# #+BEGIN_SRC emacs-lisp
-# (setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
-#       python-shell-interpreter-args "console --simple-prompt"
-#       python-shell-prompt-detect-failure-warning nil)
-# (add-to-list 'python-shell-completion-native-disabled-interpreters
-#              "jupyter")
-# #+END_SRC
+**** Use IPython for REPL
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter")
+#+END_SRC
 
 
 **** Enable Flycheck
@@ -4993,6 +5012,16 @@ To enforce the use of one whitespace, enter the following:
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
+
+;; always delete trailing whitespace on save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; make the default movement within words (e.g. someThing, some_thing, some-thing)
+;; http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html
+(add-hook 'prog-mode-hook 'subword-mode)
+
+;; only highlight mispelling for strings and comments
+(add-hook `prog-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
 # *** SLIME
