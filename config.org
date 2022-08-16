@@ -1356,7 +1356,7 @@ You can customize the prefix by adding:
 **** List my interactive functions
 
 
-Source https://stackoverflow.com/questions/19649872/get-list-of-interactive-functions-in-elisp-emacs
+[[https://stackoverflow.com/questions/19649872/get-list-of-interactive-functions-in-elisp-emacs][Source]].
 
 Enter ~M-x bhmm/~ in the minibuffer to get a list of my functions.
 
@@ -1580,7 +1580,7 @@ Add matching pairs of quotes and parentheses.
 
 *** electric-spacing
 
-An emacs minor-mode to automatically add spacing around operators \footnote{\url{https://github.com/xwl/electric-spacing}}.
+An emacs minor-mode to automatically add spacing around [[https://github.com/xwl/electric-spacing][operators]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package electric-spacing
@@ -1614,7 +1614,7 @@ Enter S-g to update the feeds.
         "https://planet.emacslife.com/atom.xml"))
 #+END_SRC
 
-The elfeed configuration below follows this post \footnote{\url{https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/}}.
+The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/][post]].
 
 
 #+BEGIN_SRC emacs-lisp
@@ -1650,7 +1650,6 @@ The elfeed configuration below follows this post \footnote{\url{https://www.cs.m
 (setq elfeed-search-print-entry-function #'my-search-print-fn)
 (setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
 (setq elfeed-search-title-max-width 110)
-
 (setq elfeed-search-filter "@2-week-ago +unread")
 
 (add-hook 'elfeed-search-mode-hook 'elfeed-update)
@@ -1661,14 +1660,11 @@ The elfeed configuration below follows this post \footnote{\url{https://www.cs.m
   (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
   (elfeed-score-enable)
   (define-key elfeed-search-mode-map "=" elfeed-score-map))
-
-
 (setq arxiv_bib "~/Downloads/global.bib")
-(setq arxiv_pdf_loc "~/0papersLabled/")
+(setq arxiv_pdf_loc "~/0papersLabeled/")
 
 (defun my/elfeed-entry-to-arxiv ()
-    "Fetch an arXiv paper into the local library from the current elfeed entry.
-"
+    "Fetch an arXiv paper into the local library from the current elfeed entry."
     (interactive)
     (let* ((link (elfeed-entry-link elfeed-show-entry))
            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
@@ -1684,9 +1680,7 @@ The elfeed configuration below follows this post \footnote{\url{https://www.cs.m
 
 (defun my/elfeed-entry-to-arxiv ()
     "Fetch an arXiv paper into the local library from the current elfeed entry.
-
-- Update the bib entry with the pdf file location
-"
+- Update the bib entry with the pdf file location"
     (interactive)
     (let* ((link (elfeed-entry-link elfeed-show-entry))
            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
@@ -1712,19 +1706,15 @@ The elfeed configuration below follows this post \footnote{\url{https://www.cs.m
                         (save-buffer)
                         )))
         )
-      )
-  )
+    )
+)
 
 (setq org-ref-pdf-directory arxiv_pdf_loc)
-
-
-
 
 #+END_SRC
 
 
-\footnote{\url{https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/}}
-\footnote{\url{http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending}}
+- [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
 
 
 
@@ -3001,15 +2991,12 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 
 *** org-ac
 
-
 See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-ac)
 (org-ac/config-default)
 #+END_SRC
-
-
 
 
 *** org-agenda 
@@ -3701,11 +3688,6 @@ Requires org-edna.
 #+BEGIN_SRC emacs-lisp
 (use-package org-gtd :after 'org)
 #+END_SRC
-
-
-
-
-
 
 
 
