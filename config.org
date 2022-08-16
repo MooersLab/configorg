@@ -1585,6 +1585,12 @@ An emacs minor-mode to automatically add spacing around operators \footnote{\url
 #+BEGIN_SRC emacs-lisp
 (use-package electric-spacing
       :ensure t)
+      
+;; restrict to limited number of modes to keep it out of the minibuffer
+(defvar my-electic-pair-modes '(python-mode julia-mode r-mode org-mode))
+(defun my-inhibit-electric-pair-mode (char)
+  (not (member major-mode my-electic-pair-modes)))
+(setq electric-pair-inhibit-predicate #'my-inhibit-electric-pair-mode)
 #+END_SRC
 
 You can add hooks to major modes.
@@ -1597,6 +1603,12 @@ You can add hooks to major modes.
       '("http://nullprogram.com/feed/"
         "https://planet.emacslife.com/atom.xml"))
 #+END_SRC
+
+
+
+
+
+
 
 *** Emacs lisp REPL
 
@@ -4641,6 +4653,69 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
 #+END_SRC
 
 
+*** pubmed
+
+This package is very useful for most biomedical scientists who relie on PubMed.
+It allows you to submit searches from inside Emacs to Pubmed.
+The result is returned in a new buffer as a list of refernces.
+You mark the ones of interest.
+The bibtex for the marked ones can be fetched (appears to be broken).
+The work around is to past the title into the Google Scholar Bibtex extension for Chrome.
+The returned Bibtex can be pasted into the global.bib file.
+JabRef can generate a better cite key.
+The PDF of the current entry can be fetched and displayed in Emacs.
+The PDF can be saved with a the better cite key as the filename prefix.
+
+There are two commands for this page: M-x pubmed-search and M-x pubmed-advanced-search. 
+The first returns the results in a buffer.
+There are also functions for sending the search to PubMed in the default buffer.
+
+https://gitlab.com/fvdbeek/emacs-pubmed
+
+#+BEGIN_SRC emacs-lisp
+(use-package pubmed
+  :ensure t
+  :commands (pubmed-search pubmed-advanced-search))
+#+END_SRC
+
+There are the following keybindings:
+
+- <kbd>RET</kbd>: Show the summary of the current entry.
+- <kbd>f</kbd>: Try to fetch the fulltext PDF of the current entry.
+- <kbd>m</kbd>: Mark the current entry.
+- <kbd>M</kbd>: Mark all entries.
+- <kbd>n</kbd>: Show the summary of the next entry.
+- <kbd>p</kbd>: Show the summary of the previous entry.
+- <kbd>q</kbd>: Quit window.
+- <kbd>s</kbd>: Search PubMed.
+- <kbd>u</kbd>: Unmark the current entry.
+- <kbd>U</kbd>: Unmark all entries.
+- <kbd>w</kbd>: Write the BibTeX references of the marked entries or current
+  entry to file.
+- <kbd>\<TAB\></kbd>: Show the BibTeX references of the marked entries or current
+  entry.
+
+s lanuches a search query. 
+m marked an entry.
+f tries to fetch the PDF and opens it in Emacs in a new buffer.
+The file can be saved to whatever filename. 
+The whitespace function is interfering with entering file paths in the minibuffer
+
+Note that there is a also a  major pubmed-mode that can cause some confusion.
+
+You need to get a API key from NCBI to make up to 10 requests per second.
+Otherwise your access will be limited to 3 requests per second.
+Get the API key via your NCBI account .
+
+
+#+BEGIN_SRC emacs-lisp
+(setq pubmed-api-key "4435739a80ea3e31729353c98b2349ef8f08")
+#+END_SRC
+
+
+
+
+
 
 *** Python
 
@@ -4897,6 +4972,12 @@ I could not figure out where sbt installed scala.
 
 
 *** scholar-import
+
+[[Source][https://github.com/teeann/scholar-import]]
+
+You must install the Scholar to Emacs Chrome extension first.
+You must have the paths to the global.bib file and the PDF folder defined elsewhere.
+They are defined in the helm-bibtex configuration in my case.
 
 #+BEGIN_SRC emacs-lisp
 (use-package scholar-import
