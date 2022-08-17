@@ -494,219 +494,219 @@ frame: Create a new frame and window in it. Must be using some windowing pacakge
 
 
 
-*** Autocompletion stack
-
-The /consult/, /vertico/, and /marginalia/ autocompletion set of packages is the new toolchain for autocompletion.
-This is an alternative autocompletion system to company and ivy and the built-in /ido-mode/.
-These older systems still work very well.
-The built-in ido-mode is wonderful for aiding the entry of filepaths in the minibuffer after entering ~C-x C-f~.
-
-**** consult
-
-Example configuration for the pacakge  /consult/. 
-
-#+BEGIN_SRC emacs-lisp
-(use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
-         ("C-c k" . consult-kmacro)
-         ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ("<help> a" . consult-apropos)            ;; orig. apropos-command
-         ;; M-g bindings (goto-map)
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-
-	 
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings (search-map)
-         ("M-s d" . consult-find)
-         ("M-s D" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s m" . consult-multi-occur)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI. You may want to also
-  ;; enable ~consult-preview-at-point-mode~ in Embark Collect buffers.
-  
-  
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  ;; The :init configuration is always executed (Not lazy)
-  :init
-
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `~consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Optionally replace `completing-read-multiple' with an enhanced version.
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "M-."))
-  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
-   :preview-key (kbd "M-."))
-
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; (kbd "C-+")
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  ;; Optionally configure a function which returns the project root directory.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (project-roots)
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project)))))
-  ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-root-function #'projectile-project-root)
-  ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-root-function #'vc-root-dir)
-  ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
-)
-#+END_SRC
-
-
-**** marginalia
-
-#+BEGIN_SRC emacs-lisp
-(use-package marginalia
-  :ensure t
-  :config
-  (marginalia-mode))
-#+END_SRC
-
-
-**** embark
-
-#+BEGIN_SRC emacs-lisp
-(use-package embark
-  :ensure t
-  :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-#+END_SRC
-
-
-**** embark-consult
-
-Consult users will also want the embark-consult package.
-
-#+BEGIN_SRC emacs-lisp
-(use-package embark-consult
-  :ensure t
-  :after (embark consult)
-  :demand t ; only necessary if you have the hook below
-  ;; if you want to have consult previews as you move around an
-  ;; auto-updating embark collect buffer
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-#+END_SRC
-
-
-**** orderless
-
-
-[[https://github.com/oantolin/orderless][orderless] GitHub repo.
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-#+END_SRC
-
-**** vertico
-
-#+BEGIN_SRC emacs-lisp
-(use-package vertico
-  :init
-  (vertico-mode)
-
-  ;; Different scroll margin
-  (setq vertico-scroll-margin 0)
-
-  ;; Show more candidates
- (setq vertico-count 20)
-
-  ;; Grow and shrink the Vertico minibuffer
-  (setq vertico-resize t)
-
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  (setq vertico-cycle t)
-)
-#+END_SRC
+# *** Autocompletion stack
+#
+# The /consult/, /vertico/, and /marginalia/ autocompletion set of packages is the new toolchain for autocompletion.
+# This is an alternative autocompletion system to company and ivy and the built-in /ido-mode/.
+# These older systems still work very well.
+# The built-in ido-mode is wonderful for aiding the entry of filepaths in the minibuffer after entering ~C-x C-f~.
+#
+# **** consult
+#
+# Example configuration for the pacakge  /consult/.
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package consult
+#   ;; Replace bindings. Lazily loaded due by `use-package'.
+#   :bind (;; C-c bindings (mode-specific-map)
+#          ("C-c h" . consult-history)
+#          ("C-c m" . consult-mode-command)
+#          ("C-c k" . consult-kmacro)
+#          ;; C-x bindings (ctl-x-map)
+#          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+#          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+#          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+#          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+#          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+#          ;; Custom M-# bindings for fast register access
+#          ("M-#" . consult-register-load)
+#          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+#          ("C-M-#" . consult-register)
+#          ;; Other custom bindings
+#          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+#          ("<help> a" . consult-apropos)            ;; orig. apropos-command
+#          ;; M-g bindings (goto-map)
+#          ("M-g e" . consult-compile-error)
+#          ("M-g f" . consult-flymake)               ;; Alternative: consult-
+#
+#          ("M-g g" . consult-goto-line)             ;; orig. goto-line
+#          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+#          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+#          ("M-g m" . consult-mark)
+#          ("M-g k" . consult-global-mark)
+#          ("M-g i" . consult-imenu)
+#          ("M-g I" . consult-imenu-multi)
+#          ;; M-s bindings (search-map)
+#          ("M-s d" . consult-find)
+#          ("M-s D" . consult-locate)
+#          ("M-s g" . consult-grep)
+#          ("M-s G" . consult-git-grep)
+#          ("M-s r" . consult-ripgrep)
+#          ("M-s l" . consult-line)
+#          ("M-s L" . consult-line-multi)
+#          ("M-s m" . consult-multi-occur)
+#          ("M-s k" . consult-keep-lines)
+#          ("M-s u" . consult-focus-lines)
+#          ;; Isearch integration
+#          ("M-s e" . consult-isearch-history)
+#          :map isearch-mode-map
+#          ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+#          ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+#          ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+#          ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+#
+#   ;; Enable automatic preview at point in the *Completions* buffer. This is
+#   ;; relevant when you use the default completion UI. You may want to also
+#   ;; enable ~consult-preview-at-point-mode~ in Embark Collect buffers.
+#
+#
+#   :hook (completion-list-mode . consult-preview-at-point-mode)
+#
+#   ;; The :init configuration is always executed (Not lazy)
+#   :init
+#
+#   ;; Optionally configure the register formatting. This improves the register
+#   ;; preview for `~consult-register', `consult-register-load',
+#   ;; `consult-register-store' and the Emacs built-ins.
+#   (setq register-preview-delay 0
+#         register-preview-function #'consult-register-format)
+#
+#   ;; Optionally tweak the register preview window.
+#   ;; This adds thin lines, sorting and hides the mode line of the window.
+#   (advice-add #'register-preview :override #'consult-register-window)
+#
+#   ;; Optionally replace `completing-read-multiple' with an enhanced version.
+#   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+#
+#   ;; Use Consult to select xref locations with preview
+#   (setq xref-show-xrefs-function #'consult-xref
+#         xref-show-definitions-function #'consult-xref)
+#
+#   ;; Configure other variables and modes in the :config section,
+#   ;; after lazily loading the package.
+#   :config
+#   ;; Optionally configure preview. The default value
+#   ;; is 'any, such that any key triggers the preview.
+#   ;; (setq consult-preview-key 'any)
+#   ;; (setq consult-preview-key (kbd "M-."))
+#   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+#   ;; For some commands and buffer sources it is useful to configure the
+#   ;; :preview-key on a per-command basis using the `consult-customize' macro.
+#   (consult-customize
+#    consult-theme
+#    :preview-key '(:debounce 0.2 any)
+#    consult-ripgrep consult-git-grep consult-grep
+#    consult-bookmark consult-recent-file consult-xref
+#    consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+#    :preview-key (kbd "M-."))
+#
+#   ;; Optionally configure the narrowing key.
+#   ;; Both < and C-+ work reasonably well.
+#   (setq consult-narrow-key "<") ;; (kbd "C-+")
+#
+#   ;; Optionally make narrowing help available in the minibuffer.
+#   ;; You may want to use `embark-prefix-help-command' or which-key instead.
+#   ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+#
+#   ;; Optionally configure a function which returns the project root directory.
+#   ;; There are multiple reasonable alternatives to chose from.
+#   ;;;; 1. project.el (project-roots)
+#   (setq consult-project-root-function
+#         (lambda ()
+#           (when-let (project (project-current))
+#             (car (project-roots project)))))
+#   ;;;; 2. projectile.el (projectile-project-root)
+#   ;; (autoload 'projectile-project-root "projectile")
+#   ;; (setq consult-project-root-function #'projectile-project-root)
+#   ;;;; 3. vc.el (vc-root-dir)
+#   ;; (setq consult-project-root-function #'vc-root-dir)
+#   ;;;; 4. locate-dominating-file
+#   ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+# )
+# #+END_SRC
+#
+#
+# **** marginalia
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package marginalia
+#   :ensure t
+#   :config
+#   (marginalia-mode))
+# #+END_SRC
+#
+#
+# **** embark
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package embark
+#   :ensure t
+#   :bind
+#   (("C-." . embark-act)         ;; pick some comfortable binding
+#    ("C-;" . embark-dwim)        ;; good alternative: M-.
+#    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+#   :init
+#   ;; Optionally replace the key help with a completing-read interface
+#   (setq prefix-help-command #'embark-prefix-help-command)
+#   :config
+#   ;; Hide the mode line of the Embark live/completions buffers
+#   (add-to-list 'display-buffer-alist
+#                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+#                  nil
+#                  (window-parameters (mode-line-format . none)))))
+# #+END_SRC
+#
+#
+# **** embark-consult
+#
+# Consult users will also want the embark-consult package.
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package embark-consult
+#   :ensure t
+#   :after (embark consult)
+#   :demand t ; only necessary if you have the hook below
+#   ;; if you want to have consult previews as you move around an
+#   ;; auto-updating embark collect buffer
+#   :hook
+#   (embark-collect-mode . consult-preview-at-point-mode))
+# #+END_SRC
+#
+#
+# **** orderless
+#
+#
+# [[https://github.com/oantolin/orderless][orderless] GitHub repo.
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package orderless
+#   :ensure t
+#   :custom
+#   (completion-styles '(orderless basic))
+#   (completion-category-overrides '((file (styles basic partial-completion)))))
+# #+END_SRC
+#
+# **** vertico
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package vertico
+#   :init
+#   (vertico-mode)
+#
+#   ;; Different scroll margin
+#   (setq vertico-scroll-margin 0)
+#
+#   ;; Show more candidates
+#  (setq vertico-count 20)
+#
+#   ;; Grow and shrink the Vertico minibuffer
+#   (setq vertico-resize t)
+#
+#   ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+#   (setq vertico-cycle t)
+# )
+# #+END_SRC
 
 
 # **** citar
@@ -944,6 +944,22 @@ It is a peer of ivy.
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
+  
+;; (use-package company-lsp)
+;; (push 'company-lsp company-backends)
+
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+
+(add-hook 'python-mode-hook 'my/python-mode-hook)
+
+
+
+#+END_SRC
+
+
+
+
 #+END_SRC
 
 
@@ -1600,117 +1616,239 @@ You can add hooks to major modes.
 Enter M-x elfeed to fire up a session.
 Enter S-g to update the feeds.
 
- 
-
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed)
+(setq elfeed-curl-program-name "/opt/local/bin/curl")
+(setq elfeed-search-title-max-width 130)
+(use-package elfeed-org)
+(setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+(elfeed-org)
+;;
+;;(setq elfeed-feeds '("https://planet.emacslife.com/atom.xml" "http://feeds.nature.com/nchem/rss/current"
+;;    "http://feeds.nature.com/nature/rss/current"
+;;    "https://onlinelibrary.wiley.com/feed/1469896x/most-recent"
+;;    "https://www.science.org/action/showFeed?type=axatoc&feed=rss&jc=science"
+;;    "https://journals.iucr.org/j/rss10.xml"
+;;    "https://journals.iucr.org/s/rss10.xml"
+;;    "https://journals.iucr.org/m/rss10.xml"
+;;    "https://journals.iucr.org/a/rss10.xml"
+;;    "https://journals.iucr.org/d/rss10.xml"
+;;    "http://feeds.feedburner.com/acs/chreay"
+;;    "https://rss.sciencedirect.com/publication/science/10933263"
+;;    "http://feeds.feedburner.com/acs/jcisd8"
+;;    "https://www.pnas.org/about/rss"
+;;    "http://feeds.feedburner.com/acs/cgdefu"
+;;    "https://pubs.acs.org/page/follow.html?widget=follow-pane-rss"
+;;    "https://rss.sciencedirect.com/publication/science/00222836"
+;;    "https://academic.oup.com/rss/site_5127/3091.xml"
+;;    "http://www.cell.com/cell/current.rss"
+;;    "http://www.cell.com/cell/inpress.rss"
+;;    "https://www.jstatsoft.org/gateway/plugin/WebFeedGatewayPlugin/atom"
+;;    "https://rss.sciencedirect.com/publication/science/09692126"
+;;    "https://onlinelibrary.wiley.com/feed/10970282/most-recent"
+;;    "http://connect.biorxiv.org/biorxiv_xml.php?subject=biophysics+biochemistry+cancer"
+;;    )
+
+;; The following config is from Chris Cundy (https://cundy.me/post/elfeed/)
+(defun concatenate-authors (authors-list)
+  "Given AUTHORS-LIST, list of plists; return string of all authors
+concatenated."
+  (mapconcat
+   (lambda (author) (plist-get author :name))
+   authors-list ", "))
+
+(defun my-search-print-fn (entry)
+  "Print ENTRY to the buffer."
+  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+	 (title (or (elfeed-meta entry :title)
+		    (elfeed-entry-title entry) ""))
+	 (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+	 (feed (elfeed-entry-feed entry))
+	 (feed-title
+	  (when feed
+	    (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+	 (entry-authors (concatenate-authors
+			 (elfeed-meta entry :authors)))
+	 (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+	 (tags-str (mapconcat
+		    (lambda (s) (propertize s 'face
+					    'elfeed-search-tag-face))
+		    tags ","))
+	 (title-width (- (window-width) 10
+			 elfeed-search-trailing-width))
+	 (title-column (elfeed-format-column
+			title (elfeed-clamp
+			       elfeed-search-title-min-width
+			       title-width
+			       elfeed-search-title-max-width)
+			:left))
+	 (authors-width 135)
+	 (authors-column (elfeed-format-column
+			entry-authors (elfeed-clamp
+			       elfeed-search-title-min-width
+			       authors-width
+			       131)
+			:left)))
+
+    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+
+    (insert (propertize title-column
+			'face title-faces 'kbd-help title) " ")
+
+    (insert (propertize authors-column
+			'face 'elfeed-search-date-face
+			'kbd-help entry-authors) " ")
+
+    ;; (when feed-title
+    ;;   (insert (propertize entry-authors
+    ;; 'face 'elfeed-search-feed-face) " "))
+
+    (when entry-authors
+      (insert (propertize feed-title
+			  'face 'elfeed-search-feed-face) " "))
+
+    ;; (when tags
+    ;;   (insert "(" tags-str ")"))
+
+    )
+  )
+(setq elfeed-search-print-entry-function #'my-search-print-fn)
 
 (global-set-key (kbd "C-x w") 'elfeed)
 
+(use-package  elfeed-score)
+(elfeed-score-enable)
+(define-key elfeed-search-mode-map "=" elfeed-score-map)
 
-(setq elfeed-feeds
-      '("http://nullprogram.com/feed/"
-         "http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
-        "https://planet.emacslife.com/atom.xml"))
+(run-at-time nil (* 8 60 60) #'elfeed-update)
 #+END_SRC
 
+
+
+
+
+
+https://journals.iucr.org/d/rss10.xml
+
+
+https://www.science.org/action/showFeed?type=axatoc&feed=rss&jc=science
+
+# #+BEGIN_SRC emacs-lisp
+# (use-package elfeed)
+# (setq elfeed-curl-program-name "/opt/local/bin/curl")
+# (setq-default elfeed-search-filter "@1-week-ago +unread ")
+# (global-set-key (kbd "C-x w") 'elfeed)
+# (add-to-list 'elfeed-feeds '("http://feeds.nature.com/nchem/rss/current" nature))
+# (setq elfeed-feeds
+#       '("https://planet.emacslife.com/atom.xml" emacs) 
+#       ("http://feeds.nature.com/nchem/rss/current" nature))
+# ;; Entries older than 2 weeks are marked as read
+# (add-hook 'elfeed-new-entry-hook
+#           (elfeed-make-tagger :before "2 weeks ago"
+#                               :remove 'unread))
+# ;; (add-hook 'elfeed-search-mode-hook 'elfeed-update)
+# ;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" 
+# ;; "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
+# ;;  "http://export.arxiv.org/api/query?search_query=cat:cs.CL&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
+# #+END_SRC
+# 
 The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/][post]].
 
 
 #+BEGIN_SRC emacs-lisp
-(defun concatenate-authors (authors-list)
-    "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
-    (if (> (length authors-list) 1)
-        (format "%s et al." (plist-get (nth 0 authors-list) :name))
-      (plist-get (nth 0 authors-list) :name)))
+;;(defun concatenate-authors (authors-list)
+;;    "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
+;;    (if (> (length authors-list) 1)
+;;        (format "%s et al." (plist-get (nth 0 authors-list) :name))
+;;      (plist-get (nth 0 authors-list) :name)))
+;;
+;;(defun my-search-print-fn (entry)
+;;    "Print ENTRY to the buffer."
+;;    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+;;        (title (or (elfeed-meta entry :title)
+;;                    (elfeed-entry-title entry) ""))
+;;        (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+;;        (entry-authors (concatenate-authors
+;;                        (elfeed-meta entry :authors)))
+;;        (title-width (- (window-width) 10
+;;                        elfeed-search-trailing-width))
+;;        (title-column (elfeed-format-column
+;;                        title 100
+;;                        :left))
+;;        (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
+;;        (authors-column (elfeed-format-column entry-authors 40 :left)))
+;;    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+;;
+;;    (insert (propertize title-column
+;;                        'face title-faces 'kbd-help title) " ")
+;;    (insert (propertize authors-column
+;;                        'kbd-help entry-authors) " ")
+;;    (insert entry-score " ")))
+;;
+;;(setq elfeed-search-print-entry-function #'my-search-print-fn)
+;;(setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
+;;(setq elfeed-search-title-max-width 110)
+;;(setq elfeed-search-filter "@2-week-ago +unread")
+;;
 
-(defun my-search-print-fn (entry)
-    "Print ENTRY to the buffer."
-    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-        (title (or (elfeed-meta entry :title)
-                    (elfeed-entry-title entry) ""))
-        (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-        (entry-authors (concatenate-authors
-                        (elfeed-meta entry :authors)))
-        (title-width (- (window-width) 10
-                        elfeed-search-trailing-width))
-        (title-column (elfeed-format-column
-                        title 100
-                        :left))
-        (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
-        (authors-column (elfeed-format-column entry-authors 40 :left)))
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-
-    (insert (propertize title-column
-                        'face title-faces 'kbd-help title) " ")
-    (insert (propertize authors-column
-                        'kbd-help entry-authors) " ")
-    (insert entry-score " ")))
-
-(setq elfeed-search-print-entry-function #'my-search-print-fn)
-(setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
-(setq elfeed-search-title-max-width 110)
-(setq elfeed-search-filter "@2-week-ago +unread")
-
-(add-hook 'elfeed-search-mode-hook 'elfeed-update)
-
-(use-package elfeed-score
-  :after elfeed
-  :config
-  (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
-  (elfeed-score-enable)
-  (define-key elfeed-search-mode-map "=" elfeed-score-map))
-(setq arxiv_bib "~/Downloads/global.bib")
-(setq arxiv_pdf_loc "~/0papersLabeled/")
-
-(defun my/elfeed-entry-to-arxiv ()
-    "Fetch an arXiv paper into the local library from the current elfeed entry."
-    (interactive)
-    (let* ((link (elfeed-entry-link elfeed-show-entry))
-           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-           (matched-arxiv-number (match-string 1 link)))
-      (when matched-arxiv-number
-        (message "Going to arXiv: %s" matched-arxiv-number)
-        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
-
-
-;; (map! :leader
-;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
-;;       :desc "Elfeed" "n e" #'elfeed)
-
-(defun my/elfeed-entry-to-arxiv ()
-    "Fetch an arXiv paper into the local library from the current elfeed entry.
-- Update the bib entry with the pdf file location"
-    (interactive)
-    (let* ((link (elfeed-entry-link elfeed-show-entry))
-           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-           (matched-arxiv-number (match-string 1 link)))
-      (when matched-arxiv-number
-        (message "Going to arXiv: %s" matched-arxiv-number)
-        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
-        ;; Now, we are updating the most recent bib file with the pdf location
-        (save-window-excursion
-                ;; Get the bib file
-                (find-file arxiv_bib)
-                ;; get to last line
-                (goto-char (point-max))
-                ;; get to the first line of bibtex
-                (bibtex-beginning-of-entry)
-                (let* ((entry (bibtex-parse-entry))
-                        (key (cdr (assoc "=key=" entry)))
-                        (pdf (org-ref-get-pdf-filename key)))
-                        (message (concat "checking for key: " key))
-                        (message (concat "value of pdf: " pdf))
-                        (when (file-exists-p pdf)
-                        (bibtex-set-field "file" pdf)
-                        (save-buffer)
-                        )))
-        )
-    )
-)
-
-(setq org-ref-pdf-directory arxiv_pdf_loc)
-
+;; 
+;; (use-package elfeed-score
+;;   :after elfeed
+;;   :config
+;;   (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
+;;   (elfeed-score-enable)
+;;   (define-key elfeed-search-mode-map "=" elfeed-score-map))
+;; (setq arxiv_bib "~/Downloads/global.bib")
+;; (setq arxiv_pdf_loc "~/0papersLabeled/")
+;; 
+;; (defun my/elfeed-entry-to-arxiv ()
+;;     "Fetch an arXiv paper into the local library from the current elfeed entry."
+;;     (interactive)
+;;     (let* ((link (elfeed-entry-link elfeed-show-entry))
+;;            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+;;            (matched-arxiv-number (match-string 1 link)))
+;;       (when matched-arxiv-number
+;;         (message "Going to arXiv: %s" matched-arxiv-number)
+;;         (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
+;; 
+;; 
+;; ;; (map! :leader
+;; ;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
+;; ;;       :desc "Elfeed" "n e" #'elfeed)
+;; 
+;; (defun my/elfeed-entry-to-arxiv ()
+;;     "Fetch an arXiv paper into the local library from the current elfeed entry.
+;; - Update the bib entry with the pdf file location"
+;;     (interactive)
+;;     (let* ((link (elfeed-entry-link elfeed-show-entry))
+;;            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+;;            (matched-arxiv-number (match-string 1 link)))
+;;       (when matched-arxiv-number
+;;         (message "Going to arXiv: %s" matched-arxiv-number)
+;;         (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
+;;         ;; Now, we are updating the most recent bib file with the pdf location
+;;         (save-window-excursion
+;;                 ;; Get the bib file
+;;                 (find-file arxiv_bib)
+;;                 ;; get to last line
+;;                 (goto-char (point-max))
+;;                 ;; get to the first line of bibtex
+;;                 (bibtex-beginning-of-entry)
+;;                 (let* ((entry (bibtex-parse-entry))
+;;                         (key (cdr (assoc "=key=" entry)))
+;;                         (pdf (org-ref-get-pdf-filename key)))
+;;                         (message (concat "checking for key: " key))
+;;                         (message (concat "value of pdf: " pdf))
+;;                         (when (file-exists-p pdf)
+;;                         (bibtex-set-field "file" pdf)
+;;                         (save-buffer)
+;;                         )))
+;;         )
+;;     )
+;; )
+;; 
+;; (setq org-ref-pdf-directory arxiv_pdf_loc)
+;; 
 #+END_SRC
 
 
@@ -2574,26 +2712,6 @@ Use lsp-treemacs.
 #+END_SRC
 
 
-**** Tweaks to company mode
-
-#+BEGIN_SRC emacs-lisp
-(use-package company
-  :after lsp-mode
-  :hook (prog-mode . company-mode)
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-#+END_SRC
-
-
-
 # **** For ivy users
 # 
 # #+BEGIN_SRC emacs-lisp
@@ -2686,12 +2804,23 @@ Use lsp-treemacs.
 # 
 # 
 
+*** LaTeX 
+
+
+#+BEGIN_SRC emacs-lisp
+;; local configuration for TeX modes
+(defun my-latex-mode-setup ()
+  (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends)))
+
+(add-hook 'tex-mode-hook 'my-latex-mode-setup)
+#+END_SRC
+
+
+
+
 *** LaTeX helper functions
-
-
-
-
-
 
 
 **** M-x description
@@ -4813,10 +4942,6 @@ Get the API key via your NCBI account .
 #+END_SRC
 
 
-
-
-
-
 *** Python
 
 See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
@@ -4859,8 +4984,6 @@ The config below is from [[https://github.com/kpurdon/.emacs.d/blob/main/develop
 #+END_SRC
 
 
-
-
 The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
 Python-mode should be built-in but lets upgrade to the latest version.
 You may need to install debugpy from PyPi.
@@ -4877,6 +5000,9 @@ You may need to install dap-mode from MELPA.
   ;; NOTE: Set these if Python 3 is called "python3" on your system!
   (python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
   )
+(eval-after-load "company"
+ '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
+
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook 'electric-spacing-mode)
 (add-hook 'python-mode-hook 'blacken-mode)
