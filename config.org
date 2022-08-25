@@ -729,7 +729,21 @@ frame: Create a new frame and window in it. Must be using some windowing pacakge
 # #+END_SRC
 # 
 # Notethat scholar-import is configured to work with citar.
-# 
+# ƒ
+
+*** auctex 
+[[source][https://stackoverflow.com/questions/3300497/using-minted-source-code-latex-package-with-emacs-auctex]]
+
+To enable the use of the minted package.
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "tex" 
+  '(setcdr (assoc "LaTeX" TeX-command-list)
+          '("%`%l%(mode) -shell-escape%' %t"
+          TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")
+    )
+  )
+#+END_SRC
 
 *** awesome-tab
 
@@ -932,6 +946,12 @@ It is a peer of ivy.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
+  :ensure t
+  :config
+  ;; Turn on company-mode globally:
+  (add-hook 'after-init-hook 'global-company-mode)
+  ;; Only activate company in R scripts, not in R console:
+  (setq ess-use-company 'script-only)
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
@@ -945,6 +965,30 @@ It is a peer of ivy.
 (use-package company-box
   :hook (company-mode . company-box-mode))
   
+;; Use F12 to trigger manually completion on R function args:
+(add-hook 'ess-r-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "<f12>") #'company-R-args)))
+
+;; More customization options for company:
+(setq company-selection-wrap-around t
+      ;; Align annotations to the right tooltip border:
+      company-tooltip-align-annotations t
+      ;; Idle delay in seconds until completion starts automatically:
+      company-idle-delay 0.45
+      ;; Completion will start after typing two letters:
+      company-minimum-prefix-length 2
+      ;; Maximum number of candidates in the tooltip:
+      company-tooltip-limit 10)
+
+(use-package company-quickhelp
+  :ensure t
+  :config
+  ;; Load company-quickhelp globally:
+  (company-quickhelp-mode)
+  ;; Time before display of documentation popup:
+  (setq company-quickhelp-delay 0.3))
+
 ;; (use-package company-lsp)
 ;; (push 'company-lsp company-backends)
 
@@ -952,14 +996,6 @@ It is a peer of ivy.
   (add-to-list 'company-backends 'company-jedi))
 
 (add-hook 'python-mode-hook 'my/python-mode-hook)
-
-
-
-#+END_SRC
-
-
-
-
 #+END_SRC
 
 
@@ -1043,7 +1079,7 @@ Use C-x, C-v, C-c for cut, paste, and copy when in a marked region.
 If the region is active, use C-S-x (or two rapid C-x C-x) instead C-x to do what C-x normally does in Emacs. 
 The same goes for the other CUA keys. 
 
-Source https://www.emacswiki.org/emacs/CuaMode
+[[Source][https://www.emacswiki.org/emacs/CuaMode]]
 
 #+BEGIN_SRC emacs-lisp
 (cua-mode t)
@@ -1071,7 +1107,7 @@ Source https://www.emacswiki.org/emacs/CuaMode
 (setq dashboard-insert-ascii-banner-centered t)
 (setq dashboard-banner-logo-title "Loxo or selpercatinib. FDA-approved RET kinase inhibitor to treat non-small cell lung cancer in 2020.")
 (use-package all-the-icons)
-(insert (all-the-icons-icon-for-buffer))
+;;(insert (all-the-icons-icon-for-buffer))
 (setq dashboard-center-content t)
 (setq dashboard-image-banner-max-width 120)
 (setq dashboard-image-banner-max-height 150)
@@ -1138,167 +1174,167 @@ I edited the documentation line to fix the grammar and add the final phrase.
 #+END_SRC
 
 
-*** Denote
-
-This is Prot's new package for note taking in Emacs.
-It is an alternative to org-roam.
-It is not in ELPA yet and has to be installed manually.
-The manual is located [[https://protesilaos.com/emacs/denote][here]].
-
-#+BEGIN_SRC emacs-lisp
-;; Make Elisp files in that directory available to the user.
-(add-to-list 'load-path "~/.emacs.default/manual-packages/denote")
-#+END_SRC
-
-Here is the sample configuration.
-Customize the keywords
-
-
-#+BEGIN_SRC emacs-lisp
-(require 'denote)
-
-;; Remember to check the doc strings of those variables.
-(setq denote-directory (expand-file-name "~/Documents/notes/"))
-(setq denote-known-keywords
-      '("emacs" "python" "pymol" "crystallography" "structural-biology"))
-(setq denote-infer-keywords t)
-(setq denote-sort-keywords t)
-(setq denote-file-type nil) ; Org is the default, set others here
-
-;; We allow multi-word keywords by default.  The author's personal
-;; preference is for single-word keywords for a more rigid workflow.
-(setq denote-allow-multi-word-keywords t)
-
-(setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
-
-;; You will not need to `require' all those individually once the
-;; package is available.
-(require 'denote-retrieve)
-(require 'denote-link)
-
-;; If you use Markdown or plain text files (Org renders links as buttons
-;; right away)
-(add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-
-(require 'denote-dired)
-(setq denote-dired-rename-expert nil)
-
-;; We use different ways to specify a path for demo purposes.
-(setq denote-dired-directories
-      (list denote-directory
-            (thread-last denote-directory (expand-file-name "attachments"))
-            (expand-file-name "~/Documents/books")))
-
-;; Generic (great if you rename files Denote-style in lots of places):
-;; (add-hook 'dired-mode-hook #'denote-dired-mode)
-;;
-;; OR if only want it in `denote-dired-directories':
-(add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-
-;; Here is a custom, user-level command from one of the examples we
-;; showed in this manual.  We define it here and add it to a key binding
-;; below.
-(defun my-denote-journal ()
-  "Create an entry tagged 'journal', while prompting for a title."
-  (interactive)
-  (denote
-   (denote--title-prompt)
-   "journal"))
-
-;; Denote does not define any key bindings.  This is for the user to
-;; decide.  For example:
-(let ((map global-map))
-  (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
-  (define-key map (kbd "C-c n n") #'denote)
-  (define-key map (kbd "C-c n N") #'denote-type)
-  (define-key map (kbd "C-c n d") #'denote-date)
-  ;; If you intend to use Denote with a variety of file types, it is
-  ;; easier to bind the link-related commands to the `global-map', as
-  ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
-  ;; `markdown-mode-map', and/or `text-mode-map'.
-  (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
-  (define-key map (kbd "C-c n I") #'denote-link-add-links)
-  (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
-  (define-key map (kbd "C-c n b") #'denote-link-backlinks)
-  ;; Note that `denote-dired-rename-file' can work from any context, not
-  ;; just Dired bufffers.  That is why we bind it here to the
-  ;; `global-map'.
-  (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
-
-(with-eval-after-load 'org-capture
-  (require 'denote-org-capture)
-  (setq denote-org-capture-specifiers "%l\n%i\n%?")
-  (add-to-list 'org-capture-templates
-               '("n" "New note (with denote.el)" plain
-                 (file denote-last-path)
-                 #'denote-org-capture
-                 :no-save t
-                 :immediate-finish nil
-                 :kill-buffer t
-                 :jump-to-captured t)))
-#+END_SRC
-
-*** Doom mode-line
-
-The doom mode-line can be used without the Doom configuration.
-
+# *** Denote
+#
+# This is Prot's new package for note taking in Emacs.
+# It is an alternative to org-roam.
+# It is not in ELPA yet and has to be installed manually.
+# The manual is located [[https://protesilaos.com/emacs/denote][here]].
+#
 # #+BEGIN_SRC emacs-lisp
-# (use-package doom-modeline
-#   :ensure t
-#   :init (doom-modeline-mode 1)
-#   :custom ((doom-modeline-height 25)))
+# ;; Make Elisp files in that directory available to the user.
+# (add-to-list 'load-path "~/.emacs.default/manual-packages/denote")
 # #+END_SRC
-
-
-*** dot-mode
-
-This minor mode enables the use of C-. to repeat the last command.
-I want this great Vi command enabled globally.
-
-#+BEGIN_SRC emacs-lisp
-(use-package dot-mode)
-(global-dot-mode t)
-#+END_SRC
-
-
-
-*** dotnet
-
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'csharp-mode-hook 'dotnet-mode)
-;; and/or
-(add-hook 'fsharp-mode-hook 'dotnet-mode)
-#+END_SRC
-
-The default prefix is ~C-c C-n~.
-The prefix gives you access to the following key combinations:
-
-|-----------------------+-----------------------|
-| Keybinding            | Command               |
-|-----------------------+-----------------------|
-| C-c C-n a p           | dotnet-add-package    |	
-| C-c C-n a r	        | dotnet-add-reference  |
-| C-c C-n b             | dotnet-build          | 
-| C-c C-n c             | dotnet-clean          |
-| C-c C-n g c           | dotnet-goto-csproj    |
-| C-c C-n g f           | dotnet-goto-fsproj    |
-| C-c C-n g s           | dotnet-goto-sln       |
-| C-c C-n n             | dotnet-new            |
-| C-c C-n p             | dotnet-publish        |
-| C-c C-n r             | dotnet-restore        |
-| C-c C-n e             | dotnet-run            |
-| C-c C-n C-e           | dotnet-run-with-args  |
-| C-c C-n s a           | dotnet-sln-add        |
-| C-c C-n s l           | dotnet-sln-list       |
-| C-c C-n s n           | dotnet-sln-new        |
-| C-c C-n s r           | dotnet-sln-remove     |
-| C-c C-n t             | dotnet-test           |
-| C-c C-n T             | dotnet-test-rerun     |
-|-----------------------+-----------------------|
-
-You can customize the prefix by adding:
-
+#
+# Here is the sample configuration.
+# Customize the keywords
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (require 'denote)
+#
+# ;; Remember to check the doc strings of those variables.
+# (setq denote-directory (expand-file-name "~/Documents/notes/"))
+# (setq denote-known-keywords
+#       '("emacs" "python" "pymol" "crystallography" "structural-biology"))
+# (setq denote-infer-keywords t)
+# (setq denote-sort-keywords t)
+# (setq denote-file-type nil) ; Org is the default, set others here
+#
+# ;; We allow multi-word keywords by default.  The author's personal
+# ;; preference is for single-word keywords for a more rigid workflow.
+# (setq denote-allow-multi-word-keywords t)
+#
+# (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
+#
+# ;; You will not need to `require' all those individually once the
+# ;; package is available.
+# (require 'denote-retrieve)
+# (require 'denote-link)
+#
+# ;; If you use Markdown or plain text files (Org renders links as buttons
+# ;; right away)
+# (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+#
+# (require 'denote-dired)
+# (setq denote-dired-rename-expert nil)
+#
+# ;; We use different ways to specify a path for demo purposes.
+# (setq denote-dired-directories
+#       (list denote-directory
+#             (thread-last denote-directory (expand-file-name "attachments"))
+#             (expand-file-name "~/Documents/books")))
+#
+# ;; Generic (great if you rename files Denote-style in lots of places):
+# ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+# ;;
+# ;; OR if only want it in `denote-dired-directories':
+# (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+#
+# ;; Here is a custom, user-level command from one of the examples we
+# ;; showed in this manual.  We define it here and add it to a key binding
+# ;; below.
+# (defun my-denote-journal ()
+#   "Create an entry tagged 'journal', while prompting for a title."
+#   (interactive)
+#   (denote
+#    (denote--title-prompt)
+#    "journal"))
+#
+# ;; Denote does not define any key bindings.  This is for the user to
+# ;; decide.  For example:
+# (let ((map global-map))
+#   (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
+#   (define-key map (kbd "C-c n n") #'denote)
+#   (define-key map (kbd "C-c n N") #'denote-type)
+#   (define-key map (kbd "C-c n d") #'denote-date)
+#   ;; If you intend to use Denote with a variety of file types, it is
+#   ;; easier to bind the link-related commands to the `global-map', as
+#   ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
+#   ;; `markdown-mode-map', and/or `text-mode-map'.
+#   (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
+#   (define-key map (kbd "C-c n I") #'denote-link-add-links)
+#   (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
+#   (define-key map (kbd "C-c n b") #'denote-link-backlinks)
+#   ;; Note that `denote-dired-rename-file' can work from any context, not
+#   ;; just Dired bufffers.  That is why we bind it here to the
+#   ;; `global-map'.
+#   (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
+#
+# (with-eval-after-load 'org-capture
+#   (require 'denote-org-capture)
+#   (setq denote-org-capture-specifiers "%l\n%i\n%?")
+#   (add-to-list 'org-capture-templates
+#                '("n" "New note (with denote.el)" plain
+#                  (file denote-last-path)
+#                  #'denote-org-capture
+#                  :no-save t
+#                  :immediate-finish nil
+#                  :kill-buffer t
+#                  :jump-to-captured t)))
+# #+END_SRC
+#
+# *** Doom mode-line
+#
+# The doom mode-line can be used without the Doom configuration.
+#
+# # #+BEGIN_SRC emacs-lisp
+# # (use-package doom-modeline
+# #   :ensure t
+# #   :init (doom-modeline-mode 1)
+# #   :custom ((doom-modeline-height 25)))
+# # #+END_SRC
+#
+#
+# *** dot-mode
+#
+# This minor mode enables the use of C-. to repeat the last command.
+# I want this great Vi command enabled globally.
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package dot-mode)
+# (global-dot-mode t)
+# #+END_SRC
+#
+#
+#
+# *** dotnet
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (add-hook 'csharp-mode-hook 'dotnet-mode)
+# ;; and/or
+# (add-hook 'fsharp-mode-hook 'dotnet-mode)
+# #+END_SRC
+#
+# The default prefix is ~C-c C-n~.
+# The prefix gives you access to the following key combinations:
+#
+# |-----------------------+-----------------------|
+# | Keybinding            | Command               |
+# |-----------------------+-----------------------|
+# | C-c C-n a p           | dotnet-add-package    |
+# | C-c C-n a r            | dotnet-add-reference  |
+# | C-c C-n b             | dotnet-build          |
+# | C-c C-n c             | dotnet-clean          |
+# | C-c C-n g c           | dotnet-goto-csproj    |
+# | C-c C-n g f           | dotnet-goto-fsproj    |
+# | C-c C-n g s           | dotnet-goto-sln       |
+# | C-c C-n n             | dotnet-new            |
+# | C-c C-n p             | dotnet-publish        |
+# | C-c C-n r             | dotnet-restore        |
+# | C-c C-n e             | dotnet-run            |
+# | C-c C-n C-e           | dotnet-run-with-args  |
+# | C-c C-n s a           | dotnet-sln-add        |
+# | C-c C-n s l           | dotnet-sln-list       |
+# | C-c C-n s n           | dotnet-sln-new        |
+# | C-c C-n s r           | dotnet-sln-remove     |
+# | C-c C-n t             | dotnet-test           |
+# | C-c C-n T             | dotnet-test-rerun     |
+# |-----------------------+-----------------------|
+#
+# You can customize the prefix by adding:
+#
 #+BEGIN_COMMENT
 
 
@@ -1586,6 +1622,60 @@ Enter C-x p to move the cursor to the previously visited window.
 # #+END_SRC
 # 
 
+*** ef-themes
+
+Source: https://protesilaos.com/emacs/ef-themes#h:ac76ded0-af9b-4566-aff9-75142ef2d4ef
+
+#+BEGIN_SRC emacs-lisp
+(use-package ef-themes
+  :ensure t)
+;; If you like two specific themes and want to switch between them, you
+;; can specify them in `ef-themes-to-toggle' and then invoke the command
+;; `ef-themes-toggle'.  All the themes are included in the variable
+;; `ef-themes-collection'.
+(setq ef-themes-to-toggle '(ef-summer ef-winter))
+
+;; Make customisations that affect Emacs faces BEFORE loading a theme
+;; (any change needs a theme re-load to take effect).
+
+(setq ef-themes-headings ; read the manual's entry or the doc string
+      '((0 . (variable-pitch light 1.9))
+        (1 . (variable-pitch light 1.8))
+        (2 . (variable-pitch regular 1.7))
+        (3 . (variable-pitch regular 1.6))
+        (4 . (variable-pitch regular 1.5))
+        (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
+        (6 . (variable-pitch 1.3))
+        (7 . (variable-pitch 1.2))
+        (t . (variable-pitch 1.1))))
+
+;; They are nil by default...
+(setq ef-themes-mixed-fonts t
+      ef-themes-variable-pitch-ui t)
+
+;; Disable all other themes to avoid awkward blending:
+(mapc #'disable-theme custom-enabled-themes)
+
+;; Load the theme of choice:
+(load-theme 'ef-spring :no-confirm)
+
+;; The themes we provide:
+;;
+;; Light: `ef-day', `ef-light', `ef-spring', `ef-summer'.
+;; Dark:  `ef-autumn', `ef-dark', `ef-night', `ef-winter'.
+;;
+;; Also those which are optimized for deuteranopia (red-green color
+;; deficiency): `ef-deuteranopia-dark', `ef-deuteranopia-light'.
+
+;; We also provide these commands, but do not assign them to any key:
+;;
+;; - `ef-themes-toggle'
+;; - `ef-themes-select'
+;; - `ef-themes-load-random'
+;; - `ef-themes-preview-colors'
+;; - `ef-themes-preview-colors-current'#+END_SRC
+#+END_SRC
+
 *** Electric-pair mode
 Add matching pairs of quotes and parentheses.
 
@@ -1597,13 +1687,21 @@ Add matching pairs of quotes and parentheses.
 *** electric-spacing
 
 An emacs minor-mode to automatically add spacing around [[https://github.com/xwl/electric-spacing][operators]].
+Backspace over the whitespaces to remove them when none are permitted.
 
 #+BEGIN_SRC emacs-lisp
 (use-package electric-spacing
       :ensure t)
-      
+
+;; git clone https://github.com/walmes/electric-spacing.git into .emacs.default/elisp
+;; byte-compile with (byte-compile-file "~/ess-emacs/elisp/electric-spacing/electric-spacing.el")
+;; byte-compile with (byte-compile-file "~/ess-emacs/elisp/electric-spacing/electric-spacing-r.el")
+(add-to-list 'load-path "~/ess-emacs/elisp/electric-spacing")
+(require 'electric-spacing-r)
+(add-hook 'ess-mode-hook #'electric-spacing-mode)
+
 ;; restrict to limited number of modes to keep it out of the minibuffer
-(defvar my-electic-pair-modes '(python-mode julia-mode r-mode org-mode))
+(defvar my-electic-pair-modes '(python-mode julia-mode org-mode))
 (defun my-inhibit-electric-pair-mode (char)
   (not (member major-mode my-electic-pair-modes)))
 (setq electric-pair-inhibit-predicate #'my-inhibit-electric-pair-mode)
@@ -1621,7 +1719,7 @@ Enter S-g to update the feeds.
 (setq elfeed-curl-program-name "/opt/local/bin/curl")
 (setq elfeed-search-title-max-width 130)
 (use-package elfeed-org)
-(setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+(setq rmh-elfeed-org-files (list "~/.emacs.default/elfeed.org"))
 (elfeed-org)
 ;;
 ;;(setq elfeed-feeds '("https://planet.emacslife.com/atom.xml" "http://feeds.nature.com/nchem/rss/current"
@@ -1728,10 +1826,10 @@ concatenated."
 
 
 
-https://journals.iucr.org/d/rss10.xml
-
-
-https://www.science.org/action/showFeed?type=axatoc&feed=rss&jc=science
+# https://journals.iucr.org/d/rss10.xml
+#
+#
+# https://www.science.org/action/showFeed?type=axatoc&feed=rss&jc=science
 
 # #+BEGIN_SRC emacs-lisp
 # (use-package elfeed)
@@ -1928,6 +2026,16 @@ Must install edit-server first.
               (markdown-mode))))
 #+END_SRC
 
+
+
+*** Load ess-r-mode
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'ess-r-mode)
+#+END_SRC
+
+
 ** F
 
 *** F# (F sharp)
@@ -2102,8 +2210,8 @@ I succeeded in compiling and installing the code as directed.
 
 #+BEGIN_SRC emacs-lisp
 ;; Grammar Checker
-(add-to-list 'load-path "~/.emacs.default/elisp/grammar")
-(add-to-list 'exec-path "~/.emacs.default/elisp/grammar")
+(add-to-list 'load-path "~/.emacs.default/elisp/grammar/")
+(add-to-list 'exec-path "~/.emacs.default/elisp/grammar/")
 (autoload 'grammar-mode "grammar" nil t)
 #+END_SRC
 
@@ -2263,25 +2371,28 @@ I am not sure what this is adding.
 ** I
 
 
-# 
-# *** ivy
-# 
-# Ivy is a popular autocompletion package.
-# 
-# Make M-x and other mini-buffers sortable, filterable
-# 
-# +BEGIN_SRC emacs-lisp
-# (use-package ivy
-#  :init
-#  (ivy-mode 1)
-#  (global-set-key "\C-s" 'swiper)
-#  (unbind-key "S-SPC" ivy-minibuffer-map)
-#  (setq ivy-height 15
-#        ivy-use-virtual-buffers t
-#        ivy-use-selectable-prompt t))
-#
-# (use-package ivy-bibtex)
-# +END_SRC
+
+*** ivy
+
+Ivy is a popular autocompletion package.
+
+Make M-x and other mini-buffers sortable, filterable
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+ :ensure t
+ :init
+ (ivy-mode 1)
+ (global-set-key "\C-s" 'swiper)
+ (unbind-key "S-SPC" ivy-minibuffer-map)
+ (setq ivy-height 15
+       ivy-use-virtual-buffers t
+       ivy-count-format "(%d/%d) "
+       ivy-use-selectable-prompt t))
+
+(use-package ivy-bibtex
+   :ensure t)
+#+END_SRC
 
 # Add vim key binding for use in ivy menus.
 # 
@@ -2736,7 +2847,7 @@ Use lsp-treemacs.
 (add-hook 'python-mode-hook 'eglot-ensure)
 (add-hook 'latex-mode-hook 'eglot-ensure)
 (add-hook 'julia-mode-hook 'eglot-ensure)
-(add-hook 'R-mode-hook 'eglot-ensure)
+;; (add-hook 'R-mode-hook 'eglot-ensure)
 #+END_SRC
 
 
@@ -2897,7 +3008,7 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 
 
 
-# ** M
+** M
 # 
 # 
 # *** magit 
@@ -2920,36 +3031,59 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 # # #+END_SRC
 # 
 # 
-# *** mathpix
-# 
-# This is an interfae to Mathpix \footnote{\url{https://github.com/jethrokuan/mathpix.el}}.
-# It requires the Mathpix.app and the key (i.e., you have to subscribe to this service).
-# 
-# 
-# Here is the configuration to load the package from github via straight.
-# Remember that use-package is a macro that can be used with either straight or package.
-# I want to avoid the use of straight.el.
-# I download via git clone the mathpix.el repo.
-# I renamed it mathpix.
-# 
+
+
+*** markdown-mode
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :mode ("\\.Rmd\\'" . md-mode)
+  :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+
+
+
+*** mathpix
+
+This is an interfae to Mathpix \footnote{\url{https://github.com/jethrokuan/mathpix.el}}.
+It requires the Mathpix.app and the key (i.e., you have to subscribe to this service).
+
+
+Here is the configuration to load the package from github via straight.
+Remember that use-package is a macro that can be used with either straight or package.
+I want to avoid the use of straight.el.
+I download via git clone the mathpix.el repo.
+I renamed it mathpix.
+I am getting the need for five arguments witht the require command.
+I have only three.
+I need a use-package version.
+
+
 # #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.d/elisp/mathpix")
-# (use-package mathpix
+# (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
+# (require 'mathpix
+#   :custom ((mathpix-app-id "app-id")
+#            (mathpix-app-key "app-key"))
+#   :bind
+#   ("C-x m" . mathpix-screenshot))
+# maybe a required setting for Macs
+# (setq mathpix-screenshot-method "screencapture -i %s")
+# #+END_SRC
+
+
+# #+BEGIN_SRC emacs-lisp
+# (use-package mathpix.el
+#   :straight (:host github :repo "jethrokuan/mathpix.el")
 #   :custom ((mathpix-app-id "app-id")
 #            (mathpix-app-key "app-key"))
 #   :bind
 #   ("C-x m" . mathpix-screenshot))
 # #+END_SRC
-# 
 
-#. #+BEGIN_SRC emacs-lisp
-#. (use-package mathpix.el
-#.   :straight (:host github :repo "jethrokuan/mathpix.el")
-#.   :custom ((mathpix-app-id "app-id")
-#.            (mathpix-app-key "app-key"))
-#.   :bind
-#.   ("C-x m" . mathpix-screenshot))
-#. #+END_SRC
+
+
+
 
 # 
 # Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
@@ -3405,52 +3539,70 @@ prot-org.el file.  In the video I explain why I use this style.
 
 
 *** org-babel
+(use-pacakge org-babel
+  :ensure t)
+
 #
 ##+BEGIN_SRC emacs-lisp
-#(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
+#;; (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
 #(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
 ##+END_SRC
 #
+# :after (ob-jupyter ob-python)
+# :config
+# (setq jupyter-api-authentication-method 'password)
+# (setq jupyter-eval-use-overlays nil)
+# (setq org-babel-default-header-args:jupyter-python '((:session . "/jpy:localhost#8888:py")
+#                                                      (:kernel . "conda-env-edge-py")
+#                                                      (:async . "yes")
+#                                (:pandoc t)))
+# (add-to-list 'savehist-additional-variables 'jupyter-server-kernel-names)
+# (setq ob-async-no-async-languages-alist '("jupyter-python"))
+# (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python")))
 
 #
-# #+BEGIN_SRC emacs-lisp
-# (use-package jupyter)
-# (org-babel-do-load-languages
-#  'org-babel-load-languages
-#  '(
-# (emacs-lisp . t)
-#    (C . t)
-#    (js . t)
-#    (ditaa . t)
-#    (ipython . t)
-#    (python . t)
-#    (gnuplot . t)
-#    (R . t)
-#    (latex . t)
-#    (plantuml . t)
-#    (shell . t)
-#    (clojure . t)
-#    (julia . t)
-#    (jupyter . t) ) )
-# ;; enable use of python instead of python-juptyer inside of source blocks
-# (org-babel-jupyter-override-src-block "python")
-# #+END_SRC
-#
-# I add to add ~:results value scalar~ to get the approapriate output.
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'org-babel-default-header-args:emacs-lisp
-#              '(:results . "output"))
-# #+END_SRC
-#
-# *** Turn off security confirmation for langs in list.
-#
-# #+BEGIN_SRC emacs-lisp
-# ;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
-# (defun my-org-confirm-babel-evaluate (lang body)
-#   (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
-# (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package jupyter
+  :ensure t)
+    
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (emacs-lisp . t)
+   (C . t)
+   (js . t)
+   (ditaa . t)
+;;(ipython . t)
+   (python . t)
+   (gnuplot . t)
+   (R . t)
+   (latex . t)
+   (plantuml . t)
+   (shell . t)
+   (clojure . t)
+   (julia . t)
+;;   (jupyter . t)
+   )
+)
+;; enable use of python instead of python-juptyer inside of source blocks
+;; (org-babel-jupyter-override-src-block "python")
+#+END_SRC
+
+I add to add ~:results value scalar~ to get the approapriate output.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-babel-default-header-args:emacs-lisp
+             '(:results . "output"))
+#+END_SRC
+
+*** Turn off security confirmation for langs in list.
+
+#+BEGIN_SRC emacs-lisp
+;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+END_SRC
 
 
 *** consult-org-headings
@@ -3629,49 +3781,49 @@ I had to add the set term, set xtics, and set ytics to expand the size of the pl
 
 **** elgantt
 
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path (concat user-emacs-directory "elisp/elgantt/")) ;; Or wherever it is located
-(require 'elgantt)
-(setq elgantt-agenda-files (concat user-emacs-directory "elisp/elgantt/test.org"))
-
-;; (setq elgantt-user-set-color-priority-counter 0)
-;; (elgantt-create-display-rule draw-scheduled-to-deadline
-;;   :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
-;;                                (s-split " " colors)))))
-;;   :args (elgantt-scheduled elgantt-color elgantt-org-id)
-;;   :body ((when elgantt-scheduled
-;;            (let ((point1 (point))
-;;                  (point2 (save-excursion
-;;                            (elgantt--goto-date elgantt-scheduled)
-;;                            (point)))
-;;                  (color1 (or (car elgantt-color)
-;;                              "black"))
-;;                  (color2 (or (cadr elgantt-color)
-;;                              "red")))
-;;              (when (/= point1 point2)
-;;                (elgantt--draw-gradient 
-;;                 color1
-;;                 color2
-;;                 (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in 
-;;                 (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
-;;                 nil
-;;                 `(priority ,(setq elgantt-user-set-color-priority-counter
-;;                                   (1- elgantt-user-set-color-priority-counter))
-;;                            ;; Decrease the priority so that earlier entries take
-;;                            ;; precedence over later ones (note: it doesn’t matter if the number is negative)
-;;                            :elgantt-user-overlay ,elgantt-org-id)))))))
-;; (setq elgantt-header-type 'outline
-;;       elgantt-insert-blank-line-between-top-level-header t
-;;       elgantt-startup-folded nil
-;;       elgantt-show-header-depth t
-;;       elgantt-draw-overarching-headers t)
-;; 
-;; (setq elgantt-header-type 'hashtag
-;;       elgantt-insert-blank-line-between-top-level-header nil
-;;       elgantt-startup-folded t)
-#+END_SRC
-
+#
+# #+BEGIN_SRC emacs-lisp
+# # (add-to-list 'load-path (concat user-emacs-directory "/Users/blaine/.emacs.default/elisp/elgantt")) ;; Or wherever it is located
+# # (require 'elgantt)
+# # (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org"))
+# #
+# ;; (setq elgantt-user-set-color-priority-counter 0)
+# ;; (elgantt-create-display-rule draw-scheduled-to-deadline
+# ;;   :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
+# ;;                                (s-split " " colors)))))
+# ;;   :args (elgantt-scheduled elgantt-color elgantt-org-id)
+# ;;   :body ((when elgantt-scheduled
+# ;;            (let ((point1 (point))
+# ;;                  (point2 (save-excursion
+# ;;                            (elgantt--goto-date elgantt-scheduled)
+# ;;                            (point)))
+# ;;                  (color1 (or (car elgantt-color)
+# ;;                              "black"))
+# ;;                  (color2 (or (cadr elgantt-color)
+# ;;                              "red")))
+# ;;              (when (/= point1 point2)
+# ;;                (elgantt--draw-gradient
+# ;;                 color1
+# ;;                 color2
+# ;;                 (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
+# ;;                 (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
+# ;;                 nil
+# ;;                 `(priority ,(setq elgantt-user-set-color-priority-counter
+# ;;                                   (1- elgantt-user-set-color-priority-counter))
+# ;;                            ;; Decrease the priority so that earlier entries take
+# ;;                            ;; precedence over later ones (note: it doesn’t matter if the number is negative)
+# ;;                            :elgantt-user-overlay ,elgantt-org-id)))))))
+# ;; (setq elgantt-header-type 'outline
+# ;;       elgantt-insert-blank-line-between-top-level-header t
+# ;;       elgantt-startup-folded nil
+# ;;       elgantt-show-header-depth t
+# ;;       elgantt-draw-overarching-headers t)
+# ;;
+# ;; (setq elgantt-header-type 'hashtag
+# ;;       elgantt-insert-blank-line-between-top-level-header nil
+# ;;       elgantt-startup-folded t)
+# #+END_SRC
+#
 # *** org-latex-impatient
 # 
 # Provides equation preview with MathJax.
@@ -4762,6 +4914,27 @@ See org-noter section
 
 
 
+*** poly-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package poly-markdown
+  :ensure t)
+#+END_SRC
+
+*** poly-R
+
+#+BEGIN_SRC emacs-lisp
+(use-package poly-R
+  :ensure t)
+;; associate the new polymode to Rmd files:
+(add-to-list 'auto-mode-alist
+             '("\\.[rR]md\\'" . poly-gfm+r-mode))
+;; uses braces around code block language strings:
+(setq markdown-code-block-braces t)
+#+END_SRC
+
+
+
 # *** powerline
 # 
 # Controls the appearance of the modeliine.
@@ -4937,9 +5110,6 @@ Otherwise your access will be limited to 3 requests per second.
 Get the API key via your NCBI account .
 
 
-#+BEGIN_SRC emacs-lisp
-(setq pubmed-api-key "4435739a80ea3e31729353c98b2349ef8f08")
-#+END_SRC
 
 
 *** Python
@@ -5129,6 +5299,20 @@ See the conda configuration under C.
 ** Q
 
 *** quarto-mode
+#+BEGIN_SRC emacs-lisp
+;; load the library
+(require 'quarto-mode)
+;; Note that the following is not necessary to run quarto-mode in .qmd files! It's merely illustrating
+;; how to associate different extensions to the mode.
+;; (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-quarto-mode))
+
+;;
+;;;; Or, with use-package:
+;;(use-package quarto-mode
+;;  :mode (("\\.Rmd" . poly-quarto-mode))
+;;  )
+#+END_SRC
+
 #
 # Source: \url{https://github.com/quarto-dev/quarto-emacs}
 #
@@ -5139,6 +5323,100 @@ See the conda configuration under C.
 # #+END_SRC
 
 ** R
+
+*** ess-r-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package ess
+  :ensure t)
+#+END_SRC
+
+
+
+
+
+
+
+
+*** r-autoyas
+
+Enter C-g to delete the unused arguments in a R function call.
+
+#+BEGIN_SRC emacs-lisp
+(use-package r-autoyas
+    :ensure t)
+(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
+#+END_SRC
+
+*** R config by Federic Santoas 
+
+[[See github repo][https://github.com/ess-intro/presentation-ess-customization/blob/main/tutorial/ess-init.el]] for a detailed tutorial.
+#+BEGIN_SRC emacs-lisp
+;; Code visibility:
+(setq ess-eval-visibly 'nowait)
+
+;; Font lock keywords for syntactic highlighting:
+(setq ess-R-font-lock-keywords
+      '((ess-R-fl-keyword:keywords . t)
+	(ess-R-fl-keyword:constants . t)
+	(ess-R-fl-keyword:modifiers . t)
+	(ess-R-fl-keyword:fun-defs . t)
+	(ess-R-fl-keyword:assign-ops . t)
+	(ess-R-fl-keyword:%op% . t)
+	(ess-fl-keyword:fun-calls . t)
+	(ess-fl-keyword:numbers . t)
+	(ess-fl-keyword:operators . t)
+	(ess-fl-keyword:delimiters . t)
+	(ess-fl-keyword:= . t)
+	(ess-R-fl-keyword:F&T . t)))
+
+;; Activate global mode for parenthesis matching:
+(show-paren-mode)
+
+;; Remove Flymake support:
+(setq ess-use-flymake nil)
+;; Replace it (globally) by Flycheck:
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+
+;; Open Rdired buffer with F9:
+(add-hook 'ess-r-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "<f9>") #'ess-rdired)))
+;; Close Rdired buffer with F9 as well:
+(add-hook 'ess-rdired-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "<f9>") #'kill-buffer-and-window)))
+
+;; An example of window configuration:
+(setq display-buffer-alist
+      '(("*R Dired"
+	 (display-buffer-reuse-window display-buffer-at-bottom)
+	 (window-width . 0.5)
+	 (window-height . 0.25)
+	 (reusable-frames . nil))
+	("*R"
+	 (display-buffer-reuse-window display-buffer-in-side-window)
+	 (side . right)
+	 (slot . -1)
+	 (window-width . 0.5)
+	 (reusable-frames . nil))
+	("*Help"
+	 (display-buffer-reuse-window display-buffer-in-side-window)
+	 (side . right)
+	 (slot . 1)
+	 (window-width . 0.5)
+	 (reusable-frames . nil))))
+#+END_SRC
+
+
+
+
+
+
+
 
 
 # *** rune
@@ -6021,17 +6299,66 @@ Version 2020-12-02 2021-04-14 2021-08-01"
 This is the snippet manager.
 It has a nice table view of the snippets available for the current mode and a function for automating the writing of new snippets.
 
+# **** main configuration
+# #+BEGIN_SRC emacs-lisp
+# (use-package yasnippet
+#     :init
+#     (add-to-list 'load-path
+#               "~/.emacs.default/plugins/yasnippet")
+#     :config
+#     (yas-global-mode 1))
+# (require 'yasnippet)
+# (yas-global-mode 1)
+#
+#
+#
+#
+#
+#
+# (use-package yasnippet
+#   :ensure t
+#   :config
+#   (yas-global-mode 1)
+#   ;; Indicate the directory containing your snippets:
+#   (setq yas-snippet-dirs
+#           '("~/.emacs.default/snippets"))
+#   ;; Load your snippets on startup:
+#   (yas-reload-all)
+#   ;; Turn on yasnippet (minor) mode when editing R files:
+#   ;;(add-hook 'ess-r-mode-hook #'yas-minor-mode)
+#   ;;(add-hook 'markdown-mode-hook #'yas-minor-mode)
+#   ;;(add-hook 'poly-gfm+r-mode#'yas-minor-mode)
+#   )
+# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
+# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
+# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
+#
+# #+END_SRC
+
+
 **** main configuration
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-    :init
-    (add-to-list 'load-path
-              "~/.emacs.default/plugins/yasnippet")
-    :config
-    (yas-global-mode 1))
-(require 'yasnippet)
-(yas-global-mode 1)              
+  :ensure t
+  :config
+  (yas-global-mode 1))
 #+END_SRC
+
+
+
+***** Function to insert a fence code block
+
+Source: 
+
+#+BEGIN_SRC emacs-lisp
+(defun tws-insert-r-chunk (header) 
+  "Insert an r-chunk in markdown mode."
+  (insert (concat "```{r " header "}\n\n```")) 
+  (forward-line -1))
+;;(global-set-key "\C-f \C-f" 'tws-insert-r-chunk)
+;;(markdown-mode-map (kbd "C-p C-f") 'tws-insert-r-chunk)
+#+END_SRC
+
 
 **** list paths to snippets
 Directory listed below first is the personal snippets directory. 
@@ -6039,10 +6366,6 @@ Early directories override later ones when there are name conflicts.
 Snippets from all directories are pooled.
 
 #+BEGIN_SRC emacs-lisp
-(setq yas-snippet-dirs
-          '("~/.emacs.default/snippets"                           ;; personal snippets. 
-            "~/.emacs.default/yasmate/snippets"      ;; the yasmate collection
-                  ))
 #+END_SRC
 
 **** keybinding to insert snippet
@@ -6084,7 +6407,8 @@ Enable snippet tab triggers to work in the native code language of the code bloc
 #+BEGIN_SRC emacs-lisp
 ;; (require 'popup)
 ;;(require 'yasnippet)
-(use-package popup)
+(use-package popup
+  :ensure t)
 (require 'yasnippet)
 ;; add some shotcuts in popup menu mode
 (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
