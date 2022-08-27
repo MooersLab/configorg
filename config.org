@@ -2304,13 +2304,13 @@ I am not sure what this is adding.
 
 *** Helm
 
-
+#+BEGIN_SRC emacs-lisp
 (setq bib-files-directory (directory-files
                              (concat (getenv "HOME") "/Documents/") t
                              "global.+.bib")
         pdf-files-directory (concat (getenv "HOME") t
                              "^0[A-Z|a-z].+Labled$"))
-
+#+END_SRC
 
 
 
@@ -2330,6 +2330,13 @@ I am not sure what this is adding.
 #+END_SRC
 
 
+*** Hippie expand
+
+Enable a more powerful version of autocompletion of prose by mapping hippe-expand on top of the default dabbrev-exapnd.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [remap dabbrev-expand]  'hippie-expand)
+#+END_SRC
 
 
 
