@@ -188,7 +188,8 @@ He provides an excellent [[https://www-users.cse.umn.edu/~kauffman/tooltime/][wo
 A faked full screen.
 
 #+BEGIN_SRC emacs-lisp
-(use-package maxframe)
+(use-package maxframe
+   :ensure t)
 (defvar my-fullscreen-p t "Check if fullscreen is on or off")
 (defun my-toggle-fullscreen ()
   (interactive)
@@ -262,6 +263,31 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
 #+END_SRC
 
 
+https://www.emacswiki.org/emacs/CommentingCode
+
+
+
+## C
+#+BEGIN_SRC emacs-lisp
+;; source: https://www.emacswiki.org/emacs/CommentingCode
+;; This looks useful. The selected region does not have to start at the beginning of the line.
+;; Source: https://www.emacswiki.org/emacs/CommentingCode
+(defun comment-eclipse ()
+      (interactive)
+      (let ((start (line-beginning-position))
+            (end (line-end-position)))
+        (when (or (not transient-mark-mode) (region-active-p))
+          (setq start (save-excursion
+                        (goto-char (region-beginning))
+                        (beginning-of-line)
+                        (point))
+                end (save-excursion
+                      (goto-char (region-end))
+                      (end-of-line)
+                      (point))))
+        (comment-or-uncomment-region start end)))
+(global-set-key "\M-;" 'comment-eclipse)
+#+END_SRC
 
 ** PDF viewing with retina display
 
@@ -1544,7 +1570,7 @@ File aliases on the Mac are not symlinks; they open as binary files.
 **** Move point to previous window
 
 From the book /Writing GNU Emacs Extensions/ by Bill Glickstein.
-I used a different keybining.
+I used a different keybinding.
 Enter C-x p to move the cursor to the previously visited window.
 
 
