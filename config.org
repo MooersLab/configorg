@@ -1503,13 +1503,13 @@ open."
 #+END_SRC
 
 
-**** Move X-lines up or down
+**** Move N-lines up or down
 
 Make selection from start of line with C-SPC.
 Move point or cursor to the line of the selection.
 Enter M-UP to move the selected lines up.
 
-Thanks you DivineDomain: https://github.com/MooersLab/latex-emacs/issues/1
+Thank you DivineDomain: https://github.com/MooersLab/latex-emacs/issues/1
 
 #+BEGIN_SRC emacs-lisp
 (defun move-text-internal (arg)
@@ -3115,16 +3115,73 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 # 
 
 
+
+
 *** markdown-mode
+
+I adapted it to edit README.md files for GitHub following this suggested [[https://blog.bitsandbobs.net/blog/emacs-markdown-live-preview/][configuration]].
+
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
-  :mode ("\\.Rmd\\'" . md-mode)
-  :init (setq markdown-command "multimarkdown"))
+  :commands (markdown-mode gfm-mode)
+  :config
+  (setq markdown-command "pandoc -t html5"))
+;; :mode ("\\.Rmd\\'" . md-mode)
+;; :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+
+Install simple-httpd and impatient-mode packages.
+
+#+BEGIN_SRC emacs-lisp
+(use-package simple-httpd
+  :ensure t
+  :config
+  (setq httpd-port 7070)
+  (setq httpd-host (system-name)))
+#+END_SRC
+
+The impatient-mode package takes the content of your buffer, passes it through a filter, and serves the result via simple-httpd HTTP server.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package impatient-mode
+  :ensure t
+  :commands impatient-mode)
+#+END_SRC
+
+Create a filter function to process the Markdown buffer. 
+The function my-markdown-filter uses github-markdown-css to mimic the look of GitHub.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-markdown-filter (buffer)
+  (princ
+   (with-temp-buffer
+     (let ((tmp (buffer-name)))
+       (set-buffer buffer)
+       (set-buffer (markdown tmp))
+       (format "<!DOCTYPE html><html><title>Markdown preview</title><link rel=\"stylesheet\" href = \"https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css\"/>
+<body><article class=\"markdown-body\" style=\"box-sizing: border-box;min-width: 200px;max-width: 980px;margin: 0 auto;padding: 45px;\">%s</article></body></html>" (buffer-string))))
+   (current-buffer)))
 #+END_SRC
 
 
+Create the function my-markdown-preview to show the preview. 
+
+#+BEGIN_SRC emacs-lisp
+(defun my-markdown-preview ()
+  "Preview markdown."
+  (interactive)
+  (unless (process-status "httpd")
+    (httpd-start))
+  (impatient-mode)
+  (imp-set-user-filter 'my-markdown-filter)
+  (imp-visit-buffer))
+#+END_SRC
+
+Run my-markdown-preview in any Markdown buffer.
+It will open a new window in your browser and update it as you type.
 
 *** mathpix
 
