@@ -2415,40 +2415,40 @@ Enable a more powerful version of autocompletion of prose by mapping hippe-expan
 
 
 
-# *** highlight-indent-guides
-#
-#
-# This is a new and well developed minor mode that is activated for most modes by the command below.
-# For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-# #+END_SRC
-#
-#
-#
-# *** hydra
-#
-# Hydra empowers you to make custom keybindings that are repeated by entering a single key.
-# For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
-# [[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
-# [[Hydra github site][Https://github.com/abo-abo/hydra]].
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package hydra)
-#
-#
-# (defhydra hydra-zoom (global-map "<f2>")
-#       "zoom"
-#       ("g" text-scale-increase "in")
-#       ("l" text-scale-decrease "out"))
-#
-# (defhydra hydra-text-scale (:timeout 4)
-#   "scale text"
-#   ("j" text-scale-increase "in")
-#   ("k" text-scale-decrease "out")
-#   ("f" nil "finished" :exit t))
-# #+END_SRC#+BEGIN_SRC emacs-lisp
+#    *** highlight-indent-guides
+#    
+#    
+#    This is a new and well developed minor mode that is activated for most modes by the command below.
+#    For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
+#    
+#    #+BEGIN_SRC emacs-lisp
+#    (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+#    #+END_SRC
+#    
+#    
+#    
+#    *** hydra
+#   
+#    Hydra empowers you to make custom keybindings that are repeated by entering a single key.
+#    For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
+#    [[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
+#    [[Hydra github site][Https://github.com/abo-abo/hydra]].
+#    
+#    #+BEGIN_SRC emacs-lisp
+#    (use-package hydra)
+#    
+#    
+#    (defhydra hydra-zoom (global-map "<f2>")
+#          "zoom"
+#          ("g" text-scale-increase "in")
+#          ("l" text-scale-decrease "out"))
+#    
+#    (defhydra hydra-text-scale (:timeout 4)
+#      "scale text"
+#      ("j" text-scale-increase "in")
+#      ("k" text-scale-decrease "out")
+#      ("f" nil "finished" :exit t))
+#    #+END_SRC#+BEGIN_SRC emacs-lisp
 
 ** I
 
