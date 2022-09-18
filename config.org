@@ -2957,46 +2957,46 @@ Invoke already under the Python config. dap works for only Python and Java.
   (yas-global-mode))
 #+END_SRC
 
-# #
-# #
-# #  :init
-# #  :commands (lsp)
-# #  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-# #  (setq lsp-keymap-prefix "C-c l")
-# #  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-# #        (c-mode . lsp)
-# #      (c++-mode . lsp)
-# #      (clojure-mode . lsp)
-# #      (julia-mode . lsp)
-# #         (latex-mode . lsp)
-# #         (python-mode . lsp)
-# #         (R-mode . lsp)
-# #         ;; if you want which-key integration
-# #         (lsp-mode . lsp-enable-which-key-integration)))
-# #
-# #
-# # busted :custom( (lsp-modeline-diagnostics-enable . t) (lsp-modeline-diagnostics-scope . :project)))
-# #
-# #
-# #
-# #
-# #
-# # #+BEGIN_SRC emacs-lisp
-# # (use-package lsp-ui
-# #   :commands (lsp)
-# #   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-# #         (
-# #        (latex-mode . lsp)
-# #         (python-mode . lsp)))
-# # +END_SRC
-# #
-# #      (c-mode . lsp)
-# #      (c++-mide . lsp)
-# #         (clojure-mode . lsp)
-# #         (julia-mode . lsp)
-# #         (r-mode . lsp)
-# #
-# #
+
+
+ :init
+#  :commands (lsp)
+#  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+#  (setq lsp-keymap-prefix "C-c l")
+#  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
+#        (c-mode . lsp)
+#      (c++-mode . lsp)
+#      (clojure-mode . lsp)
+#      (julia-mode . lsp)
+#         (latex-mode . lsp)
+#         (python-mode . lsp)
+#         (R-mode . lsp)
+#         ;; if you want which-key integration
+#         (lsp-mode . lsp-enable-which-key-integration)))
+#
+#
+# busted :custom( (lsp-modeline-diagnostics-enable . t) (lsp-modeline-diagnostics-scope . :project)))
+#
+#
+#
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-ui
+#   :commands (lsp)
+#   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
+#         (
+#        (latex-mode . lsp)
+#         (python-mode . lsp)))
+# +END_SRC
+#
+#      (c-mode . lsp)
+#      (c++-mide . lsp)
+#         (clojure-mode . lsp)
+#         (julia-mode . lsp)
+#         (r-mode . lsp)
+
+
 
 *** LaTeX 
 
@@ -3203,26 +3203,26 @@ I have only three.
 I need a use-package version.
 
 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-# (require 'mathpix
-#   :custom ((mathpix-app-id "app-id")
-#            (mathpix-app-key "app-key"))
-#   :bind
-#   ("C-x m" . mathpix-screenshot))
-# maybe a required setting for Macs
-# (setq mathpix-screenshot-method "screencapture -i %s")
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
+(require 'mathpix
+  :custom ((mathpix-app-id "app-id")
+           (mathpix-app-key "app-key"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+maybe a required setting for Macs
+(setq mathpix-screenshot-method "screencapture -i %s")
+#+END_SRC
 
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package mathpix.el
-#   :straight (:host github :repo "jethrokuan/mathpix.el")
-#   :custom ((mathpix-app-id "app-id")
-#            (mathpix-app-key "app-key"))
-#   :bind
-#   ("C-x m" . mathpix-screenshot))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package mathpix.el
+  :straight (:host github :repo "jethrokuan/mathpix.el")
+  :custom ((mathpix-app-id "app-id")
+           (mathpix-app-key "app-key"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+#+END_SRC
 
 
 
