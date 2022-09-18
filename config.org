@@ -4656,58 +4656,15 @@ This package provides an interface between helm and org-roam.
 
 This package displays the zettelkasten as a graph in your default browser.
 It only work with version 2 of org-roam.
+If installed from MELPA, no configuration is required.
 Start by entering ~M-x org-roam-ui-mode~.
 
 [[https://github.com/org-roam/org-roam-ui][source]]
-
-# **** install straight to install packages from github
-# 
-# Install straight.el to use the code below:
-# 
-# 
-# #+BEGIN_SRC emacs-lisp
-# (defvar bootstrap-version)
-# (let ((bootstrap-file
-#        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-#       (bootstrap-version 5))
-#   (unless (file-exists-p bootstrap-file)
-#     (with-current-buffer
-#         (url-retrieve-synchronously
-#          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-#          'silent 'inhibit-cookies)
-#       (goto-char (point-max))
-#       (eval-print-last-sexp)))
-#   (load bootstrap-file nil 'nomessage))
-# #+END_SRC
-# 
-
-
-#. #+BEGIN_SRC emacs-lisp
-#. (use-package org-roam-ui
-#.   :straight
-#.     (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-#.     :after org-roam
-#. ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-#. ;;         a hookable mode anymore, you're advised to pick something yourself
-#. ;;         if you don't care about startup time, use
-#. ;;  :hook (after-init . org-roam-ui-mode)
-#.     :config
-#.     (setq org-roam-ui-sync-theme t
-#.           org-roam-ui-follow t
-#.           org-roam-ui-update-on-save t
-#.           org-roam-ui-open-on-start t))
-#. #+END_SRC
-
-
 
 
 **** Visualize with igraph and R
 
 [[https://lucidmanager.org/data-science/visualise-org-roam/][See this post]] on how to visualize parts of your zettelkasten in igraph.
-
-
-
-
 
 
 *** org-roam ripgrep
@@ -4756,46 +4713,6 @@ Function for ripgrep org-roam files.
     (show-children)))
 (add-hook 'org-mode-hook (lambda () (local-set-key "\M-=" 'org-show-current-heading-tidily)))
  #+END_SRC
-
-
-
-# #+BEGIN_SRC emacs-lisp
-# (defun ded/org-show-next-heading-tidily ()
-#   "Show next entry, keeping other entries closed."
-#   (if (save-excursion (end-of-line) (outline-invisible-p))
-#       (progn (org-show-entry) (show-children))
-#     (outline-next-heading)
-#     (unless (and (bolp) (org-on-heading-p))
-#       (org-up-heading-safe)
-#       (hide-subtree)
-#       (error "Boundary reached"))
-#     (org-overview)
-#     (org-reveal t)
-#     (org-show-entry)
-#     (recenter-top-bottom)
-#     (show-children)
-#     (recenter-top-bottom)))
-# 
-# (defun ded/org-show-previous-heading-tidily ()
-#   "Show previous entry, keeping other entries closed."
-#   (let ((pos (point)))
-#     (outline-previous-heading)
-#     (unless (and (< (point) pos) (bolp) (org-on-heading-p))
-#       (goto-char pos)
-#       (hide-subtree)
-#       (error "Boundary reached"))
-#     (org-overview)
-#     (org-reveal t)
-#     (org-show-entry)
-#     (recenter-top-bottom)
-#     (show-children)
-#     (recenter-top-bottom)))
-# 
-# (setq org-speed-commands-user
-#       '(("j" . ded/org-show-next-heading-tidily)
-#         ("l" . ded/org-show-previous-heading-tidily)))
-# #+END_SRC
-
 
 
 *** org, tables
@@ -4870,13 +4787,13 @@ The tables have to be preceded by the appropriate header.
 
 Another approach is to store the file path and file format in a properites drawer for the enclosing section.
 
-# #+BEGIN_SRC emacs-lisp
-# ;; :Properties:
-# ;; :TABLE_EXPORT_FILE: observations2.csv
-# ;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
-# ;; :END:
-# #+END_SRC
-#
+#+BEGIN_SRC emacs-lisp
+;; :Properties:
+;; :TABLE_EXPORT_FILE: observations2.csv
+;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
+;; :END:
+#+END_SRC
+
 Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 
