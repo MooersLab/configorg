@@ -4956,28 +4956,6 @@ See org-noter section
 #+END_SRC
 
 
-
-*** powerline
-
-Controls the appearance of the modeliine.
-
-#+BEGIN_SRC emacs-lisp
-(use-package powerline
-    :ensure t
-    :config
-    (powerline-evil-vim-color-theme)
-    (setq powerline-arrow-shape 'arrow)   ;; the default
-    (custom-set-faces
-    ;; custom-set-faces was added by Custom.
-    ;; If you edit it by hand, you could mess it up, so be careful.
-    ;; Your init file should contain only one such instance.
-    ;; If there is more than one, they won't work right.
-    '(mode-line ((t (:foreground "#030303" :background "#bdbdbd" :box nil))))
-    '(mode-line-inactive ((t (:foreground "#f9f9f9" :background "#666666" :box nil)))))
-)
-#+END_SRC
-
-
 *** projectile
 
 [[https://docs.projectile.mx][Documentation:]] 
@@ -5229,11 +5207,14 @@ C-c C-c will send run the code in the buffer to the REPL and return the output i
 #+END_SRC
 
 
-
+# **** Enable debugger for Python
+# #+BEGIN_SRC emacs-lisp
 # (dap-python-executable "python3")
 # (dap-python-debugger 'debugpy)
 # :config
 # (require 'dap-python)
+# #+END_SRC
+
 
 **** pyenv
 
@@ -5247,17 +5228,17 @@ See the conda configuration under C.
 #+END_SRC
 
 
-# **** python-x
-#
-# This package enhances the Python REPL experience.
-# Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-# You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
-# The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
-#
-# #+BEGIN_SRC emacs-lisp
-# (python-x-setup)
-# (setq python-section-delimiter "##")
-# #+END_SRC
+**** python-x
+
+This package enhances the Python REPL experience.
+Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
+The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
+
+#+BEGIN_SRC emacs-lisp
+(python-x-setup)
+(setq python-section-delimiter "##")
+#+END_SRC
 
 
 **** Running Python in LaTeX and Markdown documents
