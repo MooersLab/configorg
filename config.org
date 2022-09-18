@@ -2905,21 +2905,21 @@ Use lsp-treemacs.
 #+END_SRC
 
 
-# **** For ivy users
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-# (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-# #+END_SRC
-#
-# **** To use debugger
-# Invoke already under the Python config. dap works for only Python and Java.
-# #+BEGIN_SRC emacs-lisp
-# (use-package dap-mode)
-# ;; (use-package dap-python) ;to load the dap adapter for your language
-# #+END_SRC
-#
-#
+**** For ivy users
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+#+END_SRC
+
+**** To use debugger
+Invoke already under the Python config. dap works for only Python and Java.
+#+BEGIN_SRC emacs-lisp
+(use-package dap-mode)
+;; (use-package dap-python) ;to load the dap adapter for your language
+#+END_SRC
+
+
 
 **** Eglot LSP
 
