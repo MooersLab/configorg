@@ -5850,8 +5850,50 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
 # #+BEGIN_SRC emacs-lisp
 # (load "iterm.el")
 # #+END_SRC
-# 
-# *** Timers
+
+
+
+*** String infleciton (snake_case -> UPCASE -> )
+
+Place cursor at the compound word and enter C-q C-u repeatedly to cycle 
+through the alternatives.
+
+[[https://github.com/akicho8/string-inflection][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package string-inflection
+  :ensure t
+)
+
+(global-unset-key (kbd "C-q"))
+(global-set-key (kbd "C-q C-u") 'my-string-inflection-cycle-auto)
+
+(defun my-string-inflection-cycle-auto ()
+  "switching by major-mode"
+  (interactive)
+  (cond
+   ;; for emacs-lisp-mode
+   ((eq major-mode 'emacs-lisp-mode)
+    (string-inflection-all-cycle))
+   ;; for python
+   ((eq major-mode 'python-mode)
+    (string-inflection-python-style-cycle))
+   ;; for java
+   ((eq major-mode 'java-mode)
+    (string-inflection-java-style-cycle))
+   ;; for elixir
+   ((eq major-mode 'elixir-mode)
+    (string-inflection-elixir-style-cycle))
+   (t
+    ;; default
+    (string-inflection-java-style-cycle))))
+#+END_SRC
+
+## T
+
+*** Timers
+
+Use the pomodoto.app. It is hard to beat.
 # 
 # 
 # **** tmr
@@ -5889,7 +5931,6 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
 # #+END_SRC
 # 
 # 
-
 
 
 *** themes
@@ -6305,21 +6346,6 @@ Version 2020-12-02 2021-04-14 2021-08-01"
 This is the snippet manager.
 It has a nice table view of the snippets available for the current mode and a function for automating the writing of new snippets.
 
-# **** main configuration
-# #+BEGIN_SRC emacs-lisp
-# (use-package yasnippet
-#     :init
-#     (add-to-list 'load-path
-#               "~/.emacs.default/plugins/yasnippet")
-#     :config
-#     (yas-global-mode 1))
-# (require 'yasnippet)
-# (yas-global-mode 1)
-#
-#
-#
-#
-#
 #
 # (use-package yasnippet
 #   :ensure t
@@ -6347,7 +6373,17 @@ It has a nice table view of the snippets available for the current mode and a fu
 (use-package yasnippet
   :ensure t
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+;; Turn on yasnippet (minor) mode when editing R files:
+   (add-hook 'ess-r-mode-hook #'yas-minor-mode)
+   (add-hook 'markdown-mode-hook #'yas-minor-mode)
+   (add-hook 'poly-gfm+r-mode#'yas-minor-mode)
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
+)
+
+
 #+END_SRC
 
 
@@ -6365,14 +6401,6 @@ Source:
 ;;(markdown-mode-map (kbd "C-p C-f") 'tws-insert-r-chunk)
 #+END_SRC
 
-
-**** list paths to snippets
-Directory listed below first is the personal snippets directory. 
-Early directories override later ones when there are name conflicts.
-Snippets from all directories are pooled.
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
 
 **** keybinding to insert snippet
 
@@ -6411,8 +6439,6 @@ Enable snippet tab triggers to work in the native code language of the code bloc
 
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'popup)
-;;(require 'yasnippet)
 (use-package popup
   :ensure t)
 (require 'yasnippet)
@@ -6453,20 +6479,6 @@ Enable snippet tab triggers to work in the native code language of the code bloc
 (advice-add 'company-complete-selection :after 'complete-if-yas-field)
 (advice-add 'yas-next-field :after 'complete-if-yas-field)
 #+END_SRC
-
-
-# **** Yasnippet camelize function
-# 
-# The code below defines the [[https://emacs.stackexchange.com/questions/27535/getting-the-value-of-previos-field-with-yasnippet][camelize function]] that is used to convert snake_case text to CamelCase inside a tab stop.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (defun camelize (s)
-#   "Convert under_score, or snake_scase, string S to CamelCase string."
-#   (mapconcat 'identity (mapcar
-#                         '(lambda (word) (capitalize (downcase word)))
-#                         (split-string s "_")) ""))
-# #+END_SRC
-
 
 
 ** Z
