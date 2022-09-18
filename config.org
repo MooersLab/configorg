@@ -3683,10 +3683,10 @@ prot-org.el file.  In the video I explain why I use this style.
 
 *** org-babel
 
-#+BEGIN_SRC emacs-lisp
-(use-package org-babel
-  :ensure t)
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-babel
+#   :ensure t)
+# #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
