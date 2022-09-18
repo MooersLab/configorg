@@ -3791,20 +3791,6 @@ To drag and drop images into org files, see the associate [[https://github.com/a
 #+END_SRC
 
 
-*** org-elp-mode
-
-To launch previewing of equations in org-mode, enter ~M-x org-elp-mode~ to toggle on and off.
-
-#+BEGIN_SRC emacs-lisp
-;; (add-to-list 'org-preview-latex-process-alist dvisvgm)
-(use-package org-elp
-  :config
-  (setq org-elp-idle-time 0.5
-        org-elp-split-fraction 0.25))
-#+END_SRC
-
-
-
 *** org gantt plots
 
 There is a number of ways to make these type of plots in Emacs.
@@ -3846,8 +3832,8 @@ I deleted a number of rows of sensitive information under the manuscript and gra
 | GRC abstract                          |             15 | <2022-06-01 Wed> | <2022-06-15 Wed> |             |       |          |                  |                 |
 | GRC Mtg                               |              7 | <2022-07-24 Sun> | <2022-07-29 Fri> |             |       |          |                  |                 |
 | SSRL/LCLS Mtg                         |              6 | <2022-09-26 Mon> | <2022-09-30 Fri> |             |       |          |                  |                 |
-| JuptyerCon 2022 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
-| JupyterCon 2022                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
+| JuptyerCon 2023 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
+| JupyterCon 2023                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
 | EmacsConf22 abstract                  |             15 | <2022-09-01 Thu> | <2022-09-15 Mon> |             |       |          |                  |                 |
 | EmacsConf22                           |              2 | <2022-11-26 Sat> | <2022-11-27 Sun> |             |       |          |                  |                 |
 | Grant reports:                        |                |                  |                  |             |       |          |                  |                 |
@@ -3931,66 +3917,50 @@ I had to add the set term, set xtics, and set ytics to expand the size of the pl
 
 **** elgantt
 
+
+#+BEGIN_SRC emacs-lisp
+# (add-to-list 'load-path (concat user-emacs-directory "/Users/blaine/.emacs.default/elisp/elgantt")) ;; Or wherever it is located
+# (require 'elgantt)
+# (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org"))
 #
-# #+BEGIN_SRC emacs-lisp
-# # (add-to-list 'load-path (concat user-emacs-directory "/Users/blaine/.emacs.default/elisp/elgantt")) ;; Or wherever it is located
-# # (require 'elgantt)
-# # (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org"))
-# #
-# ;; (setq elgantt-user-set-color-priority-counter 0)
-# ;; (elgantt-create-display-rule draw-scheduled-to-deadline
-# ;;   :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
-# ;;                                (s-split " " colors)))))
-# ;;   :args (elgantt-scheduled elgantt-color elgantt-org-id)
-# ;;   :body ((when elgantt-scheduled
-# ;;            (let ((point1 (point))
-# ;;                  (point2 (save-excursion
-# ;;                            (elgantt--goto-date elgantt-scheduled)
-# ;;                            (point)))
-# ;;                  (color1 (or (car elgantt-color)
-# ;;                              "black"))
-# ;;                  (color2 (or (cadr elgantt-color)
-# ;;                              "red")))
-# ;;              (when (/= point1 point2)
-# ;;                (elgantt--draw-gradient
-# ;;                 color1
-# ;;                 color2
-# ;;                 (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
-# ;;                 (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
-# ;;                 nil
-# ;;                 `(priority ,(setq elgantt-user-set-color-priority-counter
-# ;;                                   (1- elgantt-user-set-color-priority-counter))
-# ;;                            ;; Decrease the priority so that earlier entries take
-# ;;                            ;; precedence over later ones (note: it doesn’t matter if the number is negative)
-# ;;                            :elgantt-user-overlay ,elgantt-org-id)))))))
-# ;; (setq elgantt-header-type 'outline
-# ;;       elgantt-insert-blank-line-between-top-level-header t
-# ;;       elgantt-startup-folded nil
-# ;;       elgantt-show-header-depth t
-# ;;       elgantt-draw-overarching-headers t)
-# ;;
-# ;; (setq elgantt-header-type 'hashtag
-# ;;       elgantt-insert-blank-line-between-top-level-header nil
-# ;;       elgantt-startup-folded t)
-# #+END_SRC
-#
-# *** org-latex-impatient
-# 
-# Provides equation preview with MathJax.
-# Configuaration from the README.org [[https://github.com/yangsheng6810/org-latex-impatient][file]].
-# 
-# Not working for me.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-latex-impatient
-#   :defer t
-#   :hook (org-mode . org-latex-impatient-mode)
-#   :init
-#   (setq org-latex-impatient-tex2svg-bin
-#         ;; location of tex2svg executable
-#         "~/node_modules/mathjax-node-cli/bin/tex2svg"))
-# #+END_SRC
-# 
+(setq elgantt-user-set-color-priority-counter 0)
+(elgantt-create-display-rule draw-scheduled-to-deadline
+  :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
+                               (s-split " " colors)))))
+  :args (elgantt-scheduled elgantt-color elgantt-org-id)
+  :body ((when elgantt-scheduled
+           (let ((point1 (point))
+                 (point2 (save-excursion
+                           (elgantt--goto-date elgantt-scheduled)
+                           (point)))
+                 (color1 (or (car elgantt-color)
+                             "black"))
+                 (color2 (or (cadr elgantt-color)
+                             "red")))
+             (when (/= point1 point2)
+               (elgantt--draw-gradient
+                color1
+                color2
+                (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
+                (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
+                nil
+                `(priority ,(setq elgantt-user-set-color-priority-counter
+                                  (1- elgantt-user-set-color-priority-counter))
+                           ;; Decrease the priority so that earlier entries take
+                           ;; precedence over later ones (note: it doesn’t matter if the number is negative)
+                           :elgantt-user-overlay ,elgantt-org-id)))))))
+(setq elgantt-header-type 'outline
+      elgantt-insert-blank-line-between-top-level-header t
+      elgantt-startup-folded nil
+      elgantt-show-header-depth t
+      elgantt-draw-overarching-headers t)
+
+(setq elgantt-header-type 'hashtag
+      elgantt-insert-blank-line-between-top-level-header nil
+      elgantt-startup-folded t)
+#+END_SRC
+
+
 *** org-latex minted
 
 #+BEGIN_SRC emacs-lisp
@@ -4007,7 +3977,7 @@ I had to add the set term, set xtics, and set ytics to expand the size of the pl
 #+END_SRC
 
 
-*** org-latex-classes by journal name
+*** org-latex-classes by document class
 
 From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
 For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~. 
@@ -4015,92 +3985,77 @@ Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "tak
 
 I am stumped on the configuration. 
 Did ox-latex get renamed to org-latex?
-No, it is a built in file
-https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el
+No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
 
-I finally found that there was a of the first two lines after Emacs 24.
+To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
 
 
-# [[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
-# #+BEGIN_SRC emacs-lisp
-# (with-eval-after-load "ox-latex"
-#   (add-to-list 'org-latex-classes
-#                '("koma-article" "\\documentclass{scrartcl}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("apa6" "\\documentclass{apa6}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("report" "\\documentclass{report}"
-#                  ("\\chapter{%s}" . "\\chapter*{%s}")
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("memoir" "\\documentclass{memoir}"
-#                  ("\\book{%s}" . "\\book*{%s}")
-#                  ("\\part{%s}" . "\\part*{%s}")
-#                  ("\\chapter{%s} .\\chapter*{%s}")
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("paper" "\\documentclass{paper}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-# )
-# #+END_SRC
+[[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load "ox-latex"
+  (add-to-list 'org-latex-classes
+               '("koma-article" "\\documentclass{scrartcl}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("apa6" "\\documentclass{apa6}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("report" "\\documentclass{report}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("memoir" "\\documentclass{memoir}"
+                 ("\\book{%s}" . "\\book*{%s}")
+                 ("\\part{%s}" . "\\part*{%s}")
+                 ("\\chapter{%s} .\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("paper" "\\documentclass{paper}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+            '("Springer"
+               "\\documentclass[natbib]{svjour3}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+)
+#+END_SRC
 
 *** org-export-latex-no-toc 
 
-# #+BEGIN_SRC emacs-lisp
-# (defun org-export-latex-no-toc (depth)
-#   (when depth
-#     (format "%% Org-mode is exporting headings to %s levels.\n"
-#               depth)))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(defun org-export-latex-no-toc (depth)
+  (when depth
+    (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+#+END_SRC
 
 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'org-latex-classes
-#              '("apa6"
-#                "\\documentclass{apa6}"
-#                ("\\section{%s}" . "\\section*{%s}")
-#                ("\\subsection{%s}" . "\\subsection*{%s}")
-#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#
-# (add-to-list 'org-latex-classes
-#             '("Springer"
-#                "\\documentclass[natbib]{svjour3}"
-#                ("\\section{%s}" . "\\section*{%s}")
-#                ("\\subsection{%s}" . "\\subsection*{%s}")
-#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-# #+END_SRC
-
-
-To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
 
 
 *** org-gcal
