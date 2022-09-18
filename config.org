@@ -255,7 +255,6 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
 (add-hook 'edit-server-start-hook 'edit-server-maybe-dehtmlize-buffer)
 (add-hook 'edit-server-done-hook  'edit-server-maybe-htmlize-buffer)
 
-
 (define-key minibuffer-local-map (kbd "M-p") 'previous-complete-history-element)
 (define-key minibuffer-local-map (kbd "M-n") 'next-complete-history-element)
 (define-key minibuffer-local-map (kbd "<up>") 'previous-complete-history-element)
@@ -263,11 +262,13 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
 #+END_SRC
 
 
-https://www.emacswiki.org/emacs/CommentingCode
 
+** C
 
+*** Commenting Code
 
-## C
+[[https://www.emacswiki.org/emacs/CommentingCode][Commenting code source.]]
+
 #+BEGIN_SRC emacs-lisp
 ;; source: https://www.emacswiki.org/emacs/CommentingCode
 ;; This looks useful. The selected region does not have to start at the beginning of the line.
@@ -289,7 +290,7 @@ https://www.emacswiki.org/emacs/CommentingCode
 (global-set-key "\M-;" 'comment-eclipse)
 #+END_SRC
 
-** PDF viewing with retina display
+*** PDF viewing with retina display
 
 Combined with emacs-mac, this gives good PDF quality for [[https://www.aidanscannell.com/post/setting-up-an-emacs-playground-on-mac/][retina display]].
 
@@ -297,15 +298,15 @@ Combined with emacs-mac, this gives good PDF quality for [[https://www.aidanscan
 (setq pdf-view-use-scaling t)
 #+END_SRC
 
-** PDF default page width behavior
+*** PDF default page width behavior
 
 #+BEGIN_SRC emacs-lisp
 (setq-default pdf-view-display-size 'fit-page)
 #+END_SRC
   
-** Provide matching parentheses
+*** Provide matching parentheses
 
-[[https://ianyepan.github.io/posts/setting-up-use-package/][source]] 
+[[https://ianyepan.github.io/posts/setting-up-use-package/][Source for matching parentheses.]] 
 
 Set delay in the matching parenthesis to zero.
 We are modifying the behavior of a built-in package.
