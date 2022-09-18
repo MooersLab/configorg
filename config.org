@@ -1312,18 +1312,18 @@ I edited the documentation line to fix the grammar and add the final phrase.
 # # #+END_SRC
 #
 #
-# *** dot-mode
-#
-# This minor mode enables the use of C-. to repeat the last command.
-# I want this great Vi command enabled globally.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package dot-mode)
-# (global-dot-mode t)
-# #+END_SRC
-#
-#
-#
+*** dot-mode
+
+This minor mode enables the use of C-. to repeat the last command.
+I want this great Vi command enabled globally.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dot-mode)
+(global-dot-mode t)
+#+END_SRC
+
+
+
 # *** dotnet
 #
 #
@@ -5894,6 +5894,7 @@ through the alternatives.
 *** Timers
 
 Use the pomodoto.app. It is hard to beat.
+
 # 
 # 
 # **** tmr
@@ -6346,28 +6347,6 @@ Version 2020-12-02 2021-04-14 2021-08-01"
 This is the snippet manager.
 It has a nice table view of the snippets available for the current mode and a function for automating the writing of new snippets.
 
-#
-# (use-package yasnippet
-#   :ensure t
-#   :config
-#   (yas-global-mode 1)
-#   ;; Indicate the directory containing your snippets:
-#   (setq yas-snippet-dirs
-#           '("~/.emacs.default/snippets"))
-#   ;; Load your snippets on startup:
-#   (yas-reload-all)
-#   ;; Turn on yasnippet (minor) mode when editing R files:
-#   ;;(add-hook 'ess-r-mode-hook #'yas-minor-mode)
-#   ;;(add-hook 'markdown-mode-hook #'yas-minor-mode)
-#   ;;(add-hook 'poly-gfm+r-mode#'yas-minor-mode)
-#   )
-# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
-# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
-# ;;(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
-#
-# #+END_SRC
-
-
 **** main configuration
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
@@ -6382,8 +6361,6 @@ It has a nice table view of the snippets available for the current mode and a fu
    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
 )
-
-
 #+END_SRC
 
 
