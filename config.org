@@ -2816,7 +2816,7 @@ Enter ~C-c w~. [[https://newbedev.com/word-count-for-latex-within-emacs][Source]
 (defun latex-word-count ()
   (interactive)
   (shell-command (concat "/usr/local/bin/texcount.pl"))
-                          (buffer-file-name))))
+                          (buffer-file-name) )
 #+END_SRC
 
 *** lsp
