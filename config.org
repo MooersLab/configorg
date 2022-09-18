@@ -2689,22 +2689,22 @@ It might be annoying for experienced users.
 
 Enhances the access to help information about keybindings, functions, and variables.
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package which-key
-#    :defer 0
-#    :diminish which-key-mode
-#    :config
-#    (which-key-mode)
-#      (setq which-key-idle-delay 0.3))
-#
-# ;;   (add-hook 'c-mode-hook 'lsp)
-# ;; (add-hook 'c++-mode-hook 'lsp)
-# (add-hook 'clojure-mode-hook 'lsp)
-# ;; (add-hook 'julia-mode-hook 'lsp)
-# (add-hook 'latex-mode-hook 'lsp)
-# (add-hook 'python-mode-hook 'lsp)
-# ;; (add-hook 'R-mode-hook 'lsp)
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+   :defer 0
+   :diminish which-key-mode
+   :config
+   (which-key-mode)
+     (setq which-key-idle-delay 0.3))
+
+;;   (add-hook 'c-mode-hook 'lsp)
+;; (add-hook 'c++-mode-hook 'lsp)
+(add-hook 'clojure-mode-hook 'lsp)
+;; (add-hook 'julia-mode-hook 'lsp)
+(add-hook 'latex-mode-hook 'lsp)
+(add-hook 'python-mode-hook 'lsp)
+;; (add-hook 'R-mode-hook 'lsp)
+#+END_SRC
 
 
 *** LaTeX customizations
@@ -2765,197 +2765,198 @@ Place the  point in equation and enter ~C-c C-x C-l~ to render.
 #+END_SRC
 
 
-# **** Grammer checking with language-tool
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-hook 'LaTeX-mode-hook
-#           (lambda ()
-#              (add-hook 'after-save-hook 'langtool-check nil 'make-it-local)))
-# #+END_SRC
-#
-#
-# **** Spell check with flyspell
-#
-# Run the command ~M-x flyspell-buffer~ or ~M-x flys-bu~.
-#
-#
-# **** Turn on ispell for tex fileset
-#
-# This recommendation is from the 2020 edtion of Petersen's book /Mastering Emacs/, page 250.
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-hook 'tex-mode-hook
-#       #'(lambda () (setq ispell-parser 'tex)))
-# #+END_SRC
-#
-#
-#
-#
-# *** Word count in LaTeX files
-#
-# Run texcount.pl on an open tex document in the current buffer to get a report of word counts by section.
-# Enter ~C-c w~. [[https://newbedev.com/word-count-for-latex-within-emacs][Source]].
-#
-# #+BEGIN_SRC emacs-lisp
-# (defun my-latex-setup ()
-#   (defun latex-word-count ()
-#     (interactive)
-#     (let* ((this-file (buffer-file-name))
-#            (word-count
-#             (with-output-to-string
-#               (with-current-buffer standard-output
-#                 (call-process "texcount" nil t nil "-brief" this-file)))))
-#       (string-match "\n$" word-count)
-#       (message (replace-match "" nil nil word-count))))
-#     (define-key LaTeX-mode-map "\C-cw" 'latex-word-count))
-# (add-hook 'LaTeX-mode-hook 'my-latex-setup t)
-# #+END_SRC
-#
-# #+BEGIN_SRC emacs-lisp
-# (defun latex-word-count ()
-#   (interactive)
-#   (shell-command (concat "/usr/local/bin/texcount.pl"))
-#                           (buffer-file-name))))
-# #+END_SRC
+**** Grammer checking with language-tool
 
-# *** lsp
-#
-# For each programming language, you have to install the corresponding LSP server.
-# Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
-# Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
-# Some languages have alternate LSPs.
-#
-# |--------------+-------------|
-# | Language     |  Sever      |
-# |--------------+-------------|
-# | C/C++        | clangd      |
-# | Clojure      | clojure-lsp |
-# | LaTeX        | digestif    |
-# | Python       | mspyls      |
-# |--------------+-------------|
-#
-# The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
-# The server make take a minute or so to spin up while analyzing the current file.
-# If you get the error message, file not in project or it is backlisted, and
-# if there is a ~.git~ repo present, the file is in a project.
-# Then there is an issue with the project being blacklisted.
-# Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
-#
-#
-# **** Main lsp config
-#
-# The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
-# https://emacs-lsp.github.io/lsp-ui/
-# https://www.taingram.org/blog/emacs-lsp-ide.html
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+             (add-hook 'after-save-hook 'langtool-check nil 'make-it-local)))
+#+END_SRC
+
+
+**** Spell check with flyspell
+
+Run the command ~M-x flyspell-buffer~ or ~M-x flys-bu~.
+
+
+**** Turn on ispell for tex fileset
+
+This recommendation is from the 2020 edtion of Petersen's book /Mastering Emacs/, page 250.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'tex-mode-hook
+      #'(lambda () (setq ispell-parser 'tex)))
+#+END_SRC
+
+
+
+
+*** Word count in LaTeX files
+
+Run texcount.pl on an open tex document in the current buffer to get a report of word counts by section.
+Enter ~C-c w~. [[https://newbedev.com/word-count-for-latex-within-emacs][Source]].
+
+#+BEGIN_SRC emacs-lisp
+(defun my-latex-setup ()
+  (defun latex-word-count ()
+    (interactive)
+    (let* ((this-file (buffer-file-name))
+           (word-count
+            (with-output-to-string
+              (with-current-buffer standard-output
+                (call-process "texcount" nil t nil "-brief" this-file)))))
+      (string-match "\n$" word-count)
+      (message (replace-match "" nil nil word-count))))
+    (define-key LaTeX-mode-map "\C-cw" 'latex-word-count))
+(add-hook 'LaTeX-mode-hook 'my-latex-setup t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun latex-word-count ()
+  (interactive)
+  (shell-command (concat "/usr/local/bin/texcount.pl"))
+                          (buffer-file-name))))
+#+END_SRC
+
+*** lsp
+
+For each programming language, you have to install the corresponding LSP server.
+Some lsps of these are be installed using the command ~M-x lsp-install-server RET <selected server>~ (marked * below), which are external programs.
+Issuing of the ~M-x lsp~ command (or ~s-l w s~ where the first ~s~ is the Super key, mapped to the Option key near the top of this config file) can trigger the installation of the lsp server if missing.
+Some languages have alternate LSPs.
+
+|--------------+-------------|
+| Language     |  Sever      |
+|--------------+-------------|
+| C/C++        | clangd      |
+| Clojure      | clojure-lsp |
+| LaTeX        | digestif    |
+| Python       | mspyls      |
+|--------------+-------------|
+
+The lsp is invoked by entering ~M-x lsp~ or ~s-l~.
+The server make take a minute or so to spin up while analyzing the current file.
+If you get the error message, file not in project or it is backlisted, and
+if there is a ~.git~ repo present, the file is in a project.
+Then there is an issue with the project being blacklisted.
+Remove the backlist with the command ~M-x lsp-workspace-blacklist-remove~.
+
+
+**** Main lsp config
+
+The github webpage for this [[https://emacs-lsp.github.io/lsp-mode/page/installation/][project]] has a lot of information.
+https://emacs-lsp.github.io/lsp-ui/
+https://www.taingram.org/blog/emacs-lsp-ide.html
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
+  (setq lsp-keymap-prefix "s-l")
+  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
+         (clojure-mode . lsp)
+         (clojurec-mode . lsp)
+         (clojurescript-mode . lsp)
+         (latex-mode . lsp)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+   :config
+   ;; add paths to your local installation of project mgmt tools, like lein
+   (setenv "PATH" (concat
+                    "/Users/blaine/bin" path-separator
+                    (getenv "PATH")))
+   (dolist (m '(clojure-mode
+                clojurec-mode
+                clojurescript-mode
+                clojurex-mode))
+      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+   (setq lsp-clojure-server-command '("/usr/local/bin/clojure-lsp")) ;; Optional: In case `clojure-lsp` is not in your $PATH
+   :commands (lsp)
+)
+#+END_SRC
+
+***** Add lsp-ui for the full experience.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :hook (lsp-mode . lsp-ui-imenu)
+  :hook (lsp-mode . lsp-ui-doc-mode)
+  :hook (lsp-mode . lsp-ui-doc-show)
+  :hook (lsp-mode . lsp-ui-doc-frame-mode)
+  :hook (lsp-mode . anaconda-mode)
+  :hook (lsp-mode . anaconda-eldoc-mode)
+)
+(setq lsp-ui-doc-position 'right)
+(setq lsp-ui-sideline-enable t)
+(setq lsp-ui-sideline-show-hover t)
+(setq anaconda-mode t)
+(setq lsp-eldoc-render-all t)
+#+END_SRC
+
+Use lsp-treemacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-treemacs
+  :after lsp)
+#+END_SRC
+
+
+# **** For ivy users
 #
 # #+BEGIN_SRC emacs-lisp
-# (use-package lsp-mode
-#   :init
-#   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l", "s-l")
-#   (setq lsp-keymap-prefix "s-l")
-#   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-#          (clojure-mode . lsp)
-#          (clojurec-mode . lsp)
-#          (clojurescript-mode . lsp)
-#          (latex-mode . lsp)
-#          (python-mode . lsp)
-#          ;; if you want which-key integration
-#          (lsp-mode . lsp-enable-which-key-integration))
-#    :config
-#    ;; add paths to your local installation of project mgmt tools, like lein
-#    (setenv "PATH" (concat
-#                     "/Users/blaine/bin" path-separator
-#                     (getenv "PATH")))
-#    (dolist (m '(clojure-mode
-#                 clojurec-mode
-#                 clojurescript-mode
-#                 clojurex-mode))
-#       (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
-#    (setq lsp-clojure-server-command '("/usr/local/bin/clojure-lsp")) ;; Optional: In case `clojure-lsp` is not in your $PATH
-#    :commands (lsp)
-# )
+# (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+# (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 # #+END_SRC
 #
-# ***** Add lsp-ui for the full experience.
-#
-#
+# **** To use debugger
+# Invoke already under the Python config. dap works for only Python and Java.
 # #+BEGIN_SRC emacs-lisp
-# (use-package lsp-ui
-#   :hook (lsp-mode . lsp-ui-mode)
-#   :hook (lsp-mode . lsp-ui-imenu)
-#   :hook (lsp-mode . lsp-ui-doc-mode)
-#   :hook (lsp-mode . lsp-ui-doc-show)
-#   :hook (lsp-mode . lsp-ui-doc-frame-mode)
-#   :hook (lsp-mode . anaconda-mode)
-#   :hook (lsp-mode . anaconda-eldoc-mode)
-# )
-# (setq lsp-ui-doc-position 'right)
-# (setq lsp-ui-sideline-enable t)
-# (setq lsp-ui-sideline-show-hover t)
-# (setq anaconda-mode t)
-# (setq lsp-eldoc-render-all t)
-# #+END_SRC
-#
-# Use lsp-treemacs.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-treemacs
-#   :after lsp)
+# (use-package dap-mode)
+# ;; (use-package dap-python) ;to load the dap adapter for your language
 # #+END_SRC
 #
 #
-# # **** For ivy users
-# #
-# # #+BEGIN_SRC emacs-lisp
-# # (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-# # (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-# # #+END_SRC
-# #
-# # **** To use debugger
-# # Invoke already under the Python config. dap works for only Python and Java.
-# # #+BEGIN_SRC emacs-lisp
-# # (use-package dap-mode)
-# # ;; (use-package dap-python) ;to load the dap adapter for your language
-# # #+END_SRC
-# #
-# #
-#
-# **** Eglot LSP
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package eglot
-#    :ensure t)
-# (add-hook 'python-mode-hook 'eglot-ensure)
-# (add-hook 'latex-mode-hook 'eglot-ensure)
-# (add-hook 'julia-mode-hook 'eglot-ensure)
-# ;; (add-hook 'R-mode-hook 'eglot-ensure)
-# #+END_SRC
-#
-#
-# **** Microsoft's pyright LSP
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-pyright
-#   :ensure t
-#   :hook (python-mode . (lambda ()
-#                           (require 'lsp-pyright)
-#                           (lsp))))  ; or lsp-deferred
-# #+END_SRC
-#
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-mode
-#  :ensure t)
-# (use-package lsp-treemacs
-#   :ensure t)
-# (add-hook 'latex-mode 'lsp)
-# (add-hook 'python-mode 'lsp)
-# (with-eval-after-load 'lsp-mode
-#   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-#   (yas-global-mode))
-# #+END_SRC
+
+**** Eglot LSP
+
+#+BEGIN_SRC emacs-lisp
+(use-package eglot
+   :ensure t)
+(add-hook 'python-mode-hook 'eglot-ensure)
+(add-hook 'latex-mode-hook 'eglot-ensure)
+(add-hook 'julia-mode-hook 'eglot-ensure)
+;; (add-hook 'R-mode-hook 'eglot-ensure)
+#+END_SRC
+
+
+**** Microsoft's pyright LSP
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+#+END_SRC
+
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+ :ensure t)
+(use-package lsp-treemacs
+  :ensure t)
+(add-hook 'latex-mode 'lsp)
+(add-hook 'python-mode 'lsp)
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (yas-global-mode))
+#+END_SRC
+
 # #
 # #
 # #  :init
@@ -3091,28 +3092,28 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 
 
 ** M
-# 
-# 
-# *** magit 
-# 
-# This package supports the use of git in Emacs.
-# Dave Wilson's [[https://raw.githubusercontent.com/daviwil/emacs-from-scratch/500370fa06889dad313e60473d73090fcfbe106d/init.el][config for magit]].
-# See his [[https://www.youtube.com/watch?v=INTu30BHZGk][video on magit]] starting at 30:00.
-# 
-# # #+BEGIN_SRC emacs-lisp
-# # (use-package magit
-# #   :custom
-# #   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-# # 
-# # ;;(use-package evil-magit
-# # ;;  :after magit)
-# # 
-# # ;; NOTE: Make sure to configure a GitHub token before using this package!
-# # ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-# # ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-# # #+END_SRC
-# 
-# 
+
+
+*** magit
+
+This package supports the use of git in Emacs.
+Dave Wilson's [[https://raw.githubusercontent.com/daviwil/emacs-from-scratch/500370fa06889dad313e60473d73090fcfbe106d/init.el][config for magit]].
+See his [[https://www.youtube.com/watch?v=INTu30BHZGk][video on magit]] starting at 30:00.
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;;(use-package evil-magit
+;;  :after magit)
+
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+#+END_SRC
+
+
 
 
 
