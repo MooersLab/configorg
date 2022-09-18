@@ -3203,26 +3203,26 @@ I have only three.
 I need a use-package version.
 
 
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-(require 'mathpix
-  :custom ((mathpix-app-id "app-id")
-           (mathpix-app-key "app-key"))
-  :bind
-  ("C-x m" . mathpix-screenshot))
-maybe a required setting for Macs
-(setq mathpix-screenshot-method "screencapture -i %s")
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package mathpix.el
-  :straight (:host github :repo "jethrokuan/mathpix.el")
-  :custom ((mathpix-app-id "app-id")
-           (mathpix-app-key "app-key"))
-  :bind
-  ("C-x m" . mathpix-screenshot))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
+# (require 'mathpix
+#   :custom ((mathpix-app-id "app-id")
+#            (mathpix-app-key "app-key"))
+#   :bind
+#   ("C-x m" . mathpix-screenshot))
+# ;; maybe a required setting for Macs
+# (setq mathpix-screenshot-method "screencapture -i %s")
+# #+END_SRC
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package mathpix.el
+#   :straight (:host github :repo "jethrokuan/mathpix.el")
+#   :custom ((mathpix-app-id "app-id")
+#            (mathpix-app-key "app-key"))
+#   :bind
+#   ("C-x m" . mathpix-screenshot))
+# #+END_SRC
 
 
 
@@ -3230,79 +3230,79 @@ maybe a required setting for Macs
 
 # 
 # Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
-# 
-# 
-# 
-# *** mode-line clean-up
-# 
-# #+BEGIN_SRC emacs-lisp
-# (defvar mode-line-cleaner-alist
-#   `((auto-complete-mode . " α")
-#     (yas-minor-mode . " γ")
-#     (paredit-mode . " Φ")
-#     (eldoc-mode . "")
-#     (abbrev-mode . "")
-#     (undo-tree-mode . " τ")
-#     (volatile-highlights-mode . " υ")
-#     (elisp-slime-nav-mode . " δ")
-#     (nrepl-mode . " ηζ")
-#     (nrepl-interaction-mode . " ηζ")
-#     ;; Major modes
-#     (clojure-mode . "λ")
-#     (hi-lock-mode . "")
-#     (python-mode . "Py")
-#     (emacs-lisp-mode . "EL")
-#     (markdown-mode . "md"))
-#   "Alist for `clean-mode-line'.
-# When you add a new element to the alist, keep in mind that you
-# must pass the correct minor/major mode symbol and a string you
-# want to use in the modeline *in lieu of* the original.")
-# #+END_SRC
-# 
-# Greek letters - `C-u C-\` greek.
-# 
-# `C-\` to revert to default.
-# 
-# `ς ε ρ τ υ θ ι ο π α σ δ φ γ η ξ κ λ ζ χ ψ ω β ν μ`
-# 
-# 
 
-# #+BEGIN_SRC emacs-lisp
-# (defun clean-mode-line ()
-#   (interactive)
-#   (loop for cleaner in mode-line-cleaner-alist
-#         do (let* ((mode (car cleaner))
-#                  (mode-str (cdr cleaner))
-#                  (old-mode-str (cdr (assq mode minor-mode-alist))))
-#              (when old-mode-str
-#                  (setcar old-mode-str mode-str))
-#                ;; major mode
-#              (when (eq mode major-mode)
-#                (setq mode-name mode-str)))))
-# (add-hook 'after-change-major-mode-hook 'clean-mode-line)
-# #+END_SRC
 
-# Alias the new `flymake-report-status-slim' to `flymake-report-status'
-# 
-# #+BEGIN_SRC emacs-lisp
-# (defun flymake-report-status-slim (e-w &optional status)
-#   "Show \"slim\" flymake status in mode line."
-#   (when e-w
-#     (setq flymake-mode-line-e-w e-w))
-#   (when status
-#     (setq flymake-mode-line-status status))
-#   (let* ((mode-line " Φ"))
-#     (when (> (length flymake-mode-line-e-w) 0)
-#       (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
-#     (setq mode-line (concat mode-line flymake-mode-line-status))
-#     (setq flymake-mode-line mode-line)
-#     (force-mode-line-update)))
-# (defalias 'flymake-report-status 'flymake-report-status-slim)
-# #+END_SRC
-# 
-# 
-# 
-# 
+
+*** mode-line clean-up
+
+#+BEGIN_SRC emacs-lisp
+(defvar mode-line-cleaner-alist
+  `((auto-complete-mode . " α")
+    (yas-minor-mode . " γ")
+    (paredit-mode . " Φ")
+    (eldoc-mode . "")
+    (abbrev-mode . "")
+    (undo-tree-mode . " τ")
+    (volatile-highlights-mode . " υ")
+    (elisp-slime-nav-mode . " δ")
+    (nrepl-mode . " ηζ")
+    (nrepl-interaction-mode . " ηζ")
+    ;; Major modes
+    (clojure-mode . "λ")
+    (hi-lock-mode . "")
+    (python-mode . "Py")
+    (emacs-lisp-mode . "EL")
+    (markdown-mode . "md"))
+  "Alist for `clean-mode-line'.
+When you add a new element to the alist, keep in mind that you
+must pass the correct minor/major mode symbol and a string you
+want to use in the modeline *in lieu of* the original.")
+#+END_SRC
+
+Greek letters - `C-u C-\` greek.
+
+`C-\` to revert to default.
+
+`ς ε ρ τ υ θ ι ο π α σ δ φ γ η ξ κ λ ζ χ ψ ω β ν μ`
+
+
+
+#+BEGIN_SRC emacs-lisp
+(defun clean-mode-line ()
+  (interactive)
+  (loop for cleaner in mode-line-cleaner-alist
+        do (let* ((mode (car cleaner))
+                 (mode-str (cdr cleaner))
+                 (old-mode-str (cdr (assq mode minor-mode-alist))))
+             (when old-mode-str
+                 (setcar old-mode-str mode-str))
+               ;; major mode
+             (when (eq mode major-mode)
+               (setq mode-name mode-str)))))
+(add-hook 'after-change-major-mode-hook 'clean-mode-line)
+#+END_SRC
+
+Alias the new `flymake-report-status-slim' to `flymake-report-status'
+
+#+BEGIN_SRC emacs-lisp
+(defun flymake-report-status-slim (e-w &optional status)
+  "Show \"slim\" flymake status in mode line."
+  (when e-w
+    (setq flymake-mode-line-e-w e-w))
+  (when status
+    (setq flymake-mode-line-status status))
+  (let* ((mode-line " Φ"))
+    (when (> (length flymake-mode-line-e-w) 0)
+      (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
+    (setq mode-line (concat mode-line flymake-mode-line-status))
+    (setq flymake-mode-line mode-line)
+    (force-mode-line-update)))
+(defalias 'flymake-report-status 'flymake-report-status-slim)
+#+END_SRC
+
+
+
+
 # ** N
 # 
 # *** nov
