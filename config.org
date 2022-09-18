@@ -3012,12 +3012,59 @@ Invoke already under the Python config. dap works for only Python and Java.
 #+END_SRC
 
 
+**** Configuration from my [[https://github.com/MooersLab/latex-emacs][latex-emacs profile]]
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p `auctex) (package-install `auctex))
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+(setq doc-view-continuous t) ;; scroll over all pages in doc view 
+
+;; Settings for minted package issue
+(eval-after-load "tex" 
+  '(setcdr (assoc "LaTeX" TeX-command-list)
+          '("%`%l%(mode) -shell-escape%' %t"
+          TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")
+    )
+  )
+
+; Outline-minor-mode key map Source: https://www.emacswiki.org/emacs/OutlineMinorMode
+(define-prefix-command 'cm-map nil "Outline-")
+; HIDE
+(define-key cm-map "q" 'hide-sublevels)    ; Hide everything but the top-level headings
+(define-key cm-map "t" 'hide-body)         ; Hide everything but headings (all body lines)
+(define-key cm-map "o" 'hide-other)        ; Hide other branches
+(define-key cm-map "c" 'hide-entry)        ; Hide this entry's body
+(define-key cm-map "l" 'hide-leaves)       ; Hide body lines in this entry and sub-entries
+(define-key cm-map "d" 'hide-subtree)      ; Hide everything in this entry and sub-entries
+; SHOW
+(define-key cm-map "a" 'show-all)          ; Show (expand) everything
+(define-key cm-map "e" 'show-entry)        ; Show this heading's body
+(define-key cm-map "i" 'show-children)     ; Show this heading's immediate child sub-headings
+(define-key cm-map "k" 'show-branches)     ; Show all sub-headings under this heading
+(define-key cm-map "s" 'show-subtree)      ; Show (expand) everything in this heading & below
+; MOVE
+(define-key cm-map "u" 'outline-up-heading)                ; Up
+(define-key cm-map "n" 'outline-next-visible-heading)      ; Next
+(define-key cm-map "p" 'outline-previous-visible-heading)  ; Previous
+(define-key cm-map "f" 'outline-forward-same-level)        ; Forward - same level
+(define-key cm-map "b" 'outline-backward-same-level)       ; Backward - same level
+(global-set-key "\M-o" cm-map)
+#+END_SRC
 
 
-*** LaTeX helper functions
+**** My LaTeX helper functions
 
 
-**** M-x description
+***** M-x description
 
 Converts a selected list into a description list.
 The elements of the list must begin with a dash.
@@ -3042,7 +3089,7 @@ have to be added after running the function.
 
 
 
-**** M-x enumerate
+***** M-x enumerate
 
 Converts a selected list into an enumerated list.
 The elements of the list must begin with a dash.
@@ -3064,7 +3111,7 @@ The elements of the list must begin with a dash.
 
 
 
-**** M-x itemize
+***** M-x itemize
 
 Converts a selected list into an itemized list.
 The elements of the list must begin with a dash.
