@@ -3757,27 +3757,27 @@ prot-org.el file.  In the video I explain why I use this style.
 
 *** consult-org-headings
 
-# Eric's wrapper for the consult-org-heading function.
-# Gives plain text headers listed in minibuffer.
-#
-# #+BEGIN_SRC emacs-lisp
-# ;;(defun esf/consult-org-heading ()
-# ;;  "Eric's wrapper about consult-org-heading."
-# ;;  (interactive)
-# ;;  (let ((org-level-faces nil))
-# ;;    (consult-org-heading)))
-# ;;(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
-# #+END_SRC
-#
-# I like the default settings with color coding.
-# I have mapped these to the ~C-c s~.
-#
-# #+BEGIN_SRC emacs-lisp
-# (global-set-key (kbd "C-c s") 'consult-org-heading)
-# ;;(add-hook 'org-mode-hook
-# ;;          (lambda ()
-# ;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
-# #+END_SRC
+Eric Fraga's wrapper for the consult-org-heading function.
+Gives plain text headers listed in minibuffer.
+
+#+BEGIN_SRC emacs-lisp
+(defun esf/consult-org-heading ()
+  "Eric's wrapper about consult-org-heading."
+  (interactive)
+  (let ((org-level-faces nil))
+    (consult-org-heading)))
+(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
+#+END_SRC
+
+I like the default settings with color coding.
+I have mapped these to the ~C-c s~.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c s") 'consult-org-heading)
+;;(add-hook 'org-mode-hook
+;;          (lambda ()
+;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
+#+END_SRC
 
 
 *** org-download
