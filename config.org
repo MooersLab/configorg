@@ -3919,10 +3919,10 @@ I had to add the set term, set xtics, and set ytics to expand the size of the pl
 
 
 #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path (concat user-emacs-directory "/Users/blaine/.emacs.default/elisp/elgantt")) ;; Or wherever it is located
-# (require 'elgantt)
-# (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org"))
-#
+(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/elgantt") ;; Or wherever it is located
+(require 'elgantt)
+(setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org")
+
 (setq elgantt-user-set-color-priority-counter 0)
 (elgantt-create-display-rule draw-scheduled-to-deadline
   :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
