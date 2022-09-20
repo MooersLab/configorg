@@ -3275,6 +3275,8 @@ Invoke already under the Python config. dap works for only Python and Java.
 (add-hook 'python-mode-hook 'eglot-ensure)
 (add-hook 'latex-mode-hook 'eglot-ensure)
 (add-hook 'julia-mode-hook 'eglot-ensure)
+(add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))      
+(add-hook 'markdown-mode-hook #'eglot-ensure)
 ;; (add-hook 'R-mode-hook 'eglot-ensure)
 #+END_SRC
 
@@ -3521,7 +3523,11 @@ I adapted it to edit README.md files for GitHub following this suggested [[https
   :mode (" \\.md\\'" . gfm-mode)
   :commands (markdown-mode gfm-mode)
   :config
-  (setq markdown-command "pandoc -t html5"))
+  (setq markdown-command "pandoc -t html5")
+  :hook (markdown-mode . lsp)
+  :config
+    (require 'lsp-marksman)
+  )
 #+END_SRC
 
 
