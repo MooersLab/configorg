@@ -4617,7 +4617,7 @@ Anyways, see pdftools for an improved experience for navigating PDFs in Emacs wi
   :config 
   (setq 
     org_notes (concat (getenv "HOME") "/org-roam/")
-    zot_bib (concat (getenv "HOME") "/Dropbox/global.bib")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
     org-directory org_notes
     deft-directory org_notes
     org-roam-directory org_notes
@@ -4768,7 +4768,7 @@ The following configuration follows the example located in the ~README.org~ file
   :config
   (setq
     org_notes (concat (getenv "HOME") "/org-roam/")
-    zot_bib (concat (getenv "HOME") "/Dropbox/global.bib")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
     org-directory org_notes
     deft-directory org_notes
     org-roam-directory org_notes
@@ -5198,21 +5198,62 @@ Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 *** org-wc
 
-Enable org-wc to work in org documents.
-Enter `wc` to get word count returned in org files.
-Enter `C-c w` to the samething.
+# Enable org-wc to work in org documents.
+# Enter `wc` to get word count returned in org files.
+# Enter `C-c w` to the samething.
+#
+# Similar to wc-mode which works in all docments
+#
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-wc)
+# ;; Total word count for a org file and word count by headline.
+# (add-hook 'org-mode-hook 'org-wc)
+# (define-key org-mode-map [("\C-cw")] 'org-wc-display)
+# ;; (define-key global-map "\C-cw" 'org-wc-display)
+# #+END_SRC
+#
+# See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
 
-Similar to wc-mode which works in all docments
+
+*** org-count-words
+[[https://www.reddit.com/r/emacs/comments/8qm1lb/new_orgcountwords_command/][org-count-words]]
+
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-wc)
-;; Total word count for a org file and word count by headline.
-(add-hook 'org-mode-hook 'org-wc)
-(define-key org-mode-map [("\C-cw")] 'org-wc-display)
-;; (define-key global-map "\C-cw" 'org-wc-display)
-#+END_SRC
+(defun ap/org-forward-to-entry-content (&optional unsafe)
+    "Skip headline, planning line, and all drawers in current entry.
+If UNSAFE is non-nil, assume point is on headline."
+    (unless unsafe
+      ;; To improve performance in loops (e.g. with `org-map-entries')
+      (org-back-to-heading))
+    (cl-loop for element = (org-element-at-point)
+             for pos = (pcase element
+                         (`(headline . ,_) (org-element-property :contents-begin element))
+                         (`(,(or 'planning 'property-drawer 'drawer) . ,_) (org-element-property :end element)))
+             while pos
+             do (goto-char pos)))
 
-See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]]. 
+(defun ap/org-count-words ()
+    "If region is active, count words in it; otherwise count words in current subtree."
+    (interactive)
+    (if (use-region-p)
+        (funcall-interactively #'count-words-region (region-beginning) (region-end))
+      (org-with-wide-buffer
+       (cl-loop for (lines words characters)
+                in (org-map-entries
+                    (lambda ()
+                      (ap/org-forward-to-entry-content 'unsafe)
+                      (let ((end (org-entry-end-position)))
+                        (list (count-lines (point) end)
+                              (count-words (point) end)
+                              (- end (point)))))
+                    nil 'tree)
+                sum lines into total-lines
+                sum words into total-words
+                sum characters into total-characters
+                finally do (message "Subtree \"%s\" has %s lines, %s words, and %s characters."
+                                    (org-get-heading t t) total-lines total-words total-characters)))))
+#+END_SRC
 
 
 **** ox-ipynb
