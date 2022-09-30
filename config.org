@@ -52,14 +52,13 @@ You have to do these steps in reverse order when updating your configuration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
 
-
-# This command starts the server if it is not already running.
-#
-# #+BEGIN_SRC emacs-lisp
-# (server-start)
-# ;;(unless (server-running-p) (server-start))
-# #+END_SRC
-
+#+BEGIN_COMMENT
+This command starts the server if it is not already running.                                                                                                                             
+#+BEGIN_SRC emacs-lisp
+(server-start)
+;;(unless (server-running-p) (server-start))
+#+END_SRC
+#+END_COMMENT
 
 The elisp code can be run by placing the cursor right after the leftmost parenthesis and entering ~C-x C-e~ or by placing the cursor inside of the parenthesis and entering ~C-M-x~.
 You can use these commands to test bits of configuration in your ~<*scratch*>~ buffer before committing to adding the code chunks to your initialization file.
