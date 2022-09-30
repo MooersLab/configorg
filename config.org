@@ -654,6 +654,7 @@ Example configuration for the pacakge  /consult/.
 #+END_SRC
 #+END_COMMENT
 
+#+BEGIN_COMMENT
  **** marginalia
 
  #+BEGIN_SRC emacs-lisp
@@ -662,12 +663,12 @@ Example configuration for the pacakge  /consult/.
    :config
    (marginalia-mode))
  #+END_SRC
+#+END_COMMENT
 
-
+#+BEGIN_COMMENT
  **** embark
-
- #+BEGIN_SRC emacs-lisp
- (use-package embark
+#+BEGIN_SRC emacs-lisp
+(use-package embark
    :ensure t
    :bind
    (("C-." . embark-act)         ;; pick some comfortable binding
@@ -682,14 +683,15 @@ Example configuration for the pacakge  /consult/.
                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                   nil
                   (window-parameters (mode-line-format . none)))))
- #+END_SRC
+#+END_SRC
+#+END_COMMENT
 
 
- **** embark-consult
+#+BEGIN_COMMENT
+**** embark-consult
+Consult users will also want the embark-consult package.
 
- Consult users will also want the embark-consult package.
-
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
  (use-package embark-consult
    :ensure t
    :after (embark consult)
@@ -698,12 +700,12 @@ Example configuration for the pacakge  /consult/.
    ;; auto-updating embark collect buffer
    :hook
    (embark-collect-mode . consult-preview-at-point-mode))
- #+END_SRC
+#+END_SRC
+#+END_COMMENT
 
 
+#+BEGIN_COMMENT
  **** orderless
-
-
  [[https://github.com/oantolin/orderless][orderless] GitHub repo.
 
 
@@ -735,8 +737,9 @@ Example configuration for the pacakge  /consult/.
    (setq vertico-cycle t)
  )
  #+END_SRC
+#+END_COMMENT
 
-
+#+BEGIN_COMMENT
  **** citar
  
  /citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
@@ -757,7 +760,6 @@ Example configuration for the pacakge  /consult/.
  #+END_SRC
  
  Notethat scholar-import is configured to work with citar.
-
 #+END_COMMENT
 
 
