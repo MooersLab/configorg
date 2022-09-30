@@ -1311,8 +1311,8 @@ I edited the documentation line to fix the grammar and add the final phrase.
 # #   :init (doom-modeline-mode 1)
 # #   :custom ((doom-modeline-height 25)))
 # # #+END_SRC
-#
-#
+
+
 *** dot-mode
 
 This minor mode enables the use of C-. to repeat the last command.
@@ -1361,8 +1361,8 @@ I want this great Vi command enabled globally.
 # |-----------------------+-----------------------|
 #
 # You can customize the prefix by adding:
-#
-#+BEGIN_COMMENT
+
+
 
 
 #+BEGIN_SRC emacs-lisp
