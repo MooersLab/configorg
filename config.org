@@ -2531,9 +2531,8 @@ Enable a more powerful version of autocompletion of prose by mapping hippe-expan
 #+END_SRC
 
 
-#+BEGIN_COMMENT
-*** highlight-indent-guides
 
+*** highlight-indent-guides
 
 This is a new and well developed minor mode that is activated for most modes by the command below.
 For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
@@ -2541,10 +2540,8 @@ For details on how to customize the coloring and width of the guides, see [[this
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 #+END_SRC
-#+END_COMMENT
 
 
-#+BEGIN_COMMENT
 *** hydra
 
 Hydra empowers you to make custom keybindings that are repeated by entering a single key.
@@ -2553,8 +2550,8 @@ For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
 [[Hydra github site][Https://github.com/abo-abo/hydra]].
 
 #+BEGIN_SRC emacs-lisp
-(use-package hydra)
-
+(use-package hydra
+  :ensure t)
 
 (defhydra hydra-zoom (global-map "<f2>")
       "zoom"
@@ -2567,7 +2564,6 @@ For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 #+END_SRC
-#+END_COMMENT
 
 
 ** I
@@ -5327,18 +5323,6 @@ If UNSAFE is non-nil, assume point is on headline."
                 finally do (message "Subtree \"%s\" has %s lines, %s words, and %s characters."
                                     (org-get-heading t t) total-lines total-words total-characters)))))
 #+END_SRC
-
-
-
-**** ox-ipynb
-
-Package for exporting org to ipynb.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ox-ipynb
-  :ensure t)
-#+END_SRC
-
 
 
 ** P
