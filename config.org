@@ -1042,13 +1042,14 @@ It is a peer of ivy.
 (add-hook 'python-mode-hook 'my/python-mode-hook)
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 *** Copilot
 
 The requires the GitHub Coplit subscription.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-(load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
+(load-file "~/.emacs.default/manual-packages/copilot.el/copilot.el")
 
 ;; Use copilot-mode to automatically provide completions
 (add-hook 'prog-mode-hook 'copilot-mode)
@@ -1073,10 +1074,10 @@ The requires the GitHub Coplit subscription.
 
 
 
-#+BEGIN_COMMENT  
-**** Copilot commands:
 
-- copilot-diagnose
+**** Copilot commands:
+#+BEGIN_COMMENT
+copilot-diagnose
 Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
 
 copilot-login
@@ -1104,11 +1105,12 @@ copilot-logout
 Logout from GitHub.
 #+END_COMMENT
 
-#+BEGIN_COMMENT 
+
+
+
 **** Copilot customizations
-
-
-opilot-node-executable
+#+BEGIN_COMMENT
+copilot-node-executable
 The executable path of Node.js.
 
 copilot-idle-delay
@@ -1391,33 +1393,35 @@ You can customize the prefix by adding:
 
 ** E
 
+
+*** EAF: emacs-application-framework
+ Missing a python library file for Qt6 on the Mac.
 #+BEGIN_COMMENT
- *** EAF: emacs-application-framework
-  Missing a python library file for Qt6 on the Mac.
- #+BEGIN_SRC emacs-lisp
- (use-package eaf
-   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-   :custom
-   ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-   (eaf-browser-continue-where-left-off t)
-   (eaf-browser-enable-adblocker t)
-   (browse-url-browser-function 'eaf-open-browser)
-   :config
-   (defalias 'browse-web #'eaf-open-browser)
-   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-   (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-   (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
- #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser)
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+END_SRC
 #+END_COMMENT
 
-#+BEGIN_COMMENT
-Load up some applications.
 
+Load up some applications.
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (require 'eaf-browser)
 (require 'eaf-pdf-viewer)
 #+END_SRC
+#+END_COMMENT
 
 To check that all is well, enter ~M-x eaf-open-demo~.
 
@@ -1449,7 +1453,7 @@ ls /Users/blaine/Library/Python/3.9/lib/python/site-packages/PyQt6/Qt6/lib
 | Demo                | `M-x eaf-open-demo` to verify basic functionality                      |
 | Vue Demo            | `M-x eaf-open-vue-demo` to verify vue.js functionality                 |
 |---------------------+------------------------------------------------------------------------|
-#+END_COMMENT
+
 
 *** Emacs Lisp Functions
 
@@ -1692,7 +1696,7 @@ nil 'tree)))))
 
 
 
-#+BEGIN_COMMENT
+
 *** eglot-grammarly
 
 Source: https://github.com/emacs-grammarly/eglot-grammarly.
@@ -1703,23 +1707,26 @@ This file is used to configure grammarly.
 1. npm install -g @emacs-grammarly/unofficial-grammarly-language-server
 2. Add the config below to your your emacs init file.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/elisp/eglot-grammarly")
+(add-to-list 'load-path "~/.emacs.default/elisp/eglot-grammarly")
 (require 'eglot-grammarly
   :ensure t
   :hook (text-mode . (lambda ()
                        (require 'eglot-grammarly)
                        (call-interactively #'eglot))))
 #+END_SRC
+#+END_COMMENT
 
 3. Create a ~.dir-locals.el~ file in the the project root directory with the following content:
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-;;((nil
-;;  (eglot-workspace-configuration
-;;   . ((@emacs-grammarly/unofficial-grammarly-language-server
-;;       . ((audience . "knowledgeable")
-;;       . ((autoactivate . "true")))))))
+((nil
+  (eglot-workspace-configuration
+   . ((@emacs-grammarly/unofficial-grammarly-language-server
+       . ((audience . "knowledgeable")
+       . ((autoactivate . "true")))))))
 #+END_SRC
 #+END_COMMENT
 
@@ -2617,22 +2624,23 @@ Add vim key binding for use in ivy menus.
 #+END_SRC
 #+END_COMMENT
 
-#+BEGIN_COMMENT
-*** ivy-bibtex
 
+*** ivy-bibtex
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-bibtex)
 #+END_SRC
 #+END_COMMENT
 
 
-#+BEGIN_COMMENT
+
 *** ivy-rich
 
 Display documentation strings with commands when running counsel-M-x.
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
+  :ensure t
   :init
   (ivy-rich-mode 1))
 #+END_SRC
@@ -4753,9 +4761,11 @@ Source: https://github.com/tmalsburg/helm-bibtex
       (("C-c n B" . helm-bibtex))
 )
 
-(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
-(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
+;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
+;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
 #+END_SRC
+
+
 
 If the file field is not used but instead the naming scheme bibtex-key + .pdf.
 
@@ -4797,6 +4807,8 @@ To use the title of the PDF file in the link used in a reading list in org-mode:
     (default       . bibtex-completion-format-citation-default)))
 #+END_SRC
 
+
+
 *** deft 
 
 This search engine can scan org-roam entries.
@@ -4823,13 +4835,14 @@ This search engine can scan org-roam entries.
 
 
 
-#+BEGIN_COMMENT
+
 *** org-noter-pdftools
 
 This package integrates org-noter and pdftools.
 
 The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package org-noter
   :after org
@@ -4933,34 +4946,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 #+END_SRC
 
 
-#+BEGIN_COMMENT
-*** org-ref and helm-bibtex
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-bibtex
-  :custom
-  ;; In the lines below I point helm-bibtex to my default library file.
-  (bibtex-completion-bibliography '("~/Dropbox/global.bib"))
-  (reftex-default-bibliography '("~/Dropbox/global.bib"))
-  ;; The line below tells helm-bibtex to find the path to the pdf
-  ;; in the "file" field in the .bib file.
-  (bibtex-completion-pdf-field "file")
-  :hook (Tex . (lambda () (define-key Tex-mode-map "\C-ch" 'helm-bibtex))))
-;; I also like to be able to view my library from anywhere in emacs, for example if I want to read a paper.
-;; I added the keybind below for that.
-;;(map! :leader
-;;      :desc "Open literature database"
-;;      "o l" #'helm-bibtex)
-;; And I added the keybinds below to make the helm-menu behave a bit like the other menus in emacs behave with evil-mode.
-;; Basically, the keybinds below make sure I can scroll through my list of references with C-j and C-k.
-;;(map! :map helm-map
-;;      "C-j" #'helm-next-line
-;;      "C-k" #'helm-previous-line)
-;;)
-#+END_SRC
-#+END_COMMENT
-
-*** org-ref
+**** org-ref
 
 
 #+BEGIN_SRC emacs-lisp
@@ -4989,10 +4975,9 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 
 
+*** org-ref-ivery
 
 #+BEGIN_COMMENT
-*** org-ref-bibtex
-
 #+BEGIN_SRC emacs-lisp
 (use-package bibtex
   :config
@@ -5344,15 +5329,16 @@ If UNSAFE is non-nil, assume point is on headline."
 #+END_SRC
 
 
-#+BEGIN_COMMENT
+
 **** ox-ipynb
 
 Package for exporting org to ipynb.
 
 #+BEGIN_SRC emacs-lisp
-(require 'ox-ipynb)
+(use-package ox-ipynb
+  :ensure t)
 #+END_SRC
-#+END_COMMENT
+
 
 
 ** P
