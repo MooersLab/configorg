@@ -480,7 +480,6 @@ You can use the configuration below to set the default major mode.
 You can also configure atomic-chrome to set the major mode by website.
 
 #+BEGIN_SRC emacs-lisp
-
 ;; (defun enable-atomic-lsp ()
 ;;   (setq-local buffer-file-name  (f-join "/path/to/some/project" (buffer-name)))
 ;;   (lsp)
@@ -830,121 +829,134 @@ Configure eglot to work with clangd.
 #+END_SRC
 
 
+#+BEGIN_COMMENT
+*** Clojure
 
-# *** Clojure
-# 
-# **** 4clojure
-# 
-# 4clojure is an interactive quiz about the basics of Clojure.
-# Install this package from MELPA.
-# It is also available via an interactive [[https://4clojure.oxal.org/][website]].
-# Github site for the 4clojure Emacs [[https://github.com/emacsorphanage/4clojure/][package]] has the usage instructions.
-# The suggested configuration below enables running the quiz interactively in cider:
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package cider)
-# 
-# (defadvice 4clojure-open-question (around 4clojure-open-question-around)
-#   "Start a cider/nREPL connection if one hasn't already been started when
-# opening 4clojure questions"
-#   ad-do-it
-#   (unless cider-current-clojure-buffer
-#     (cider-jack-in)))
-# #+END_SRC
-# 
-# 
-# **** Cider
-# 
-# Cider supports running a Clojure REPL in a parallel window.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (setq org-babel-clojure-backend 'cider)
-# (use-package cider
-#  :ensure t)
-# (setq org-edit-src-content-indentation 0
-#      org-src-tab-acts-natively t
-#      org-src-fontify-natively t
-#      org-confirm-babel-evaluate nil)
-# (require 'cider)
-# (setq nrepl-hide-special-buffers t
-#      cider-repl-pop-to-buffer-on-connect nil
-#      cider-popup-stacktraces nil
-#      cider-repl-popup-stacktraces t)
-# ;; Useful keybindings when using Clojure from Org
-# (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
-# (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
-# #+END_SRC
-# 
-# **** nbb--cider link up to run ClojureScript via nbb
-# 
-# [[https://github.com/babashka/nbb][nbb]] means not ~babashka~.
-# 
-# /babashka/ is built on a reduced set of Clojure.
-# It is independent of the JVM.
-# I stored it in /usr/local/bin.
-# It is invoked by entering ~bb~. 
-# ~bb '(vec (dedupe *input*))' <<< '[1 1 1 1 2]'~
-# Returns ~[1 2]~.
-# 
-# You can run bash scripts with Clojure code inside.
-# Add a shebang with bb.
-# ~./cst.clj~ returns central time.
-# It is the first choice for running Clojure via scripts because it starts up faster (no JVM to spin up).
-# There are several other ways to run Clojure from the command line.
-# 
-# In contrast to /babashka/, ~nbb~ runs on top of Node.js rather than the JVM.
-# ~nnb~ runs ClojureScript.
-# 
-# Install nbb via ~npm install -g nbb~.
-# Install ~npm install -g csv-parse shelljs term-size zx~.
-# Test with ~nbb -e '(+ 1 2 3)' ~ on the command line.
-# Try a multiline test ~nbb -e '(defn exp [x n] (reduce * (repeat n x)))\n (exp 4 10)' ~.
-# 
-# To run ~nbb~ from within Emacs, launch a server via ~nbb nrepl-server :port 1337~ outside Emacs on the terminal.
-# Enter ~M-x cider-connect <RET> localhost <RET> 1337~.
-# Then change the current buffer to clojure-mode.
-# 
-# There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure. 
-# Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find. 
-# Enter ~M-x clojure-mode~ to fix this issue.
-# 
-# Note, you can run ~lein repl :connect 1337~ from the terminal.
-# 
-# 
-# 
-# **** inf-clojure minor mode
-# 
-# This is the easiest way to run Clojure from Emacs.
-# To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~. 
-# The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
-# 
-# 
-# **** modeline tweak for Clojure
-# 
-# [[http://jr0cket.co.uk/2013/01/tweeking-emacs-modeline-for-clojure.html][Clojure]]
-# 
-# **** clojure-lsp
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-mode
-#   :ensure t
-#   :hook ((clojure-mode . lsp)
-#          (clojurec-mode . lsp)
-#          (clojurescript-mode . lsp))
-#   :config
-#   ;; add paths to your local installation of project mgmt tools, like lein
-#   (setenv "PATH" (concat
-#                    "/usr/local/bin" path-separator
-#                    (getenv "PATH")))
-#   (dolist (m '(clojure-mode
-#                clojurec-mode
-#                clojurescript-mode
-#                clojurex-mode))
-#      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
-#   (setq lsp-clojure-server-command '("/usr/local/Cellar/clojure-lsp-native"))) ; Optional: In case `clojure-lsp` is not in your $PATH
-# #+END_SRC 
-# 
-# 
+**** 4clojure
+
+4clojure is an interactive quiz about the basics of Clojure.
+Install this package from MELPA.
+It is also available via an interactive [[https://4clojure.oxal.org/][website]].
+Github site for the 4clojure Emacs [[https://github.com/emacsorphanage/4clojure/][package]] has the usage instructions.
+The suggested configuration below enables running the quiz interactively in cider:
+
+#+BEGIN_SRC emacs-lisp
+(use-package cider)
+
+(defadvice 4clojure-open-question (around 4clojure-open-question-around)
+  "Start a cider/nREPL connection if one hasn't already been started when
+opening 4clojure questions"
+  ad-do-it
+  (unless cider-current-clojure-buffer
+    (cider-jack-in)))
+#+END_SRC
+#+END_COMMENT
+
+
+ 
+#+BEGIN_COMMENT
+**** Cider
+
+Cider supports running a Clojure REPL in a parallel window.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-clojure-backend 'cider)
+(use-package cider
+ :ensure t)
+(setq org-edit-src-content-indentation 0
+     org-src-tab-acts-natively t
+     org-src-fontify-natively t
+     org-confirm-babel-evaluate nil)
+(require 'cider)
+(setq nrepl-hide-special-buffers t
+     cider-repl-pop-to-buffer-on-connect nil
+     cider-popup-stacktraces nil
+     cider-repl-popup-stacktraces t)
+;; Useful keybindings when using Clojure from Org
+(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+#+END_SRC
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+**** nbb--cider link up to run ClojureScript via nbb
+
+[[https://github.com/babashka/nbb][nbb]] means not ~babashka~.
+
+/babashka/ is built on a reduced set of Clojure.
+It is independent of the JVM.
+I stored it in /usr/local/bin.
+It is invoked by entering ~bb~. 
+~bb '(vec (dedupe *input*))' <<< '[1 1 1 1 2]'~
+Returns ~[1 2]~.
+
+You can run bash scripts with Clojure code inside.
+Add a shebang with bb.
+~./cst.clj~ returns central time.
+It is the first choice for running Clojure via scripts because it starts up faster (no JVM to spin up).
+There are several other ways to run Clojure from the command line.
+
+In contrast to /babashka/, ~nbb~ runs on top of Node.js rather than the JVM.
+~nnb~ runs ClojureScript.
+
+Install nbb via ~npm install -g nbb~.
+Install ~npm install -g csv-parse shelljs term-size zx~.
+Test with ~nbb -e '(+ 1 2 3)' ~ on the command line.
+Try a multiline test ~nbb -e '(defn exp [x n] (reduce * (repeat n x)))\n (exp 4 10)' ~.
+
+To run ~nbb~ from within Emacs, launch a server via ~nbb nrepl-server :port 1337~ outside Emacs on the terminal.
+Enter ~M-x cider-connect <RET> localhost <RET> 1337~.
+Then change the current buffer to clojure-mode.
+
+There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure. 
+Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find. 
+Enter ~M-x clojure-mode~ to fix this issue.
+
+Note, you can run ~lein repl :connect 1337~ from the terminal.
+#+END_COMMENT
+
+
+
+#+BEGIN_COMMENT
+
+**** inf-clojure minor mode
+
+This is the easiest way to run Clojure from Emacs.
+To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~. 
+The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
+
+
+**** modeline tweak for Clojure
+
+[[http://jr0cket.co.uk/2013/01/tweeking-emacs-modeline-for-clojure.html][Clojure]]
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+**** clojure-lsp
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :hook ((clojure-mode . lsp)
+         (clojurec-mode . lsp)
+         (clojurescript-mode . lsp))
+  :config
+  ;; add paths to your local installation of project mgmt tools, like lein
+  (setenv "PATH" (concat
+                   "/usr/local/bin" path-separator
+                   (getenv "PATH")))
+  (dolist (m '(clojure-mode
+               clojurec-mode
+               clojurescript-mode
+               clojurex-mode))
+     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+  (setq lsp-clojure-server-command '("/usr/local/Cellar/clojure-lsp-native"))) ; Optional: In case `clojure-lsp` is not in your $PATH
+#+END_SRC
+#+END_COMMENT
+
+#+END_COMMENT
 # *** Rainbow blocks for Clojure
 # 
 # The package rainbow-blocks does color highlighting by scope rather than syntax.
@@ -957,7 +969,7 @@ Configure eglot to work with clangd.
 # (add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
 # 
 # #+END_SRC
-# 
+#+END_COMMENT
 
 
 *** command-log-mode
@@ -1030,80 +1042,85 @@ It is a peer of ivy.
 (add-hook 'python-mode-hook 'my/python-mode-hook)
 #+END_SRC
 
+#+BEGIN_COMMENT
+*** Copilot
 
-# ;;  *** Copilot
-# ;;  
-# ;;  The requires the GitHub Coplit subscription.
-# ;;  
-# ;;  #+BEGIN_SRC emacs-lisp
-# ;;  (load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
-# ;;  
-# ;;  ;; Use copilot-mode to automatically provide completions
-# ;;  (add-hook 'prog-mode-hook 'copilot-mode)
-# ;;  
-# ;;  ; complete by copilot first, then company-mode
-# ;;  (defun my-tab ()
-# ;;    (interactive)
-# ;;    (or (copilot-accept-completion)
-# ;;        (company-indent-or-complete-common nil)))
-# ;;  
-# ;;  ; modify company-mode behaviors
-# ;;  (with-eval-after-load 'company
-# ;;    ;; disable inline previews
-# ;;    (delq 'company-preview-if-just-one-frontend company-frontends)
-# ;;  
-# ;;    (define-key company-mode-map (kbd "<tab>") 'my-tab)
-# ;;    (define-key company-mode-map (kbd "TAB") 'my-tab)
-# ;;    (define-key company-active-map (kbd "<tab>") 'my-tab)
-# ;;    (define-key company-active-map (kbd "TAB") 'my-tab))
-# ;;  #+END_SRC
-# ;;  
-# ;;  **** Copilot commands:
-# ;;  
-# ;;  - copilot-diagnose
-# ;;  Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
-# ;;  
-# ;;  copilot-login
-# ;;  Login to GitHub, required for using the plugin.
-# ;;  
-# ;;  copilot-mode
-# ;;  Enable/disable copilot mode.
-# ;;  
-# ;;  copilot-complete
-# ;;  Try to complete at the current point.
-# ;;  
-# ;;  copilot-accept-completion
-# ;;  Accept the current completion.
-# ;;  
-# ;;  copilot-clear-overlay
-# ;;  Clear copilot overlay in the current buffer.
-# ;;  
-# ;;  copilot-accept-completion-by-line / copilot-accept-completion-by-word
-# ;;  Similar to copilot-accept-completion, but accept the completion by line or word. You can use prefix argument to specify the number of lines or words to accept.
-# ;;  
-# ;;  copilot-next-completion / copilot-previous-completion
-# ;;  Cycle through the completion list.
-# ;;  
-# ;;  copilot-logout
-# ;;  Logout from GitHub.
-# ;;  
-# ;;  **** Copilot customizations
-# ;;  
-# ;;  
-# ;;  opilot-node-executable
-# ;;  The executable path of Node.js.
-# ;;  
-# ;;  copilot-idle-delay
-# ;;  Time in seconds to wait before starting completion (default to 0). Note Copilot itself has a ~100ms delay because of network communication.
-# ;;  
-# ;;  copilot-enable-predicates
-# ;;  A list of predicate functions with no argument to enable Copilot in copilot-mode. Copilot will be enabled only if all predicates return t.
-# ;;  
-# ;;  copilot-disable-predicates
-# ;;  A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
-# ;;  
-# ;;  
-# 
+The requires the GitHub Coplit subscription.
+
+#+BEGIN_SRC emacs-lisp
+(load-file "~/.emacs.d/manual-packages/copilot.el/copilot.el")
+
+;; Use copilot-mode to automatically provide completions
+(add-hook 'prog-mode-hook 'copilot-mode)
+
+; complete by copilot first, then company-mode
+(defun my-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (company-indent-or-complete-common nil)))
+
+; modify company-mode behaviors
+(with-eval-after-load 'company
+  ;; disable inline previews
+  (delq 'company-preview-if-just-one-frontend company-frontends)
+
+  (define-key company-mode-map (kbd "<tab>") 'my-tab)
+  (define-key company-mode-map (kbd "TAB") 'my-tab)
+  (define-key company-active-map (kbd "<tab>") 'my-tab)
+  (define-key company-active-map (kbd "TAB") 'my-tab))
+#+END_SRC
+#+END_COMMENT
+
+
+
+#+BEGIN_COMMENT  
+**** Copilot commands:
+
+- copilot-diagnose
+Check the current status of the plugin. Also you can check logs in the *copilot events* buffer and stderr output in the *copilot stderr* buffer.
+
+copilot-login
+Login to GitHub, required for using the plugin.
+
+copilot-mode
+Enable/disable copilot mode.
+
+copilot-complete
+Try to complete at the current point.
+
+copilot-accept-completion
+Accept the current completion.
+
+copilot-clear-overlay
+Clear copilot overlay in the current buffer.
+
+copilot-accept-completion-by-line / copilot-accept-completion-by-word
+Similar to copilot-accept-completion, but accept the completion by line or word. You can use prefix argument to specify the number of lines or words to accept.
+
+copilot-next-completion / copilot-previous-completion
+Cycle through the completion list.
+
+copilot-logout
+Logout from GitHub.
+#+END_COMMENT
+
+#+BEGIN_COMMENT 
+**** Copilot customizations
+
+
+opilot-node-executable
+The executable path of Node.js.
+
+copilot-idle-delay
+Time in seconds to wait before starting completion (default to 0). Note Copilot itself has a ~100ms delay because of network communication.
+
+copilot-enable-predicates
+A list of predicate functions with no argument to enable Copilot in copilot-mode. Copilot will be enabled only if all predicates return t.
+
+copilot-disable-predicates
+A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
+#+END_COMMENT
+
 
 *** CUA-mode
 
@@ -1119,10 +1136,6 @@ The same goes for the other CUA keys.
     (transient-mark-mode 1) ;; No region when it is not highlighted
     (setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
 #+END_SRC
-
-
-
-
 
 
 ** D
@@ -1398,45 +1411,46 @@ You can customize the prefix by adding:
  #+END_SRC
 #+END_COMMENT
 
-# Load up some applications.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (require 'eaf-browser)
-# (require 'eaf-pdf-viewer)
-# #+END_SRC
-# 
-# To check that all is well, enter ~M-x eaf-open-demo~.
-# 
-# ls /opt/local/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/
-# ls /Users/blaine/Library/Python/3.9/lib/python/site-packages/PyQt6/Qt6/lib
-# 
-# |---------------------+------------------------------------------------------------------------|
-# | Application Name    | Launch                                                                 |
-# |---------------------+------------------------------------------------------------------------|
-# | Browser             | `M-x eaf-open-browser`                                                 |
-# | Search or Goto URL  | `M-x eaf-open-browser-with-history` Search or Goto URL or Goto History |
-# | HTML Email Renderer | `M-x eaf-open-mail-as-html` in `gnus`, `mu4e`, `notmuch` HTMl Mail     |
-# | PDF Viewer          | `M-x eaf-open` PDF File                                                |
-# | Video Player        | `M-x eaf-open` Video File                                              |
-# | Image Viewer        | `M-x eaf-open` Image File                                              |
-# | Markdown Previewer  | `M-x eaf-open` Markdown File                                           |
-# | Org Previewer       | `M-x eaf-open` Org File                                                |
-# | Camera              | `M-x eaf-open-camera`                                                  |
-# | Terminal            | `M-x eaf-open-terminal`                                                |
-# | File Manager        | `M-x eaf-open-in-file-manager`                                         |
-# | File Sender         | `M-x eaf-file-sender-qrcode` or `eaf-file-sender-qrcode-in-dired`      |
-# | File Browser        | `M-x eaf-file-browser-qrcode`                                          |
-# | Airshare            | `M-x eaf-open-airshare`                                                |
-# | Mindmap             | `M-x eaf-create-mindmap` or `M-x eaf-open-mindmap`                     |
-# | MS Office Viewer    | `M-x eaf-open-office`                                                  |
-# | Jupyter             | `M-x eaf-open-jupyter`                                                 |
-# | Music Player        | `M-x eaf-open-music-player`                                            |
-# | System Monitor      | `M-x eaf-open-system-monitor`                                          |
-# | Demo                | `M-x eaf-open-demo` to verify basic functionality                      |
-# | Vue Demo            | `M-x eaf-open-vue-demo` to verify vue.js functionality                 |
-# |---------------------+------------------------------------------------------------------------|
-# 
-# 
+#+BEGIN_COMMENT
+Load up some applications.
+
+#+BEGIN_SRC emacs-lisp
+(require 'eaf-browser)
+(require 'eaf-pdf-viewer)
+#+END_SRC
+
+To check that all is well, enter ~M-x eaf-open-demo~.
+
+ls /opt/local/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/
+ls /Users/blaine/Library/Python/3.9/lib/python/site-packages/PyQt6/Qt6/lib
+
+|---------------------+------------------------------------------------------------------------|
+| Application Name    | Launch                                                                 |
+|---------------------+------------------------------------------------------------------------|
+| Browser             | `M-x eaf-open-browser`                                                 |
+| Search or Goto URL  | `M-x eaf-open-browser-with-history` Search or Goto URL or Goto History |
+| HTML Email Renderer | `M-x eaf-open-mail-as-html` in `gnus`, `mu4e`, `notmuch` HTMl Mail     |
+| PDF Viewer          | `M-x eaf-open` PDF File                                                |
+| Video Player        | `M-x eaf-open` Video File                                              |
+| Image Viewer        | `M-x eaf-open` Image File                                              |
+| Markdown Previewer  | `M-x eaf-open` Markdown File                                           |
+| Org Previewer       | `M-x eaf-open` Org File                                                |
+| Camera              | `M-x eaf-open-camera`                                                  |
+| Terminal            | `M-x eaf-open-terminal`                                                |
+| File Manager        | `M-x eaf-open-in-file-manager`                                         |
+| File Sender         | `M-x eaf-file-sender-qrcode` or `eaf-file-sender-qrcode-in-dired`      |
+| File Browser        | `M-x eaf-file-browser-qrcode`                                          |
+| Airshare            | `M-x eaf-open-airshare`                                                |
+| Mindmap             | `M-x eaf-create-mindmap` or `M-x eaf-open-mindmap`                     |
+| MS Office Viewer    | `M-x eaf-open-office`                                                  |
+| Jupyter             | `M-x eaf-open-jupyter`                                                 |
+| Music Player        | `M-x eaf-open-music-player`                                            |
+| System Monitor      | `M-x eaf-open-system-monitor`                                          |
+| Demo                | `M-x eaf-open-demo` to verify basic functionality                      |
+| Vue Demo            | `M-x eaf-open-vue-demo` to verify vue.js functionality                 |
+|---------------------+------------------------------------------------------------------------|
+#+END_COMMENT
+
 *** Emacs Lisp Functions
 
 **** List my interactive functions
@@ -1560,38 +1574,39 @@ Thank you DivineDomain: https://github.com/MooersLab/latex-emacs/issues/1
 #+END_SRC
 
 
-# **** Move lines up or down
-#
-# These three functions enable moving lines up and down with M-<up> and M-<down> rather than having to cut and paste.
-#
-# #+BEGIN_SRC emacs-lisp
-# (defun move-line (n)
-#   "Move the current line up or down by N lines."
-#   (interactive "p")
-#   (setq col (current-column))
-#   (beginning-of-line) (setq start (point))
-#   (end-of-line) (forward-char) (setq end (point))
-#   (let ((line-text (delete-and-extract-region start end)))
-#     (forward-line n)
-#     (insert line-text)
-#     ;; restore point to original column in moved line
-#     (forward-line -1)
-#     (forward-char col)))
-#
-# (defun move-line-up (n)
-#   "Move the current line up by N lines."
-#   (interactive "p")
-#   (move-line (if (null n) -1 (- n))))
-#
-# (defun move-line-down (n)
-#   "Move the current line down by N lines."
-#   (interactive "p")
-#   (move-line (if (null n) 1 n)))
-#
-# (global-set-key (kbd "M-<up>") 'move-line-up)
-# (global-set-key (kbd "M-<down>") 'move-line-down)
-# #+END_SRC
+#+BEGIN_COMMENT
+**** Move lines up or down
 
+These three functions enable moving lines up and down with M-<up> and M-<down> rather than having to cut and paste.
+
+#+BEGIN_SRC emacs-lisp
+(defun move-line (n)
+  "Move the current line up or down by N lines."
+  (interactive "p")
+  (setq col (current-column))
+  (beginning-of-line) (setq start (point))
+  (end-of-line) (forward-char) (setq end (point))
+  (let ((line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (insert line-text)
+    ;; restore point to original column in moved line
+    (forward-line -1)
+    (forward-char col)))
+
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (if (null n) -1 (- n))))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line (if (null n) 1 n)))
+
+(global-set-key (kbd "M-<up>") 'move-line-up)
+(global-set-key (kbd "M-<down>") 'move-line-down)
+#+END_SRC
+#+END_COMMENT
 
 **** Compile tex to PDF with current buffer name 
 
@@ -1645,65 +1660,69 @@ Enter C-x p to move the cursor to the previously visited window.
 
 **** Word counting
 
-# #+BEGIN_SRC emacs-lisp
-# ;; word counting in subtree
-# (defun my/count-words-in-subtree-or-region ()
-# ;; Bind this to a key in org-mode, e.g. C-=
-#   (interactive)
-#   (call-interactively (if (region-active-p)
-# 			  'count-words-region
-# 			  'my/count-words-in-subtree)))
-# 
-# (defun my/count-words-in-subtree ()
-# "Count words in current node and child nodes, excluding heading text."
-#   (interactive)
-#   (org-with-wide-buffer
-#     (message "%s words in subtree"
-#     (-sum (org-map-entries
-#       (lambda ()
-#         (outline-back-to-heading)
-#         (forward-line 1)
-#         (while (or (looking-at org-keyword-time-regexp)
-#         (org-in-drawer-p))
-#         (forward-line 1))
-#     (count-words (point)
-# (progn
-# (outline-end-of-subtree)
-# (point))))
-# nil 'tree)))))
-# #+END_SRC
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+;; word counting in subtree
+(defun my/count-words-in-subtree-or-region ()
+;; Bind this to a key in org-mode, e.g. C-=
+  (interactive)
+  (call-interactively (if (region-active-p)
+			  'count-words-region
+			  'my/count-words-in-subtree)))
+
+(defun my/count-words-in-subtree ()
+"Count words in current node and child nodes, excluding heading text."
+  (interactive)
+  (org-with-wide-buffer
+    (message "%s words in subtree"
+    (-sum (org-map-entries
+      (lambda ()
+        (outline-back-to-heading)
+        (forward-line 1)
+        (while (or (looking-at org-keyword-time-regexp)
+        (org-in-drawer-p))
+        (forward-line 1))
+    (count-words (point)
+(progn
+(outline-end-of-subtree)
+(point))))
+nil 'tree)))))
+#+END_SRC
+#+END_COMMENT
 
 
 
-# *** eglot-grammarly
-# 
-# Source: https://github.com/emacs-grammarly/eglot-grammarly.
-# The downside to this package is the need for a ~.dir-locals.el~ file in each project.
-# This file is used to configure grammarly.
-# 
-# 0. git clone the reto into the elisp folder
-# 1. npm install -g @emacs-grammarly/unofficial-grammarly-language-server
-# 2. Add the config below to your your emacs init file.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.d/elisp/eglot-grammarly")
-# (require 'eglot-grammarly
-#   :ensure t
-#   :hook (text-mode . (lambda ()
-#                        (require 'eglot-grammarly)
-#                        (call-interactively #'eglot))))
-# #+END_SRC
-# 
-# 3. Create a ~.dir-locals.el~ file in the the project root directory with the following content:
-# 
-# #+BEGIN_SRC emacs-lisp
-# ;;((nil
-# ;;  (eglot-workspace-configuration
-# ;;   . ((@emacs-grammarly/unofficial-grammarly-language-server
-# ;;       . ((audience . "knowledgeable")
-# ;;       . ((autoactivate . "true")))))))
-# #+END_SRC
-# 
+#+BEGIN_COMMENT
+*** eglot-grammarly
+
+Source: https://github.com/emacs-grammarly/eglot-grammarly.
+The downside to this package is the need for a ~.dir-locals.el~ file in each project.
+This file is used to configure grammarly.
+
+0. git clone the reto into the elisp folder
+1. npm install -g @emacs-grammarly/unofficial-grammarly-language-server
+2. Add the config below to your your emacs init file.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elisp/eglot-grammarly")
+(require 'eglot-grammarly
+  :ensure t
+  :hook (text-mode . (lambda ()
+                       (require 'eglot-grammarly)
+                       (call-interactively #'eglot))))
+#+END_SRC
+
+3. Create a ~.dir-locals.el~ file in the the project root directory with the following content:
+
+#+BEGIN_SRC emacs-lisp
+;;((nil
+;;  (eglot-workspace-configuration
+;;   . ((@emacs-grammarly/unofficial-grammarly-language-server
+;;       . ((audience . "knowledgeable")
+;;       . ((autoactivate . "true")))))))
+#+END_SRC
+#+END_COMMENT
+
 
 *** ef-themes
 
@@ -1906,132 +1925,125 @@ concatenated."
 
 
 
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed)
+(setq elfeed-curl-program-name "/opt/local/bin/curl")
+(setq-default elfeed-search-filter "@1-week-ago +unread ")
+(global-set-key (kbd "C-x w") 'elfeed)
+(add-to-list 'elfeed-feeds '("http://feeds.nature.com/nchem/rss/current" nature))
+(setq elfeed-feeds
+      '("https://planet.emacslife.com/atom.xml" emacs) 
+      ("http://feeds.nature.com/nchem/rss/current" nature))
+;; Entries older than 2 weeks are marked as read
+(add-hook 'elfeed-new-entry-hook
+          (elfeed-make-tagger :before "2 weeks ago"
+                              :remove 'unread))
+;; (add-hook 'elfeed-search-mode-hook 'elfeed-update)
+;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" 
+;; "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
+;;  "http://export.arxiv.org/api/query?search_query=cat:cs.CL&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
+#+END_SRC
+#+END_COMMENT
 
-
-
-# https://journals.iucr.org/d/rss10.xml
-#
-#
-# https://www.science.org/action/showFeed?type=axatoc&feed=rss&jc=science
-
-# #+BEGIN_SRC emacs-lisp
-# (use-package elfeed)
-# (setq elfeed-curl-program-name "/opt/local/bin/curl")
-# (setq-default elfeed-search-filter "@1-week-ago +unread ")
-# (global-set-key (kbd "C-x w") 'elfeed)
-# (add-to-list 'elfeed-feeds '("http://feeds.nature.com/nchem/rss/current" nature))
-# (setq elfeed-feeds
-#       '("https://planet.emacslife.com/atom.xml" emacs) 
-#       ("http://feeds.nature.com/nchem/rss/current" nature))
-# ;; Entries older than 2 weeks are marked as read
-# (add-hook 'elfeed-new-entry-hook
-#           (elfeed-make-tagger :before "2 weeks ago"
-#                               :remove 'unread))
-# ;; (add-hook 'elfeed-search-mode-hook 'elfeed-update)
-# ;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" 
-# ;; "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
-# ;;  "http://export.arxiv.org/api/query?search_query=cat:cs.CL&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
-# #+END_SRC
-# 
 The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/][post]].
 
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-;;(defun concatenate-authors (authors-list)
-;;    "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
-;;    (if (> (length authors-list) 1)
-;;        (format "%s et al." (plist-get (nth 0 authors-list) :name))
-;;      (plist-get (nth 0 authors-list) :name)))
-;;
-;;(defun my-search-print-fn (entry)
-;;    "Print ENTRY to the buffer."
-;;    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-;;        (title (or (elfeed-meta entry :title)
-;;                    (elfeed-entry-title entry) ""))
-;;        (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-;;        (entry-authors (concatenate-authors
-;;                        (elfeed-meta entry :authors)))
-;;        (title-width (- (window-width) 10
-;;                        elfeed-search-trailing-width))
-;;        (title-column (elfeed-format-column
-;;                        title 100
-;;                        :left))
-;;        (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
-;;        (authors-column (elfeed-format-column entry-authors 40 :left)))
-;;    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-;;
-;;    (insert (propertize title-column
-;;                        'face title-faces 'kbd-help title) " ")
-;;    (insert (propertize authors-column
-;;                        'kbd-help entry-authors) " ")
-;;    (insert entry-score " ")))
-;;
-;;(setq elfeed-search-print-entry-function #'my-search-print-fn)
-;;(setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
-;;(setq elfeed-search-title-max-width 110)
-;;(setq elfeed-search-filter "@2-week-ago +unread")
-;;
+(defun concatenate-authors (authors-list)
+    "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
+    (if (> (length authors-list) 1)
+        (format "%s et al." (plist-get (nth 0 authors-list) :name))
+      (plist-get (nth 0 authors-list) :name)))
 
-;; 
-;; (use-package elfeed-score
-;;   :after elfeed
-;;   :config
-;;   (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
-;;   (elfeed-score-enable)
-;;   (define-key elfeed-search-mode-map "=" elfeed-score-map))
-;; (setq arxiv_bib "~/Downloads/global.bib")
-;; (setq arxiv_pdf_loc "~/0papersLabeled/")
-;; 
-;; (defun my/elfeed-entry-to-arxiv ()
-;;     "Fetch an arXiv paper into the local library from the current elfeed entry."
-;;     (interactive)
-;;     (let* ((link (elfeed-entry-link elfeed-show-entry))
-;;            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-;;            (matched-arxiv-number (match-string 1 link)))
-;;       (when matched-arxiv-number
-;;         (message "Going to arXiv: %s" matched-arxiv-number)
-;;         (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
-;; 
-;; 
-;; ;; (map! :leader
-;; ;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
-;; ;;       :desc "Elfeed" "n e" #'elfeed)
-;; 
-;; (defun my/elfeed-entry-to-arxiv ()
-;;     "Fetch an arXiv paper into the local library from the current elfeed entry.
-;; - Update the bib entry with the pdf file location"
-;;     (interactive)
-;;     (let* ((link (elfeed-entry-link elfeed-show-entry))
-;;            (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-;;            (matched-arxiv-number (match-string 1 link)))
-;;       (when matched-arxiv-number
-;;         (message "Going to arXiv: %s" matched-arxiv-number)
-;;         (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
-;;         ;; Now, we are updating the most recent bib file with the pdf location
-;;         (save-window-excursion
-;;                 ;; Get the bib file
-;;                 (find-file arxiv_bib)
-;;                 ;; get to last line
-;;                 (goto-char (point-max))
-;;                 ;; get to the first line of bibtex
-;;                 (bibtex-beginning-of-entry)
-;;                 (let* ((entry (bibtex-parse-entry))
-;;                         (key (cdr (assoc "=key=" entry)))
-;;                         (pdf (org-ref-get-pdf-filename key)))
-;;                         (message (concat "checking for key: " key))
-;;                         (message (concat "value of pdf: " pdf))
-;;                         (when (file-exists-p pdf)
-;;                         (bibtex-set-field "file" pdf)
-;;                         (save-buffer)
-;;                         )))
-;;         )
-;;     )
-;; )
-;; 
-;; (setq org-ref-pdf-directory arxiv_pdf_loc)
-;; 
+(defun my-search-print-fn (entry)
+    "Print ENTRY to the buffer."
+    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+        (title (or (elfeed-meta entry :title)
+                    (elfeed-entry-title entry) ""))
+        (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+        (entry-authors (concatenate-authors
+                        (elfeed-meta entry :authors)))
+        (title-width (- (window-width) 10
+                        elfeed-search-trailing-width))
+        (title-column (elfeed-format-column
+                        title 100
+                        :left))
+        (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
+        (authors-column (elfeed-format-column entry-authors 40 :left)))
+    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+
+    (insert (propertize title-column
+                        'face title-faces 'kbd-help title) " ")
+    (insert (propertize authors-column
+                        'kbd-help entry-authors) " ")
+    (insert entry-score " ")))
+
+(setq elfeed-search-print-entry-function #'my-search-print-fn)
+(setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
+(setq elfeed-search-title-max-width 110)
+(setq elfeed-search-filter "@2-week-ago +unread")
+
+
+
+(use-package elfeed-score
+  :after elfeed
+  :config
+  (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
+  (elfeed-score-enable)
+  (define-key elfeed-search-mode-map "=" elfeed-score-map))
+(setq arxiv_bib "~/Downloads/global.bib")
+(setq arxiv_pdf_loc "~/0papersLabeled/")
+
+(defun my/elfeed-entry-to-arxiv ()
+    "Fetch an arXiv paper into the local library from the current elfeed entry."
+    (interactive)
+    (let* ((link (elfeed-entry-link elfeed-show-entry))
+           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+           (matched-arxiv-number (match-string 1 link)))
+      (when matched-arxiv-number
+        (message "Going to arXiv: %s" matched-arxiv-number)
+        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
+
+
+;; (map! :leader
+;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
+;;       :desc "Elfeed" "n e" #'elfeed)
+
+(defun my/elfeed-entry-to-arxiv ()
+    "Fetch an arXiv paper into the local library from the current elfeed entry.
+- Update the bib entry with the pdf file location"
+    (interactive)
+    (let* ((link (elfeed-entry-link elfeed-show-entry))
+           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+           (matched-arxiv-number (match-string 1 link)))
+      (when matched-arxiv-number
+        (message "Going to arXiv: %s" matched-arxiv-number)
+        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
+        ;; Now, we are updating the most recent bib file with the pdf location
+        (save-window-excursion
+                ;; Get the bib file
+                (find-file arxiv_bib)
+                ;; get to last line
+                (goto-char (point-max))
+                ;; get to the first line of bibtex
+                (bibtex-beginning-of-entry)
+                (let* ((entry (bibtex-parse-entry))
+                        (key (cdr (assoc "=key=" entry)))
+                        (pdf (org-ref-get-pdf-filename key)))
+                        (message (concat "checking for key: " key))
+                        (message (concat "value of pdf: " pdf))
+                        (when (file-exists-p pdf)
+                        (bibtex-set-field "file" pdf)
+                        (save-buffer)
+                        )))
+        )
+    )
+)
+
+(setq org-ref-pdf-directory arxiv_pdf_loc)
 #+END_SRC
-
+#+END_COMMENT
 
 - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
 
@@ -2512,41 +2524,44 @@ Enable a more powerful version of autocompletion of prose by mapping hippe-expan
 #+END_SRC
 
 
+#+BEGIN_COMMENT
+*** highlight-indent-guides
 
-#    *** highlight-indent-guides
-#    
-#    
-#    This is a new and well developed minor mode that is activated for most modes by the command below.
-#    For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-#    #+END_SRC
-#    
-#    
-#    
-#    *** hydra
-#   
-#    Hydra empowers you to make custom keybindings that are repeated by entering a single key.
-#    For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
-#    [[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
-#    [[Hydra github site][Https://github.com/abo-abo/hydra]].
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package hydra)
-#    
-#    
-#    (defhydra hydra-zoom (global-map "<f2>")
-#          "zoom"
-#          ("g" text-scale-increase "in")
-#          ("l" text-scale-decrease "out"))
-#    
-#    (defhydra hydra-text-scale (:timeout 4)
-#      "scale text"
-#      ("j" text-scale-increase "in")
-#      ("k" text-scale-decrease "out")
-#      ("f" nil "finished" :exit t))
-#    #+END_SRC#+BEGIN_SRC emacs-lisp
+
+This is a new and well developed minor mode that is activated for most modes by the command below.
+For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+#+END_SRC
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+*** hydra
+
+Hydra empowers you to make custom keybindings that are repeated by entering a single key.
+For example, by entering ~function <f2>  g g g~, you can zoom in three-fold.
+[[Emacs Wiki page on hydra][https://www.emacswiki.org/emacs/Hydra]].
+[[Hydra github site][Https://github.com/abo-abo/hydra]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package hydra)
+
+
+(defhydra hydra-zoom (global-map "<f2>")
+      "zoom"
+      ("g" text-scale-increase "in")
+      ("l" text-scale-decrease "out"))
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+#+END_SRC
+#+END_COMMENT
+
 
 ** I
 
@@ -2573,61 +2588,67 @@ Make M-x and other mini-buffers sortable, filterable
 (use-package ivy-bibtex
    :ensure t)
 #+END_SRC
-     
-#    Add vim key binding for use in ivy menus.
-#   
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package command-log-mode)
-#    (use-package ivy
-#      :diminish
-#      :bind (("C-s" . swiper)
-#             :map ivy-minibuffer-map
-#             ("TAB" . ivy-alt-done)
-#             ("C-l" . ivy-alt-done)
-#             ("C-j" . ivy-next-line)
-#             ("C-k" . ivy-previous-line)
-#             :map ivy-switch-buffer-map
-#             ("C-k" . ivy-previous-line)
-#             ("C-l" . ivy-done)
-#             ("C-d" . ivy-switch-buffer-kill)
-#             :map ivy-reverse-i-search-map
-#             ("C-k" . ivy-previous-line)
-#             ("C-d" . ivy-reverse-i-search-kill))
-#      :config
-#       (setq ivy-height 15
-#             ivy-use-virtual-buffers t
-#             ivy-use-selectable-prompt t)
-#       (ivy-mode 1))
-#    #+END_SRC
-#   
-#   
-#    *** ivy-bibtex
-#   
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package ivy-bibtex)
-#    #+END_SRC
-#   
-#    *** ivy-rich
-#   
-#    Display documentation strings with commands when running counsel-M-x.
-#   
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package ivy-rich
-#      :init
-#      (ivy-rich-mode 1))
-#    #+END_SRC
-#   
-#    ** J
-#   
-#   
-#    *** JavaScript Configuration
-#   
-#   
-#    **** js2-mode
-#    [[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]]
-#   
-#    Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
-#   
+
+
+#+BEGIN_COMMENT
+Add vim key binding for use in ivy menus.
+#+BEGIN_SRC emacs-lisp
+(use-package command-log-mode)
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+   (setq ivy-height 15
+         ivy-use-virtual-buffers t
+         ivy-use-selectable-prompt t)
+   (ivy-mode 1))
+#+END_SRC
+#+END_COMMENT
+
+#+BEGIN_COMMENT
+*** ivy-bibtex
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-bibtex)
+#+END_SRC
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+*** ivy-rich
+
+Display documentation strings with commands when running counsel-M-x.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+#+END_SRC
+#+END_COMMENT
+
+
+ 
+** J 
+*** JavaScript Configuration
+
+
+**** js2-mode
+[[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]]
+
+Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
+
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package js2-mode)
 #    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -3762,6 +3783,8 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 
 *** Org configuration
 
+This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the basics of org-mode in five minutes. 
+
 #+BEGIN_SRC emacs-lisp
 (use-package org)
 
@@ -4089,15 +4112,33 @@ prot-org.el file.  In the video I explain why I use this style.
 
 *** org-babel
 
+Note that jupyter has to come last in the list.
+Invoke jupyter as a language and then specify the kernel.
+You can get by by including only emacs-lisp and jupyter as the languages.
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (julia . t)
+   (python . t)
+   (R . t)
+   (jupyter . t)))  
+#+END_SRC
+
+
 # #+BEGIN_SRC emacs-lisp
 # (use-package org-babel
 #   :ensure t)
 # #+END_SRC
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
 (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
 #+END_SRC
+#+END_COMMENT
+
 
 # #+BEGIN_SRC emacs-lisp
 # :after (ob-jupyter ob-python)
@@ -4114,11 +4155,12 @@ prot-org.el file.  In the video I explain why I use this style.
 # #+END_SRC
 
 
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package jupyter
   :ensure t)
 #+END_SRC
+#+END_COMMENT
 
 # #+BEGIN_SRC emacs-lisp
 # (org-babel-do-load-languages
@@ -4184,6 +4226,28 @@ I have mapped these to the ~C-c s~.
 ;;          (lambda ()
 ;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
 #+END_SRC
+
+
+*** org-drill for spaced repetition learning in org-mode
+
+You have to install org-drill from MELPA.
+
+This is a YouTube video about how to use org-drill[[https://www.youtube.com/watch?v=uraPXeLfWcM][to learn Chinese]].
+You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-table][flashcards]].
+
+#+BEGIN_SRC
+(use-package org-drill
+             :config (progn
+                          (add-to-list 'org-modules 'org-drill)
+                          (setq org-drill-add-random-noise-to-intervals-p t)
+                          (setq org-drill-hint-separator "||")
+                          (setq org-drill-left-cloze-delimiter "<[")
+                          (setq org-drill-right-cloze-delimiter "]>")
+                          (setq org-drill-learn-fraction 0.25)
+             )
+)
+#+END_SRC
+
 
 
 *** org-download
@@ -4485,7 +4549,6 @@ Requires org-edna.
 
 *** org-mind-map
 
-
 This Emacs package creates graphs from the headings of an org file.
 The package depends on Grpahviz being installed.
 On the Mac, you can install graphviz with macports or home brew.
@@ -4759,67 +4822,68 @@ This search engine can scan org-roam entries.
 #+END_SRC
 
 
+
+#+BEGIN_COMMENT
 *** org-noter-pdftools
 
 This package integrates org-noter and pdftools.
 
 The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
 
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :ensure t
+  :config
+  ;; Your org-noter config ........
+  :config
+  (setq
+    org_notes (concat (getenv "HOME") "/org-roam/")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+    org-directory org_notes
+    deft-directory org_notes
+    org-roam-directory org_notes
+    ;; keep an empty line between headings and content in Org file
+    org-noter-separate-notes-from-heading t)
+  (require 'org-noter-pdftools))
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-noter
-#   :after org
-#   :ensure t
-#   :config
-#   ;; Your org-noter config ........
-#   :config
-#   (setq
-#     org_notes (concat (getenv "HOME") "/org-roam/")
-#     zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-#     org-directory org_notes
-#     deft-directory org_notes
-#     org-roam-directory org_notes
-#     ;; keep an empty line between headings and content in Org file
-#     org-noter-separate-notes-from-heading t)
-#   (require 'org-noter-pdftools))
-#
-# (use-package org-pdftools
-#   :hook (org-mode . org-pdftools-setup-link))
-#
-# (use-package org-noter-pdftools
-#   :after org-noter
-#   :config
-#   ;; Add a function to ensure precise note is inserted
-#   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-#     (interactive "P")
-#     (org-noter--with-valid-session
-#      (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-#                                                    (not org-noter-insert-note-no-questions)
-#                                                  org-noter-insert-note-no-questions))
-#            (org-pdftools-use-isearch-link t)
-#            (org-pdftools-use-freepointer-annot t))
-#        (org-noter-insert-note (org-noter--get-precise-info)))))
-#
-#   ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-#   (defun org-noter-set-start-location (&optional arg)
-#     "When opening a session with this document, go to the current location.
-# With a prefix ARG, remove start location."
-#     (interactive "P")
-#     (org-noter--with-valid-session
-#      (let ((inhibit-read-only t)
-#            (ast (org-noter--parse-root))
-#            (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-#        (with-current-buffer (org-noter--session-notes-buffer session)
-#          (org-with-wide-buffer
-#           (goto-char (org-element-property :begin ast))
-#           (if arg
-#               (org-entry-delete nil org-noter-property-note-location)
-#             (org-entry-put nil org-noter-property-note-location
-#                            (org-noter--pretty-print-location location))))))))
-#   (with-eval-after-load 'pdf-annot
-#     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-# #+END_SRC
+(use-package org-pdftools
+  :hook (org-mode . org-pdftools-setup-link))
 
+(use-package org-noter-pdftools
+  :after org-noter
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freepointer-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+END_SRC
+#+END_COMMENT
 
 
 
@@ -4869,31 +4933,32 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 #+END_SRC
 
 
+#+BEGIN_COMMENT
 *** org-ref and helm-bibtex
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package helm-bibtex
-#   :custom
-#   ;; In the lines below I point helm-bibtex to my default library file.
-#   (bibtex-completion-bibliography '("~/Dropbox/global.bib"))
-#   (reftex-default-bibliography '("~/Dropbox/global.bib"))
-#   ;; The line below tells helm-bibtex to find the path to the pdf
-#   ;; in the "file" field in the .bib file.
-#   (bibtex-completion-pdf-field "file")
-#   :hook (Tex . (lambda () (define-key Tex-mode-map "\C-ch" 'helm-bibtex))))
-# ;; I also like to be able to view my library from anywhere in emacs, for example if I want to read a paper.
-# ;; I added the keybind below for that.
-# ;;(map! :leader
-# ;;      :desc "Open literature database"
-# ;;      "o l" #'helm-bibtex)
-# ;; And I added the keybinds below to make the helm-menu behave a bit like the other menus in emacs behave with evil-mode.
-# ;; Basically, the keybinds below make sure I can scroll through my list of references with C-j and C-k.
-# ;;(map! :map helm-map
-# ;;      "C-j" #'helm-next-line
-# ;;      "C-k" #'helm-previous-line)
-# ;;)
-# #+END_SRC
-
+#+BEGIN_SRC emacs-lisp
+(use-package helm-bibtex
+  :custom
+  ;; In the lines below I point helm-bibtex to my default library file.
+  (bibtex-completion-bibliography '("~/Dropbox/global.bib"))
+  (reftex-default-bibliography '("~/Dropbox/global.bib"))
+  ;; The line below tells helm-bibtex to find the path to the pdf
+  ;; in the "file" field in the .bib file.
+  (bibtex-completion-pdf-field "file")
+  :hook (Tex . (lambda () (define-key Tex-mode-map "\C-ch" 'helm-bibtex))))
+;; I also like to be able to view my library from anywhere in emacs, for example if I want to read a paper.
+;; I added the keybind below for that.
+;;(map! :leader
+;;      :desc "Open literature database"
+;;      "o l" #'helm-bibtex)
+;; And I added the keybinds below to make the helm-menu behave a bit like the other menus in emacs behave with evil-mode.
+;; Basically, the keybinds below make sure I can scroll through my list of references with C-j and C-k.
+;;(map! :map helm-map
+;;      "C-j" #'helm-next-line
+;;      "C-k" #'helm-previous-line)
+;;)
+#+END_SRC
+#+END_COMMENT
 
 *** org-ref
 
@@ -4924,28 +4989,30 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 
 
+
+#+BEGIN_COMMENT
 *** org-ref-bibtex
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package bibtex
-#   :config
-#     (setq 
-#     bibtex-autokey-year-length 4
-# 	bibtex-autokey-name-year-separator "-"
-# 	bibtex-autokey-year-title-separator "-"
-# 	bibtex-autokey-titleword-separator "-"
-# 	bibtex-autokey-titlewords 2
-# 	bibtex-autokey-titlewords-stretch 1
-# 	bibtex-autokey-titleword-length 5
-# 	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
-# 
-# (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)      
-#       
-# (require 'org-ref-ivy)
-# 
-# (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package bibtex
+  :config
+    (setq 
+    bibtex-autokey-year-length 4
+	bibtex-autokey-name-year-separator "-"
+	bibtex-autokey-year-title-separator "-"
+	bibtex-autokey-titleword-separator "-"
+	bibtex-autokey-titlewords 2
+	bibtex-autokey-titlewords-stretch 1
+	bibtex-autokey-titleword-length 5
+	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
 
+(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)      
+      
+(require 'org-ref-ivy)
+
+(define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
+#+END_SRC
+#+END_COMMENT
  
 *** function for opening the PDF linked to the citation under the point
  
@@ -4975,31 +5042,31 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 #+END_SRC
 
 
+#+BEGIN_COMMENT
+*** org-ref, newer config
 
-# *** org-ref, newer config
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-ref
-#   :after org
-#   :config
-#   (defun blaine/reformat-bib-library (&optional filename)
-#     "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
-#     (interactive "P")
-#     (or filename (setq filename blaine/main-bib-library))
-#     (let ((cmnd (concat
-#                  (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
-#                  (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
-#                  (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
-#                  (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
-#                  )))
-#       (async-shell-command cmnd)))
-#   (defun blaine/reformat-bib-lib-hook ()
-#     "Reformat the main bib library whenever it is saved.."
-#     (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
-#   (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
-#   (setq bibtex-dialect 'bibtex))
-# #+END_SRC
-# 
+#+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :after org
+  :config
+  (defun blaine/reformat-bib-library (&optional filename)
+    "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
+    (interactive "P")
+    (or filename (setq filename blaine/main-bib-library))
+    (let ((cmnd (concat
+                 (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
+                 (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
+                 (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
+                 (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
+                 )))
+      (async-shell-command cmnd)))
+  (defun blaine/reformat-bib-lib-hook ()
+    "Reformat the main bib library whenever it is saved.."
+    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
+  (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
+  (setq bibtex-dialect 'bibtex))
+#+END_SRC
+#+END_COMMENT
 
 *** org-roam
 
@@ -5017,23 +5084,27 @@ The configuration for org-roam, the most advanced zettlekasten system for Emacs.
   (org-roam-setup))
 #+END_SRC
 
-# (use-package org-roam
-#   :ensure t
-#   :custom
-#   (org-roam-directory (file-truename "/Users/blaine/org-roam/"))
-#   :bind (("C-c n l" . org-roam-buffer-toggle)
-#          ("C-c n f" . org-roam-node-find)
-#          ("C-c n g" . org-roam-graph)
-#          ("C-c n i" . org-roam-node-insert)
-#          ("C-c n c" . org-roam-capture)
-#          ;; Dailies
-#          ("C-c n j" . org-roam-dailies-capture-today))
-#   :config
-#   ;; If you're using a vertical completion framework, you might want a more informative completion interface
-#   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-#   (org-roam-db-autosync-mode)
-#   ;; If using org-roam-protocol
-#   (require 'org-roam-protocol))
+
+#+BEGIN_COMMENT
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "/Users/blaine/org-roam/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
+#+END_COMMENT
+
 
 *** org-roam-bibtex (orb)
 
@@ -5214,22 +5285,23 @@ Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 *** org-wc
 
-# Enable org-wc to work in org documents.
-# Enter `wc` to get word count returned in org files.
-# Enter `C-c w` to the samething.
-#
-# Similar to wc-mode which works in all docments
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-wc)
-# ;; Total word count for a org file and word count by headline.
-# (add-hook 'org-mode-hook 'org-wc)
-# (define-key org-mode-map [("\C-cw")] 'org-wc-display)
-# ;; (define-key global-map "\C-cw" 'org-wc-display)
-# #+END_SRC
-#
-# See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
+#+BEGIN_COMMENT
+Enable org-wc to work in org documents.
+Enter `wc` to get word count returned in org files.
+Enter `C-c w` to the samething.
 
+Similar to wc-mode which works in all docments
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-wc)
+;; Total word count for a org file and word count by headline.
+(add-hook 'org-mode-hook 'org-wc)
+(define-key org-mode-map [("\C-cw")] 'org-wc-display)
+;; (define-key global-map "\C-cw" 'org-wc-display)
+#+END_SRC
+
+See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
+#+END_COMMENT
 
 *** org-count-words
 [[https://www.reddit.com/r/emacs/comments/8qm1lb/new_orgcountwords_command/][org-count-words]]
@@ -5272,15 +5344,16 @@ If UNSAFE is non-nil, assume point is on headline."
 #+END_SRC
 
 
+#+BEGIN_COMMENT
 **** ox-ipynb
 
-# Package for exporting org to ipynb.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (require 'ox-ipynb)
-# #+END_SRC
-# 
-# 
+Package for exporting org to ipynb.
+
+#+BEGIN_SRC emacs-lisp
+(require 'ox-ipynb)
+#+END_SRC
+#+END_COMMENT
+
 
 ** P
 
@@ -5352,6 +5425,7 @@ Right-click the mouse to get a menu of more options.
   ;; Setting for sharper images with Macs with Retina displays
   (setq pdf-view-use-scaling t)
 #+END_SRC
+
 
 **** Useful keybindings for viewing PDFs
 |------------------------------------------+-----------------|
@@ -5775,14 +5849,16 @@ Add the following Emacs function to the config.org file.
 ;;  )
 #+END_SRC
 
-#
-# Source: \url{https://github.com/quarto-dev/quarto-emacs}
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package quarto-mode
-#   :mode (("\\.Rmd" . poly-quarto-mode))
-#   )
-# #+END_SRC
+#+BEGIN_COMMENT
+Source: \url{https://github.com/quarto-dev/quarto-emacs}
+
+#+BEGIN_SRC emacs-lisp
+(use-package quarto-mode
+  :mode (("\\.Rmd" . poly-quarto-mode))
+  )
+#+END_SRC
+#+END_COMMENT
+
 
 ** R
 
@@ -5792,12 +5868,6 @@ Add the following Emacs function to the config.org file.
 (use-package ess
   :ensure t)
 #+END_SRC
-
-
-
-
-
-
 
 
 *** r-autoyas
@@ -5873,35 +5943,28 @@ Enter C-g to delete the unused arguments in a R function call.
 	 (reusable-frames . nil))))
 #+END_SRC
 
+#+BEGIN_COMMENT
+*** rune
 
+#+BEGIN_SRC emacs-lisp
+(use-package rune)
+(rune/leader-keys
+  "ts" '(hydra-text-scale/body :which-key "scale text"))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(use-package general
+  :config
+  (general-create-definer rune/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
-
-
-
-
-
-# *** rune
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package rune)
-# (rune/leader-keys
-#   "ts" '(hydra-text-scale/body :which-key "scale text"))
-# #+END_SRC
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package general
-#   :config
-#   (general-create-definer rune/leader-keys
-#     :keymaps '(normal insert visual emacs)
-#     :prefix "SPC"
-#     :global-prefix "C-SPC")
-#
-#   (rune/leader-keys
-#     "t"  '(:ignore t :which-key "toggles")
-#     "tt" '(counsel-load-theme :which-key "choose theme") ) )
-# #+END_SRC
-#
+  (rune/leader-keys
+    "t"  '(:ignore t :which-key "toggles")
+    "tt" '(counsel-load-theme :which-key "choose theme") ) )
+#+END_SRC
+#+END_COMMENT
 
 
 ** S
@@ -6071,31 +6134,34 @@ To enforce the use of one whitespace, enter the following:
 (add-hook `prog-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
-# *** SLIME
-# 
-# slime stands for Superior Lisp Interaction Mode for Emacs.
-# I already had sbcl installed.
-# It provides a repl for Commn Lisp.
-# There are about a dozen lisp systems.
-# I use sbcl. 
-# I had installed it with macports.
-# 
-# I had installed earlier the quicklisp package in sbcl.
-# However, I had to install a slime helper.
-# I entered sbcl and issued the following command.
-# 
-# #+BEGIN_SRC common-lisp
-# (ql:quickload "quicklisp-slime-helper")
-# #+END_SRC
-# 
-# 
-# #+BEGIN_SRC emacs-lisp
-# (load (expand-file-name "~/quicklisp/slime-helper.el"))
-# (setq inferior-lisp-program "/opt/local/bin/sbcl")
-# ;;(require 'slime-autoloads)
-# ;;(slime-setup '(slime-fancy))
-# #+END_SRC
-# 
+#+BEGIN_COMMENT
+*** SLIME
+
+slime stands for Superior Lisp Interaction Mode for Emacs.
+I already had sbcl installed.
+It provides a repl for Commn Lisp.
+There are about a dozen lisp systems.
+I use sbcl. 
+I had installed it with macports.
+
+I had installed earlier the quicklisp package in sbcl.
+However, I had to install a slime helper.
+I entered sbcl and issued the following command.
+
+#+BEGIN_SRC common-lisp
+(ql:quickload "quicklisp-slime-helper")
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(load (expand-file-name "~/quicklisp/slime-helper.el"))
+(setq inferior-lisp-program "/opt/local/bin/sbcl")
+;;(require 'slime-autoloads)
+;;(slime-setup '(slime-fancy))
+#+END_SRC
+#+END_COMMENT
+
+
 *** Spelling
 
 **** Set the spelling binary
@@ -6104,57 +6170,57 @@ To enforce the use of one whitespace, enter the following:
 (setq ispell-program-name "/opt/local/bin/aspell")
 #+END_SRC
 
+#+BEGIN_COMMENT
+*** super-agenda-org
 
-# *** super-agenda-org
-# 
-# Enable by entering ~M-x super-agenda-org-mode~.
-# [[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
-# 
-# #+BEGIN_SRC emacs-lisp
-# (let ((org-super-agenda-groups
-#        '(;; Each group has an implicit boolean OR operator between its selectors.
-#          (:name "Today"  ; Optionally specify section name
-#                 :time-grid t  ; Items that appear on the time grid
-#                 :todo "TODAY")  ; Items that have this TODO keyword
-#          (:name "Important"
-#                 ;; Single arguments given alone
-#                 :tag "bills"
-#                 :priority "A")
-#          ;; Set order of multiple groups at once
-#          (:order-multi (2 (:name "Shopping in town"
-#                                  ;; Boolean AND group matches items that match all subgroups
-#                                  :and (:tag "shopping" :tag "@town"))
-#                           (:name "Food-related"
-#                                  ;; Multiple args given in list with implicit OR
-#                                  :tag ("food" "dinner"))
-#                           (:name "Personal"
-#                                  :habit t
-#                                  :tag "personal")
-#                           (:name "Space-related (non-moon-or-planet-related)"
-#                                  ;; Regexps match case-insensitively on the entire entry
-#                                  :and (:regexp ("space" "NASA")
-#                                                ;; Boolean NOT also has implicit OR between selectors
-#                                                :not (:regexp "moon" :tag "planet")))))
-#          ;; Groups supply their own section names when none are given
-#          (:todo "WAITING" :order 8)  ; Set order of this section
-#          (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
-#                 ;; Show this group at the end of the agenda (since it has the
-#                 ;; highest number). If you specified this group last, items
-#                 ;; with these todo keywords that e.g. have priority A would be
-#                 ;; displayed in that group instead, because items are grouped
-#                 ;; out in the order the groups are listed.
-#                 :order 9)
-#          (:priority<= "B"
-#                       ;; Show this section after "Today" and "Important", because
-#                       ;; their order is unspecified, defaulting to 0. Sections
-#                       ;; are displayed lowest-number-first.
-#                       :order 1)
-#          ;; After the last group, the agenda will display items that didn't
-#          ;; match any of these groups, with the default order position of 99
-#          )))
-# 	 (org-agenda nil "a"))
-# #+END_SRC	 
-# 
+Enable by entering ~M-x super-agenda-org-mode~.
+[[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
+
+#+BEGIN_SRC emacs-lisp
+(let ((org-super-agenda-groups
+       '(;; Each group has an implicit boolean OR operator between its selectors.
+         (:name "Today"  ; Optionally specify section name
+                :time-grid t  ; Items that appear on the time grid
+                :todo "TODAY")  ; Items that have this TODO keyword
+         (:name "Important"
+                ;; Single arguments given alone
+                :tag "bills"
+                :priority "A")
+         ;; Set order of multiple groups at once
+         (:order-multi (2 (:name "Shopping in town"
+                                 ;; Boolean AND group matches items that match all subgroups
+                                 :and (:tag "shopping" :tag "@town"))
+                          (:name "Food-related"
+                                 ;; Multiple args given in list with implicit OR
+                                 :tag ("food" "dinner"))
+                          (:name "Personal"
+                                 :habit t
+                                 :tag "personal")
+                          (:name "Space-related (non-moon-or-planet-related)"
+                                 ;; Regexps match case-insensitively on the entire entry
+                                 :and (:regexp ("space" "NASA")
+                                               ;; Boolean NOT also has implicit OR between selectors
+                                               :not (:regexp "moon" :tag "planet")))))
+         ;; Groups supply their own section names when none are given
+         (:todo "WAITING" :order 8)  ; Set order of this section
+         (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+                ;; Show this group at the end of the agenda (since it has the
+                ;; highest number). If you specified this group last, items
+                ;; with these todo keywords that e.g. have priority A would be
+                ;; displayed in that group instead, because items are grouped
+                ;; out in the order the groups are listed.
+                :order 9)
+         (:priority<= "B"
+                      ;; Show this section after "Today" and "Important", because
+                      ;; their order is unspecified, defaulting to 0. Sections
+                      ;; are displayed lowest-number-first.
+                      :order 1)
+         ;; After the last group, the agenda will display items that didn't
+         ;; match any of these groups, with the default order position of 99
+         )))
+	 (org-agenda nil "a"))
+#+END_SRC
+#+END_COMMENT
 
 ** T
 
@@ -6298,15 +6364,15 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
   (setq explicit-powershell.exe-args '()))
 #+END_SRC
 
+#+BEGIN_COMMENT
+**** iterm extensions
 
-# **** iterm extensions
-# 
-# emacs-shell-mode-iterm-extensions
-# 
-# #+BEGIN_SRC emacs-lisp
-# (load "iterm.el")
-# #+END_SRC
+emacs-shell-mode-iterm-extensions
 
+#+BEGIN_SRC emacs-lisp
+(load "iterm.el")
+#+END_SRC
+#+END_COMMENT
 
 
 *** String infleciton (snake_case -> UPCASE -> )
@@ -6351,43 +6417,41 @@ through the alternatives.
 
 Use the pomodoto.app. It is hard to beat.
 
-# 
-# 
-# **** tmr
-# 
-# This is Protesilaos (aka Prot) Stavrou's simple timer.
-# You can use it out of the box if you are using a system similar to his.
-# Otherwise, you will need to edit the tmr.el file.
-# 
-# tmr depends on the ffplay executable.
-# This executable is avaiable from the developers of FFmpeg.
-# ffplay plays audio files.
-# Prot's tmr.el file has a path to a oga audio file.
-# These files are saved using the Ogg audio container format.
-# `ffplay` will read in *.wav files.
-# I set the path to =~/.emacs.d/canary.wav=.
-# The start and end times appear in the minibuffer.
-# Unfortunately, this timer requires an Emacs compiled with support for dbus to get the sound player to work.
-# 
-# 
-# 
-# I git cloned the rep to ~./mar30-emacs/elisp/tmr~ rather than the suggested path.
-# 
-# Make Elisp files in that directory available to the user.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.d/lisp/tmr")
-# 
-# ;; Load the `tmr' library
-# (require 'tmr)
-# 
-# ;; OPTIONALLY set global key bindings:
-# (let ((map global-map))
-#   (define-key map (kbd "C-c t t") #'tmr)
-#   (define-key map (kbd "C-c t c") #'tmr-cancel))
-# #+END_SRC
-# 
-# 
+#+BEGIN_COMMENT
+**** tmr
+
+This is Protesilaos (aka Prot) Stavrou's simple timer.
+You can use it out of the box if you are using a system similar to his.
+Otherwise, you will need to edit the tmr.el file.
+
+tmr depends on the ffplay executable.
+This executable is avaiable from the developers of FFmpeg.
+ffplay plays audio files.
+Prot's tmr.el file has a path to a oga audio file.
+These files are saved using the Ogg audio container format.
+`ffplay` will read in *.wav files.
+I set the path to =~/.emacs.d/canary.wav=.
+The start and end times appear in the minibuffer.
+Unfortunately, this timer requires an Emacs compiled with support for dbus to get the sound player to work.
+
+
+
+I git cloned the rep to ~./mar30-emacs/elisp/tmr~ rather than the suggested path.
+
+Make Elisp files in that directory available to the user.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/lisp/tmr")
+
+;; Load the `tmr' library
+(require 'tmr)
+
+;; OPTIONALLY set global key bindings:
+(let ((map global-map))
+  (define-key map (kbd "C-c t t") #'tmr)
+  (define-key map (kbd "C-c t c") #'tmr-cancel))
+#+END_SRC
+#+END_COMMENT
 
 
 *** themes
@@ -6395,11 +6459,12 @@ Use the pomodoto.app. It is hard to beat.
 **** leuven-theme
 The leuven-theme has high color contrast on light background.
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package leuven-theme
-#   :init (load-theme 'leuven t))
-# #+END_SRC
-
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package leuven-theme
+  :init (load-theme 'leuven t))
+#+END_SRC
+#+END_COMMENT
 
 **** ef-theme from Prot
 
