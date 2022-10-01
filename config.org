@@ -5887,11 +5887,12 @@ Enter C-g to delete the unused arguments in a R function call.
 	 (reusable-frames . nil))))
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 *** rune
 
 #+BEGIN_SRC emacs-lisp
-(use-package rune)
+(use-package rune
+  :ensure t)
 (rune/leader-keys
   "ts" '(hydra-text-scale/body :which-key "scale text"))
 #+END_SRC
@@ -5908,7 +5909,7 @@ Enter C-g to delete the unused arguments in a R function call.
     "t"  '(:ignore t :which-key "toggles")
     "tt" '(counsel-load-theme :which-key "choose theme") ) )
 #+END_SRC
-#+END_COMMENT
+
 
 
 ** S
