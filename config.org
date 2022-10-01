@@ -6335,42 +6335,6 @@ through the alternatives.
 
 Use the pomodoto.app. It is hard to beat.
 
-#+BEGIN_COMMENT
-**** tmr
-
-This is Protesilaos (aka Prot) Stavrou's simple timer.
-You can use it out of the box if you are using a system similar to his.
-Otherwise, you will need to edit the tmr.el file.
-
-tmr depends on the ffplay executable.
-This executable is avaiable from the developers of FFmpeg.
-ffplay plays audio files.
-Prot's tmr.el file has a path to a oga audio file.
-These files are saved using the Ogg audio container format.
-`ffplay` will read in *.wav files.
-I set the path to =~/.emacs.d/canary.wav=.
-The start and end times appear in the minibuffer.
-Unfortunately, this timer requires an Emacs compiled with support for dbus to get the sound player to work.
-
-
-
-I git cloned the rep to ~./mar30-emacs/elisp/tmr~ rather than the suggested path.
-
-Make Elisp files in that directory available to the user.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/tmr")
-
-;; Load the `tmr' library
-(require 'tmr)
-
-;; OPTIONALLY set global key bindings:
-(let ((map global-map))
-  (define-key map (kbd "C-c t t") #'tmr)
-  (define-key map (kbd "C-c t c") #'tmr-cancel))
-#+END_SRC
-#+END_COMMENT
-
 
 *** themes
 
