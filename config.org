@@ -6090,13 +6090,16 @@ I entered sbcl and issued the following command.
 (setq ispell-program-name "/opt/local/bin/aspell")
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 *** super-agenda-org
 
 Enable by entering ~M-x super-agenda-org-mode~.
 [[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
 
+
 #+BEGIN_SRC emacs-lisp
+(use-package org-super-agenda
+  :ensure t)
 (let ((org-super-agenda-groups
        '(;; Each group has an implicit boolean OR operator between its selectors.
          (:name "Today"  ; Optionally specify section name
@@ -6140,7 +6143,7 @@ Enable by entering ~M-x super-agenda-org-mode~.
          )))
 	 (org-agenda nil "a"))
 #+END_SRC
-#+END_COMMENT
+
 
 ** T
 
