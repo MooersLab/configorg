@@ -3313,44 +3313,6 @@ Invoke already under the Python config. dap works for only Python and Java.
 
 
 
- :init
-#  :commands (lsp)
-#  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-#  (setq lsp-keymap-prefix "C-c l")
-#  :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-#        (c-mode . lsp)
-#      (c++-mode . lsp)
-#      (clojure-mode . lsp)
-#      (julia-mode . lsp)
-#         (latex-mode . lsp)
-#         (python-mode . lsp)
-#         (R-mode . lsp)
-#         ;; if you want which-key integration
-#         (lsp-mode . lsp-enable-which-key-integration)))
-#
-#
-# busted :custom( (lsp-modeline-diagnostics-enable . t) (lsp-modeline-diagnostics-scope . :project)))
-#
-#
-#
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package lsp-ui
-#   :commands (lsp)
-#   :hook (; replace XXX-mode with concrete major-mode (e. g. python-mode)
-#         (
-#        (latex-mode . lsp)
-#         (python-mode . lsp)))
-# +END_SRC
-#
-#      (c-mode . lsp)
-#      (c++-mide . lsp)
-#         (clojure-mode . lsp)
-#         (julia-mode . lsp)
-#         (r-mode . lsp)
-
-
 
 *** LaTeX 
 
@@ -3608,26 +3570,26 @@ I have only three.
 I need a use-package version.
 
 
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-# (require 'mathpix
-#   :custom ((mathpix-app-id "app-id")
-#            (mathpix-app-key "app-key"))
-#   :bind
-#   ("C-x m" . mathpix-screenshot))
-# ;; maybe a required setting for Macs
-# (setq mathpix-screenshot-method "screencapture -i %s")
-# #+END_SRC
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package mathpix.el
-#   :straight (:host github :repo "jethrokuan/mathpix.el")
-#   :custom ((mathpix-app-id "app-id")
-#            (mathpix-app-key "app-key"))
-#   :bind
-#   ("C-x m" . mathpix-screenshot))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
+(require 'mathpix
+  :custom ((mathpix-app-id "app-id")
+           (mathpix-app-key "app-key"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+;; maybe a required setting for Macs
+(setq mathpix-screenshot-method "screencapture -i %s")
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package mathpix.el
+  :straight (:host github :repo "jethrokuan/mathpix.el")
+  :custom ((mathpix-app-id "app-id")
+           (mathpix-app-key "app-key"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+#+END_SRC
 
 
 
@@ -3706,57 +3668,54 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 #+END_SRC
 
 
+** N
+
+*** nov
+
+Customizations for the nov package that enables the reading of epub files in Emacs.
+See https://depp.brause.cc/nov.el/
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq nov-text-width 80)
+(setq nov-text-width t)
+(setq visual-fill-column-center-text t)
+(add-hook 'nov-mode-hook 'visual-line-mode)
+(add-hook 'nov-mode-hook 'visual-fill-column-mode)
+
+;; Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.emacs.d/justify-kp/")
+(load "justify-kp")
+
+;; Add some justification to epub documents.
+(require 'justify-kp)
+(setq nov-text-width t)
+
+(defun my-nov-window-configuration-change-hook ()
+  (my-nov-post-html-render-hook)
+  (remove-hook 'window-configuration-change-hook
+               'my-nov-window-configuration-change-hook
+               t))
+(defun my-nov-post-html-render-hook ()
+  (if (get-buffer-window)
+      (let ((max-width (pj-line-width))
+            buffer-read-only)
+        (save-excursion
+          (goto-char (point-min))
+          (while (not (eobp))
+            (when (not (looking-at "^[[:space:]]*$"))
+              (goto-char (line-end-position))
+              (when (> (shr-pixel-column) max-width)
+                (goto-char (line-beginning-position))
+                (pj-justify)))
+            (forward-line 1))))
+    (add-hook 'window-configuration-change-hook
+              'my-nov-window-configuration-change-hook
+              nil t)))
+(add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
+#+END_SRC
 
 
-# ** N
-# 
-# *** nov
-# 
-# #+BEGIN_SRC emacs-lisp
-# ;; Customizations for the nov package that enables the reading of epub files in Emacs.
-# ;; See https://depp.brause.cc/nov.el/
-# (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-# (setq nov-text-width 80)
-# (setq nov-text-width t)
-# (setq visual-fill-column-center-text t)
-# (add-hook 'nov-mode-hook 'visual-line-mode)
-# (add-hook 'nov-mode-hook 'visual-fill-column-mode)
-# 
-# ;; Tell emacs where is your personal elisp lib dir
-# (add-to-list 'load-path "~/.emacs.d/justify-kp/")
-# (load "justify-kp")
-# 
-# ;; Add some justification to epub documents.
-# (require 'justify-kp)
-# (setq nov-text-width t)
-# 
-# (defun my-nov-window-configuration-change-hook ()
-#   (my-nov-post-html-render-hook)
-#   (remove-hook 'window-configuration-change-hook
-#                'my-nov-window-configuration-change-hook
-#                t))
-# 
-# (defun my-nov-post-html-render-hook ()
-#   (if (get-buffer-window)
-#       (let ((max-width (pj-line-width))
-#             buffer-read-only)
-#         (save-excursion
-#           (goto-char (point-min))
-#           (while (not (eobp))
-#             (when (not (looking-at "^[[:space:]]*$"))
-#               (goto-char (line-end-position))
-#               (when (> (shr-pixel-column) max-width)
-#                 (goto-char (line-beginning-position))
-#                 (pj-justify)))
-#             (forward-line 1))))
-#     (add-hook 'window-configuration-change-hook
-#               'my-nov-window-configuration-change-hook
-#               nil t)))
-# 
-# (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
-# #+END_SRC
-# 
-# 
 ** O
 
 *** Org configuration
@@ -3786,21 +3745,21 @@ Setting to open dvi in place of pdf-tools for a sharper view.
 #+END_SRC
 
 
-# *** org2blog configuration
-#
-# This package connects the Emacs to your WordPress account.
-# You write posts in org and then publish them in WordPress.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package org2blog
-#              :ensure t)
-#
-# (setq org2blog/wp-blog-alist
-#       '(("myblog"
-#          :url "http://bmooerslab.wordpress.com/xmlrpc.php"
-#          :username "blaine-mooers@ouhsc.edu")))
-# #+END_SRC
+*** org2blog configuration
 
+This package connects the Emacs to your WordPress account.
+You write posts in org and then publish them in WordPress.
+
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package org2blog
+             :ensure t)
+(setq org2blog/wp-blog-alist
+      '(("myblog"
+         :url "http://bmooerslab.wordpress.com/xmlrpc.php"
+         :username "blaine-mooers@ouhsc.edu")))
+#+END_SRC
+#+END_COMMENT
 
 *** org-ac
 
@@ -3936,156 +3895,6 @@ Do we really have to exit the calendar after each selection?
            (org-agenda-remove-tags t))
           ("agenda.txt")))
 #+END_SRC
-
-
-# 
-# #+BEGIN_SRC emacs-lisp
-# (setq org-agenda-custom-commands
-#       `(("A" "Daily agenda and top priority tasks"
-#          ((tags-todo "*"
-#                      ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-#                       (org-agenda-skip-function
-#                        `(org-agenda-skip-entry-if
-#                          'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-overriding-header "Important tasks without a date\n")))
-#           (agenda "" ((org-agenda-span 1)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-scheduled-past-days 0)
-#                       ;; We don't need the `org-agenda-date-today'
-#                       ;; highlight because that only has a practical
-#                       ;; utility in multi-day views.
-#                       (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-#                       (org-agenda-format-date "%A %-e %B %Y")
-#                       (org-agenda-overriding-header "\nToday's agenda\n")))
-#           (agenda "" ((org-agenda-start-on-weekday nil)
-#                       (org-agenda-start-day "+1d")
-#                       (org-agenda-span 3)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                       (org-agenda-overriding-header "\nNext three days\n")))
-#           (agenda "" ((org-agenda-time-grid nil)
-#                       (org-agenda-start-on-weekday nil)
-#                       ;; We don't want to replicate the previous section's
-#                       ;; three days, so we start counting from the day after.
-#                       (org-agenda-start-day "+4d")
-#                       (org-agenda-span 14)
-#                       (org-agenda-show-all-dates nil)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-entry-types '(:deadline))
-#                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                       (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
-#         ("P" "Plain text daily agenda and top priorities"
-#          ((tags-todo "*"
-#                      ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-#                       (org-agenda-skip-function
-#                        `(org-agenda-skip-entry-if
-#                          'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-overriding-header "Important tasks without a date\n")))
-#           (agenda "" ((org-agenda-span 1)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-scheduled-past-days 0)
-#                       ;; We don't need the `org-agenda-date-today'
-#                       ;; highlight because that only has a practical
-#                       ;; utility in multi-day views.
-#                       (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-#                       (org-agenda-format-date "%A %-e %B %Y")
-#                       (org-agenda-overriding-header "\nToday's agenda\n")))
-#           (agenda "" ((org-agenda-start-on-weekday nil)
-#                       (org-agenda-start-day "+1d")
-#                       (org-agenda-span 3)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                       (org-agenda-overriding-header "\nNext three days\n")))
-#           (agenda "" ((org-agenda-time-grid nil)
-#                       (org-agenda-start-on-weekday nil)
-#                       ;; We don't want to replicate the previous section's
-#                       ;; three days, so we start counting from the day after.
-#                       (org-agenda-start-day "+4d")
-#                       (org-agenda-span 14)
-#                       (org-agenda-show-all-dates nil)
-#                       (org-deadline-warning-days 0)
-#                       (org-agenda-block-separator nil)
-#                       (org-agenda-entry-types '(:deadline))
-#                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                       (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n"))))
-#          ((org-agenda-with-colors nil)
-#           (org-agenda-prefix-format "%t %s"))
-#           (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
-#           (org-agenda-fontify-priorities nil)
-#           (org-agenda-remove-tags t))
-#          ("agenda.txt"))))
-#  #+END_SRC
-
-And this is what I actually use.  The `defvar' is stored in my
-prot-org.el file.  In the video I explain why I use this style.
-
-# #+BEGIN_SRC emacs-lisp
-# (defvar prot-org-custom-daily-agenda
-#   ;; NOTE 2021-12-08: Specifying a match like the following does not
-#   ;; work.
-#   ;;
-#   ;; tags-todo "+PRIORITY=\"A\""
-#   ;;
-#   ;; So we match everything and then skip entries with
-#   ;; `org-agenda-skip-function'.
-#   `((tags-todo "*"
-#                ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-#                 (org-agenda-skip-function
-#                  `(org-agenda-skip-entry-if
-#                    'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-#                 (org-agenda-block-separator nil)
-#                 (org-agenda-overriding-header "Important tasks without a date\n")))
-#     (agenda "" ((org-agenda-span 1)
-#                 (org-deadline-warning-days 0)
-#                 (org-agenda-block-separator nil)
-#                 (org-scheduled-past-days 0)
-#                 ;; We don't need the `org-agenda-date-today'
-#                 ;; highlight because that only has a practical
-#                 ;; utility in multi-day views.
-#                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-#                 (org-agenda-format-date "%A %-e %B %Y")
-#                 (org-agenda-overriding-header "\nToday's agenda\n")))
-#     (agenda "" ((org-agenda-start-on-weekday nil)
-#                 (org-agenda-start-day "+1d")
-#                 (org-agenda-span 3)
-#                 (org-deadline-warning-days 0)
-#                 (org-agenda-block-separator nil)
-#                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                 (org-agenda-overriding-header "\nNext three days\n")))
-#     (agenda "" ((org-agenda-time-grid nil)
-#                 (org-agenda-start-on-weekday nil)
-#                 ;; We don't want to replicate the previous section's
-#                 ;; three days, so we start counting from the day after.
-#                 (org-agenda-start-day "+4d")
-#                 (org-agenda-span 14)
-#                 (org-agenda-show-all-dates nil)
-#                 (org-deadline-warning-days 0)
-#                 (org-agenda-block-separator nil)
-#                 (org-agenda-entry-types '(:deadline))
-#                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#                 (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n"))))
-#   "Custom agenda for use in `org-agenda-custom-commands'.")
-# 
-# (setq org-agenda-custom-commands
-#       `(("A" "Daily agenda and top priority tasks"
-#          ,prot-org-custom-daily-agenda)
-#         ("P" "Plain text daily agenda and top priorities"
-#          ,prot-org-custom-daily-agenda
-#          ((org-agenda-with-colors nil)
-#           (org-agenda-prefix-format "%t %s")
-#           (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
-#           (org-agenda-fontify-priorities nil)
-#           (org-agenda-remove-tags t))
-#          ("agenda.txt"))))
-# #+END_SRC
-
 
 
 *** org-babel
@@ -5727,12 +5536,13 @@ It is recommended that ~Pymacs~ be installed in a ~python_env~ and then the foll
 Obtain PyMacs [[https://github.com/dgentry/Pymacs][here]].
 
 #+BEGIN_SRC bash
-;; #!/bin/bash
-;; source /some/dir/yourenv/bin/activate
-;; /usr/bin/emacs29
+#!/bin/bash
+source /some/dir/yourenv/bin/activate
+/usr/bin/emacs29
 #+END_SRC
-#
-Add the following Emacs function to the config.org file.
+
+
+Add the following Emacs function to the ~config.org~ file.
 
 #+BEGIN_SRC emacs-lisp
 (defun reload-pymacs()
@@ -6329,7 +6139,7 @@ through the alternatives.
     (string-inflection-java-style-cycle))))
 #+END_SRC
 
-## T
+** T
 
 *** Timers
 
