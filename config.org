@@ -6076,7 +6076,7 @@ I entered sbcl and issued the following command.
 
 
 #+BEGIN_SRC emacs-lisp
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
+;;(load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/opt/local/bin/sbcl")
 #+END_SRC
 
