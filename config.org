@@ -6099,7 +6099,7 @@ Enable by entering ~M-x super-agenda-org-mode~.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
-  :ensure t :HOME:)
+  :ensure t)
 (let ((org-super-agenda-groups
        '(;; Each group has an implicit boolean OR operator between its selectors.
          (:name "Today"  ; Optionally specify section name
