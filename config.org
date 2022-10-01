@@ -2511,7 +2511,7 @@ This is a new and well developed minor mode that is activated for most modes by 
 For details on how to customize the coloring and width of the guides, see [[this github repo][https://github.com/DarthFennec/highlight-indent-guides]].
 
 #+BEGIN_SRC emacs-lisp
-;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 #+END_SRC
 
 
@@ -6076,12 +6076,8 @@ I entered sbcl and issued the following command.
 
 
 #+BEGIN_SRC emacs-lisp
-(use-package slime
-  :ensure t)
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/opt/local/bin/sbcl")
-;;(require 'slime-autoloads)
-;;(slime-setup '(slime-fancy))
 #+END_SRC
 
 
