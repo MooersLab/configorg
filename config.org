@@ -5886,7 +5886,7 @@ Enter C-g to delete the unused arguments in a R function call.
 	 (window-width . 0.5)
 	 (reusable-frames . nil))))
 #+END_SRC
-
+y
 
 ** S
 
@@ -6055,7 +6055,7 @@ To enforce the use of one whitespace, enter the following:
 (add-hook `prog-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 *** SLIME
 
 slime stands for Superior Lisp Interaction Mode for Emacs.
@@ -6069,18 +6069,21 @@ I had installed earlier the quicklisp package in sbcl.
 However, I had to install a slime helper.
 I entered sbcl and issued the following command.
 
+
 #+BEGIN_SRC common-lisp
 (ql:quickload "quicklisp-slime-helper")
 #+END_SRC
 
 
 #+BEGIN_SRC emacs-lisp
+(use-package slime-autoloads
+  :ensure t)
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/opt/local/bin/sbcl")
 ;;(require 'slime-autoloads)
 ;;(slime-setup '(slime-fancy))
 #+END_SRC
-#+END_COMMENT
+
 
 
 *** Spelling
