@@ -2593,8 +2593,9 @@ Make M-x and other mini-buffers sortable, filterable
 #+END_SRC
 
 
-#+BEGIN_COMMENT
+
 Add vim key binding for use in ivy menus.
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package command-log-mode)
 (use-package ivy
