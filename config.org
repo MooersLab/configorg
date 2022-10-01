@@ -3499,10 +3499,6 @@ I adapted it to edit README.md files for GitHub following this suggested [[https
 #+END_SRC
 
 
-# :mode ("\\.Rmd\\'" . md-mode)
-# :init (setq markdown-command "multimarkdown"))
-
-
 Install simple-httpd and impatient-mode packages.
 
 #+BEGIN_SRC emacs-lisp
@@ -3569,7 +3565,7 @@ I am getting the need for five arguments witht the require command.
 I have only three.
 I need a use-package version.
 
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
 (require 'mathpix
@@ -3581,7 +3577,6 @@ I need a use-package version.
 (setq mathpix-screenshot-method "screencapture -i %s")
 #+END_SRC
 
-
 #+BEGIN_SRC emacs-lisp
 (use-package mathpix.el
   :straight (:host github :repo "jethrokuan/mathpix.el")
@@ -3590,7 +3585,7 @@ I need a use-package version.
   :bind
   ("C-x m" . mathpix-screenshot))
 #+END_SRC
-
+#+END_COMMENT
 
 
 
