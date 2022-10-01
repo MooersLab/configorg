@@ -3589,12 +3589,6 @@ I need a use-package version.
 
 
 
-
-# 
-# Notes on [[https://ianyepan.github.io/posts/setting-up-use-package/#:~:text=To%20install%20a%20desired%20package%20without%20using%20use-package%2C,find%20it%2C%20for%20instance%20with%20%28add-to-list%20%27load-path%20%22%2Fpath%2Fto%2Finstalled-package-repo%22%29.][use-package]].
-
-
-
 *** mode-line clean-up
 
 #+BEGIN_SRC emacs-lisp
@@ -3664,51 +3658,6 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 
 
 ** N
-
-*** nov
-
-Customizations for the nov package that enables the reading of epub files in Emacs.
-See https://depp.brause.cc/nov.el/
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-(setq nov-text-width 80)
-(setq nov-text-width t)
-(setq visual-fill-column-center-text t)
-(add-hook 'nov-mode-hook 'visual-line-mode)
-(add-hook 'nov-mode-hook 'visual-fill-column-mode)
-
-;; Tell emacs where is your personal elisp lib dir
-(add-to-list 'load-path "~/.emacs.d/justify-kp/")
-(load "justify-kp")
-
-;; Add some justification to epub documents.
-(require 'justify-kp)
-(setq nov-text-width t)
-
-(defun my-nov-window-configuration-change-hook ()
-  (my-nov-post-html-render-hook)
-  (remove-hook 'window-configuration-change-hook
-               'my-nov-window-configuration-change-hook
-               t))
-(defun my-nov-post-html-render-hook ()
-  (if (get-buffer-window)
-      (let ((max-width (pj-line-width))
-            buffer-read-only)
-        (save-excursion
-          (goto-char (point-min))
-          (while (not (eobp))
-            (when (not (looking-at "^[[:space:]]*$"))
-              (goto-char (line-end-position))
-              (when (> (shr-pixel-column) max-width)
-                (goto-char (line-beginning-position))
-                (pj-justify)))
-            (forward-line 1))))
-    (add-hook 'window-configuration-change-hook
-              'my-nov-window-configuration-change-hook
-              nil t)))
-(add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
-#+END_SRC
 
 
 ** O
