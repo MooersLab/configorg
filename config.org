@@ -52,8 +52,9 @@ You have to do these steps in reverse order when updating your configuration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
 
+
+This command starts the server if it is not already running.    
 #+BEGIN_COMMENT
-This command starts the server if it is not already running.                                                                                                                             
 #+BEGIN_SRC emacs-lisp
 (server-start)
 ;;(unless (server-running-p) (server-start))
@@ -653,9 +654,9 @@ Example configuration for the pacakge  /consult/.
 #+END_SRC
 #+END_COMMENT
 
-#+BEGIN_COMMENT
- **** marginalia
 
+**** marginalia
+#+BEGIN_COMMENT
  #+BEGIN_SRC emacs-lisp
  (use-package marginalia
    :ensure t
@@ -664,8 +665,9 @@ Example configuration for the pacakge  /consult/.
  #+END_SRC
 #+END_COMMENT
 
+
+**** embark
 #+BEGIN_COMMENT
- **** embark
 #+BEGIN_SRC emacs-lisp
 (use-package embark
    :ensure t
@@ -686,10 +688,10 @@ Example configuration for the pacakge  /consult/.
 #+END_COMMENT
 
 
-#+BEGIN_COMMENT
+
 **** embark-consult
 Consult users will also want the embark-consult package.
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
  (use-package embark-consult
    :ensure t
@@ -703,22 +705,23 @@ Consult users will also want the embark-consult package.
 #+END_COMMENT
 
 
+
+**** orderless
+[[https://github.com/oantolin/orderless][orderless] GitHub repo.
+
 #+BEGIN_COMMENT
- **** orderless
- [[https://github.com/oantolin/orderless][orderless] GitHub repo.
-
-
  #+BEGIN_SRC emacs-lisp
  (use-package orderless
    :ensure t
    :custom
    (completion-styles '(orderless basic))
    (completion-category-overrides '((file (styles basic partial-completion)))))
- #+END_SRC
+#+END_SRC
 
- **** vertico
+**** vertico
 
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
  (use-package vertico
    :init
    (vertico-mode)
@@ -735,19 +738,20 @@ Consult users will also want the embark-consult package.
    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
    (setq vertico-cycle t)
  )
- #+END_SRC
+#+END_SRC
 #+END_COMMENT
 
+
+**** citar
+
 #+BEGIN_COMMENT
- **** citar
- 
  /citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
  Its functionality overlaps with bibtex-ivy and bibtex company.
  It works in markdown, org, and LaTeX.
  
  The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
  
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
  (use-package citar
    :bind (("C-c b" . citar-insert-citation)
           :map minibuffer-local-map
@@ -756,9 +760,8 @@ Consult users will also want the embark-consult package.
    (citar-library-paths '("~/Dropbox/bookPDFs" "~/Dropbox/paperPDFs"))
    (citar-file-extensions '("pdf" "epub"))
    (citar-bibliography '("~/Dropbox/global.bib")))
- #+END_SRC
- 
- Notethat scholar-import is configured to work with citar.
+#+END_SRC
+Note that scholar-import is configured to work with citar.
 #+END_COMMENT
 
 
@@ -829,32 +832,6 @@ Configure eglot to work with clangd.
 #+END_SRC
 
 
-#+BEGIN_COMMENT
-*** Clojure
-
-**** 4clojure
-
-4clojure is an interactive quiz about the basics of Clojure.
-Install this package from MELPA.
-It is also available via an interactive [[https://4clojure.oxal.org/][website]].
-Github site for the 4clojure Emacs [[https://github.com/emacsorphanage/4clojure/][package]] has the usage instructions.
-The suggested configuration below enables running the quiz interactively in cider:
-
-#+BEGIN_SRC emacs-lisp
-(use-package cider)
-
-(defadvice 4clojure-open-question (around 4clojure-open-question-around)
-  "Start a cider/nREPL connection if one hasn't already been started when
-opening 4clojure questions"
-  ad-do-it
-  (unless cider-current-clojure-buffer
-    (cider-jack-in)))
-#+END_SRC
-#+END_COMMENT
-
-
- 
-#+BEGIN_COMMENT
 **** Cider
 
 Cider supports running a Clojure REPL in a parallel window.
@@ -876,10 +853,10 @@ Cider supports running a Clojure REPL in a parallel window.
 (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
 (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
 #+END_SRC
-#+END_COMMENT
 
 
-#+BEGIN_COMMENT
+
+
 **** nbb--cider link up to run ClojureScript via nbb
 
 [[https://github.com/babashka/nbb][nbb]] means not ~babashka~.
@@ -914,11 +891,8 @@ Then if you try to evaluate something from a cljs file, CIDER looks for a cljs R
 Enter ~M-x clojure-mode~ to fix this issue.
 
 Note, you can run ~lein repl :connect 1337~ from the terminal.
-#+END_COMMENT
 
 
-
-#+BEGIN_COMMENT
 
 **** inf-clojure minor mode
 
@@ -930,12 +904,12 @@ The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
 **** modeline tweak for Clojure
 
 [[http://jr0cket.co.uk/2013/01/tweeking-emacs-modeline-for-clojure.html][Clojure]]
-#+END_COMMENT
 
 
-#+BEGIN_COMMENT
+
 **** clojure-lsp
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :ensure t
@@ -954,22 +928,21 @@ The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
   (setq lsp-clojure-server-command '("/usr/local/Cellar/clojure-lsp-native"))) ; Optional: In case `clojure-lsp` is not in your $PATH
 #+END_SRC
-#+END_COMMENT
 
-#+END_COMMENT
-# *** Rainbow blocks for Clojure
-# 
-# The package rainbow-blocks does color highlighting by scope rather than syntax.
-# 
-# #+BEGIN_SRC emacs-lisp
-# (use-package rainbow-blocks)
-# ;; activate for clojure files
-# (add-hook 'clojure-mode-hook 'rainbow-blocks-mode)
-# (add-hook 'org-mode-hook 'rainbow-blocks-mode)
-# (add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
-# 
-# #+END_SRC
-#+END_COMMENT
+
+*** Rainbow blocks for Clojure
+
+The package rainbow-blocks does color highlighting by scope rather than syntax.
+
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-blocks
+  :ensure t)
+;; activate for clojure files
+(add-hook 'clojure-mode-hook 'rainbow-blocks-mode)
+(add-hook 'org-mode-hook 'rainbow-blocks-mode)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-blocks-mode)
+#+END_SRC
+
 
 
 *** command-log-mode
