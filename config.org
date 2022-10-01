@@ -6099,7 +6099,7 @@ Enable by entering ~M-x super-agenda-org-mode~.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
-  :ensure t)
+  :ensure t :HOME:)
 (let ((org-super-agenda-groups
        '(;; Each group has an implicit boolean OR operator between its selectors.
          (:name "Today"  ; Optionally specify section name
@@ -6287,15 +6287,10 @@ As a result, you can use evil-mode’s editing motions on the command line, unli
   (setq explicit-powershell.exe-args '()))
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 **** iterm extensions
 
-emacs-shell-mode-iterm-extensions
-
-#+BEGIN_SRC emacs-lisp
-(load "iterm.el")
-#+END_SRC
-#+END_COMMENT
+There is an iterm.el package.
 
 
 *** String infleciton (snake_case -> UPCASE -> )
