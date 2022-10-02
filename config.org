@@ -9,7 +9,7 @@
 I first posted this config file on GitHub on 20 July 2021.
 My init.el file had grown to over 700 lines in two weeks.
 It was time to clean it up and bring some order to it.
-(This config.org file is now 6700 lines). 
+(This config.org file is now 6709 lines as of October 2, 2022). 
 
 I followed an alternate approach to managing my /init.el/ file that was inspired by [[https://gitlab.com/dwt1/dotfiles][Derek Taylor]].
 This approach involves putting the elisp code of the /init.el/ into source blocks in an org-mode file called /config.org/.
@@ -28,22 +28,32 @@ In retrospect, you have to be a big fan of folded text to think that this is adv
 Second, the /config.org/ file is rendered directly by GitHub; there is no need to convert it from org to GitHub markdown.
 Unfortunately, the internal links in org do not work on GitHub.
 
-On startup, Emacs strips out (/tangles/ in literate programming parlance) the elisp code and writes it to a /config.el/ file.
+After this Intoduction, I have listed the basic configuration.
+The basics are followed by the package configurations in alphabetical order.
+
+I have commented out the configuraton of some packages by using org-modes comment keywords to flank the region that is not to be tangled to the /config.el/ file.
+I may no longer be using that particular package, but I do not want to lose its configuration.
+Or the configuration for that package needs correcting.
+
+On startup, Emacs strips out (/tangles/ in literate programming parlance) the elisp code in the source blocks of this file and writes it to a /config.el/ file.
 The /config.el/ file is the file that Emacs reads upon startup.
 The /config.el/ file will be written to your Emacs directory, (e.g., ~/Users/blaine/.emacs.d~).
 
-Recently, I changed my Emacs directory to ~/Users/blaine/.emacs.default~ because I am using the /chemacs.el/ package, which allows me to switch Emacs configurations easily.
+Recently, I changed my Emacs directory to ~/Users/blaine/.emacs.default~ because I was using the /chemacs2.el/ package, which allows me to switch Emacs configurations easily.
 This capability allows me to explore alternate Emacs configurations without displacing my default configuration.
-It also allows me to switch to a minimal configuration for continued productivity when I have broken my default configuration and have not had time to debug it.
+It also allows me to switch to a minimal configuration for continued productivity when I have broken my default configuration and do not have time to debug it.
 
 Note that if you are using Emacs version 29.0.5 from January 2022 or more recently, you can use the /--init-directory/ flag to switch profiles instead of using the cheamcs package.
 This flag is easier to use because you to not have to setup two configuration files required by chemacs.
+The latter can be tricky to set up and debug.
+
+Emacs version 29.0.5 is the bleeding edge version.
+I have been using the bleeding edge version for a 18 months and have not had any issues.
+This might be because I am still a na\{"}ive advanced beginner.
 
 I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
 For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from this file).
 These are defined in a ~.bashAppAliases~ file that I source from my ~.zshenv~ file which is  in turn sourced from my ~.zshrc~ startup file.
-I use thousands of bash aliases.
-They are parsed into separate files by function.
 
 #+BEGIN_SRC bash
 alias eib='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave'
@@ -68,6 +78,8 @@ alias eis='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~
 alias eisd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax --debug-init'
 #+END_SRC
 
+I use thousands of bash aliases.
+They are parsed into a half dozen separate files by function.
 
 You still need some settings in your ~/init.el/~ file, including one that calls ~/config.org/~.
 I used a function to do so.
@@ -86,7 +98,6 @@ Kill the daemon with the following command ~launchctl unload ~/Library/LaunchAge
 You have to do these steps in reverse order when updating your configuration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
-
 This command starts the server if it is not already running.
 
 #+BEGIN_COMMENT
@@ -95,6 +106,9 @@ This command starts the server if it is not already running.
 ;;(unless (server-running-p) (server-start))
 #+END_SRC
 #+END_COMMENT
+
+In general, the emacsclient is great when your configuration is stable.
+If you are tweaking you config.org file frequently, it is not worth the trouble because you have to kill and restart the server frequently.
 
 The elisp code can be run by placing the cursor right after the leftmost parenthesis and entering ~C-x C-e~ or by placing the cursor inside of the parenthesis and entering ~C-M-x~.
 You can use these commands to test bits of configuration in your ~<*scratch*>~ buffer before committing to adding the code chunks to your initialization file.
@@ -106,12 +120,14 @@ Enter ~M-x eshell~ to start eshell.
 * Comments in elisp
 
 Two semicolons precede comments that start at the beginning of a line.
-One semicolon precedes comments that start after a code fragment.
+One semicolon precedes comments that start after a code fragment and on the same line.
 
 * Comments in Org files
 
 Lines starting with zero or more whitespace characters followed by one ``#'' plus a whitespace are treated as comments and, as such, are not exported.
 Likewise, regions surrounded by ~#+BEGIN_COMMENT~ . . . ~#+END_COMMENT~ are not exported.
+These seem to need to flank code blocks tightly to work.
+
 Finally, a ~COMMENT~ keyword at the beginning of an entry, but after any other keyword or priority cookie, comments out the entire subtree. 
 In this case, the subtree is not exported, and no code block within it is executed. 
 The command below changes the comment status of a headline.
@@ -121,6 +137,9 @@ The command below changes the comment status of a headline.
 Toggle the ~COMMENT~ keyword at the beginning of an entry.
 
 * Setup of PATHS
+
+The zsh shell is the default for Mac OS X since Mac OS X 10.15. 
+Edit this code block to switch to using bash on most remote Linux computing platforms.
 
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
