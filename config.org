@@ -1557,7 +1557,7 @@ Make selection from start of line with C-SPC.
 Move point or cursor to the line of the selection.
 Enter M-UP to move the selected lines up.
 
-Thank you DivineDomain: https://github.com/MooersLab/latex-emacs/issues/1
+Thank you [[https://github.com/MooersLab/latex-emacs/issues/1][DivineDomain]]!
 
 #+BEGIN_SRC emacs-lisp
 (defun move-text-internal (arg)
@@ -1600,11 +1600,12 @@ Thank you DivineDomain: https://github.com/MooersLab/latex-emacs/issues/1
 #+END_SRC
 
 
-#+BEGIN_COMMENT
+
 **** Move lines up or down
 
 These three functions enable moving lines up and down with M-<up> and M-<down> rather than having to cut and paste.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (defun move-line (n)
   "Move the current line up or down by N lines."
@@ -1647,6 +1648,28 @@ The following function compiles a tex file to a PDF in current directory with bu
               (car (split-string (buffer-name)
                                  "\\."))
               ".pdf")))
+#+END_SRC
+
+
+**** fill-or-unfill
+
+Line wrap a paragraph on a line-single line as from a html file.
+Unwrap that parargraph upon repeat of this function.
+Adapted from [[https://github.com/novoid/dot-emacs/blob/master/config.org][here]]
+
+#+BEGIN_SRC emacs-lisp
+(defun fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command 'my-fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (call-interactively 'fill-paragraph nil (vector nil t))))
+
+(global-set-key [remap fill-paragraph]
+                'fill-or-unfill)
 #+END_SRC
 
 
@@ -2369,6 +2392,43 @@ Enter ~M-x list-flycheck-errors ~ ~C-c ! l~ to list the errors in a separate buf
               (window-height   . 0.33)))
 #+END_SRC
 
+*** flyspell
+
+Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/config.org][Karl Voit]]
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "aspell")
+
+(when (my-system-type-is-darwin)
+  (add-to-list 'load-path "/opt/local/share/emacs/lisp/textmodes")
+)
+
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+(setq flyspell-issue-welcome-flag nil)
+
+(when (my-system-type-is-windows)
+  (setq flyspell-default-dictionary "american")
+)
+(when (my-system-type-is-darwin)
+  (setq flyspell-default-dictionary "american")
+  (setq default-dictionary "american")
+)
+
+;; Check spelling only in the comments of these source codes.
+(add-hook          'c-mode-hook 'flyspell-prog-mode)
+(add-hook         'sh-mode-hook 'flyspell-prog-mode)
+(add-hook        'c++-mode-hook 'flyspell-prog-mode)
+(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
+(add-hook     'python-mode-hook 'flyspell-prog-mode)
+(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
+(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
+(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
+(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mo
+#+END_SRC
+
+
+
 
 ** G
 
@@ -2672,9 +2732,9 @@ Display documentation strings with commands when running counsel-M-x.
 
 
 **** js2-mode
-[[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]]
 
-Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
+
+Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior: [[https://emacs.cafe/emacs/javascript/setup/2017/04/23/emacs-setup-javascript.html][source]].
 
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package js2-mode)
