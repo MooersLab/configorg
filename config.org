@@ -49,7 +49,7 @@ I use bash aliases to start up emacs with specifc profiles and with or without t
 For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from this file).
 These are defined in a ~.bashAppAliases~ file that I source from my ~.zshenv~ file which is  in turn sourced from my ~.zshrc~ startup file.
 
-#+BEGIN_SRC shell
+#+BEGIN_EXAMPLE
 alias eib='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave'
 alias eibd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave --debug-init'
 
@@ -70,7 +70,7 @@ alias eild='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory 
 
 alias eis='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax'
 alias eisd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax --debug-init'
-#+END_SRC
+#+END_EXAMPLE
 
 I use thousands of bash aliases.
 They are parsed into a half dozen separate files by function.
