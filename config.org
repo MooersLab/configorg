@@ -2425,10 +2425,12 @@ Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/co
 (add-hook   'autotest-mode-hook 'flyspell-prog-mode)
 (add-hook   'makefile-mode-hook 'flyspell-prog-mode)
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mo
+
+;; For quick spell checking
+(define-key global-map [(f5)] 'flyspell-mode)
+(define-key global-map [(f7)] 'flyspell-goto-next-error)
+(define-key global-map [(f8)] 'flyspell-correct-word-before-point)
 #+END_SRC
-
-
-
 
 ** G
 
