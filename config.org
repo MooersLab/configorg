@@ -5,12 +5,6 @@
 #+STARTUP: overview
 #+Startup: nohideblocks
 
-
-I first posted this config file on GitHub on 20 July 2021.
-My init.el file had grown to over 700 lines in two weeks.
-It was time to clean it up and bring some order to it.
-(This config.org file is now 6709 lines as of October 2, 2022). 
-
 I followed an alternate approach to managing my /init.el/ file that was inspired by [[https://gitlab.com/dwt1/dotfiles][Derek Taylor]].
 This approach involves putting the elisp code of the /init.el/ into source blocks in an org-mode file called /config.org/.
 Org-mode is a specialized markup language for Emacs.
@@ -49,7 +43,7 @@ The latter can be tricky to set up and debug.
 
 Emacs version 29.0.5 is the bleeding edge version.
 I have been using the bleeding edge version for a 18 months and have not had any issues.
-This might be because I am still a na\{"}ive advanced beginner.
+This might be because I am still a na\"{i}ive advanced beginner.
 
 I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
 For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from this file).
