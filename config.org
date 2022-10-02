@@ -3926,7 +3926,7 @@ The languages with ~nil~ are inactivated.
    (mathematica . nil)
    (plantuml . nil)
    (lisp . t)
-   (org . t}
+   (org . t)
    (smiles . t)	
    (julia . t)
    (python . t)
