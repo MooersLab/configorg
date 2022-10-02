@@ -14,7 +14,7 @@ The initial conversion took several hours, but the resulting /config.org/ file i
 I found that I broke my /init.el/ file less frequently after making the switch to the /config.org/ file.
 I might have been breaking my /init.el/ frequently because I was ignorant of the basics of Emacs lisp (elisp).
 The less frequent breaking of my init.el file freed up time and mental bandwidth to learn about new Emacs packages.
- 
+
 Using the /config.org/ file for the configuration has several advantages.
 First, the sections can be folded while editing this file in Emacs by entering TAB when the cursor or point is on the section title.
 When all sections are folded, the entire document is visible in one screen.
@@ -122,8 +122,8 @@ Lines starting with zero or more whitespace characters followed by one ``#'' plu
 Likewise, regions surrounded by ~#+BEGIN_COMMENT~ . . . ~#+END_COMMENT~ are not exported.
 These seem to need to flank code blocks tightly to work.
 
-Finally, a ~COMMENT~ keyword at the beginning of an entry, but after any other keyword or priority cookie, comments out the entire subtree. 
-In this case, the subtree is not exported, and no code block within it is executed. 
+Finally, a ~COMMENT~ keyword at the beginning of an entry, but after any other keyword or priority cookie, comments out the entire subtree.
+In this case, the subtree is not exported, and no code block within it is executed.
 The command below changes the comment status of a headline.
 
 ~C-c ;~ or ~M-x (org-toggle-comment)~.
@@ -132,7 +132,7 @@ Toggle the ~COMMENT~ keyword at the beginning of an entry.
 
 * Setup of PATHS
 
-The zsh shell is the default for Mac OS X since Mac OS X 10.15. 
+The zsh shell is the default for Mac OS X since Mac OS X 10.15.
 Edit this code block to switch to using bash on most remote Linux computing platforms.
 
 #+BEGIN_SRC emacs-lisp
@@ -168,7 +168,7 @@ Edit this code block to switch to using bash on most remote Linux computing plat
 #+END_SRC
 
 
-* Basic customizations 
+* Basic customizations
 
 
 ** custom file config
@@ -225,7 +225,7 @@ He provides an excellent [[https://www-users.cse.umn.edu/~kauffman/tooltime/][wo
 		eshell-mode-hook
 		vtern-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-#+END_SRC  
+#+END_SRC
 
 
 A faked full screen.
@@ -243,7 +243,7 @@ A faked full screen.
 
 ;; (global-set-key (kbd "M-RET") 'my-toggle-fullscreen)
 (global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
-#+END_SRC  
+#+END_SRC
 
 
 
@@ -277,12 +277,12 @@ A faked full screen.
 See this [[http://ergoemacs.org/emacs/emacs_hyper_super_keys.html][ for more information.]]
 
 #+BEGIN_SRC emacs-lisp
-;; set keys for Apple keyboard, for emacs in OS X 
+;; set keys for Apple keyboard, for emacs in OS X
 ;; Source http://xahlee.info/emacs/emacs/emacs_hyper_super_keys.html
 (setq mac-command-modifier 'meta) ; make cmd key do Meta
-(setq mac-caplocks-modifier 'super) ; make alt or opt key do Super. 
+(setq mac-caplocks-modifier 'super) ; make alt or opt key do Super.
 (setq mac-control-modifier 'control) ; make Control key do Control
-(setq ns-function-modifier 'hyper)  ; make Fn key do Hyper  
+(setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
 #+END_SRC
 
 
@@ -346,10 +346,10 @@ Combined with emacs-mac, this gives good PDF quality for [[https://www.aidanscan
 #+BEGIN_SRC emacs-lisp
 (setq-default pdf-view-display-size 'fit-page)
 #+END_SRC
-  
+
 *** Provide matching parentheses
 
-[[https://ianyepan.github.io/posts/setting-up-use-package/][Source for matching parentheses.]] 
+[[https://ianyepan.github.io/posts/setting-up-use-package/][Source for matching parentheses.]]
 
 Set delay in the matching parenthesis to zero.
 We are modifying the behavior of a built-in package.
@@ -514,7 +514,7 @@ When finished, you can then cut and paste this text in the desired location in t
 One advantage of atomic-chrome over the edit-server is that you can type in either Emacs or the text area.
 The edit-server expects you to do all of your typing in Emacs.
 All of the installed editing tools may not be available at both sites.
-For example, on 11 May 2022, the lsp-grammarly was not working in Emacs, but the grammarly plugin for Chrome was working. 
+For example, on 11 May 2022, the lsp-grammarly was not working in Emacs, but the grammarly plugin for Chrome was working.
 I could take advantage of this plugin by typing in the text area for 750words.
 
 On the other hand, edit-server allowed you to use a hook to recognize that the text area on 750word are to be opened in the latex-mode.
@@ -529,15 +529,15 @@ You can also configure atomic-chrome to set the major mode by website.
 ;;   (lsp)
 ;;   (lsp-ui-mode)
 ;;   )
-;; 
+;;
 ;; (use-package lsp-mode
 ;;     :ensure t
 ;;     :hook ((python-mode . lsp))
 ;;     :commands lsp
 ;;     :config (add-hook 'atomic-chrome-edit-mode-hook 'enable-atomic-lsp)
 ;;  )
- 
- 
+
+
 (use-package atomic-chrome)
 (atomic-chrome-start-server)
 (setq atomic-chrome-default-major-mode 'python-mode)
@@ -793,7 +793,7 @@ Consult users will also want the embark-consult package.
  /citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
  Its functionality overlaps with bibtex-ivy and bibtex company.
  It works in markdown, org, and LaTeX.
- 
+
  The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
 
 #+BEGIN_COMMENT
@@ -811,13 +811,13 @@ Note that scholar-import is configured to work with citar.
 #+END_COMMENT
 
 
-*** AUCTeX 
+*** AUCTeX
 [[source][https://stackoverflow.com/questions/3300497/using-minted-source-code-latex-package-with-emacs-auctex]]
 
 To enable the use of the minted package.
 
 #+BEGIN_SRC emacs-lisp
-(eval-after-load "tex" 
+(eval-after-load "tex"
   '(setcdr (assoc "LaTeX" TeX-command-list)
           '("%`%l%(mode) -shell-escape%' %t"
           TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")
@@ -910,7 +910,7 @@ Cider supports running a Clojure REPL in a parallel window.
 /babashka/ is built on a reduced set of Clojure.
 It is independent of the JVM.
 I stored it in /usr/local/bin.
-It is invoked by entering ~bb~. 
+It is invoked by entering ~bb~.
 ~bb '(vec (dedupe *input*))' <<< '[1 1 1 1 2]'~
 Returns ~[1 2]~.
 
@@ -932,8 +932,8 @@ To run ~nbb~ from within Emacs, launch a server via ~nbb nrepl-server :port 1337
 Enter ~M-x cider-connect <RET> localhost <RET> 1337~.
 Then change the current buffer to clojure-mode.
 
-There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure. 
-Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find. 
+There is a bug. When you use cider-connect this is actually cider-connect-clj, which sets the connection type automatically to Clojure.
+Then if you try to evaluate something from a cljs file, CIDER looks for a cljs REPL, which it cannot find.
 Enter ~M-x clojure-mode~ to fix this issue.
 
 Note, you can run ~lein repl :connect 1337~ from the terminal.
@@ -943,7 +943,7 @@ Note, you can run ~lein repl :connect 1337~ from the terminal.
 **** inf-clojure minor mode
 
 This is the easiest way to run Clojure from Emacs.
-To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~. 
+To open a clj repl in a parallel buffer in Emacs, load a Clojure file and invoke the inf-clojure minor mode by entering ~M-x inf-clojure~.
 The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
 
 
@@ -1026,7 +1026,7 @@ It is a peer of ivy.
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
-  
+
 ;; Use F12 to trigger manually completion on R function args:
 (add-hook 'ess-r-mode-hook
 	  '(lambda ()
@@ -1145,8 +1145,8 @@ A list of predicate functions with no argument to disable Copilot in copilot-mod
 *** CUA-mode
 
 Use C-x, C-v, C-c for cut, paste, and copy when in a marked region.
-If the region is active, use C-S-x (or two rapid C-x C-x) instead C-x to do what C-x normally does in Emacs. 
-The same goes for the other CUA keys. 
+If the region is active, use C-S-x (or two rapid C-x C-x) instead C-x to do what C-x normally does in Emacs.
+The same goes for the other CUA keys.
 
 [[Source][https://www.emacswiki.org/emacs/CuaMode]]
 
@@ -1508,17 +1508,17 @@ Note that the interactive expression is needed to map the function to a key-bind
 
 #+BEGIN_SRC emacs-lisp
 (defun bhmm/hello-blaine ()
-  "This is a demo of an Emacs function that runs in the minibuffer interactively. 
-  Enter M-x hello-blaine to run. 
+  "This is a demo of an Emacs function that runs in the minibuffer interactively.
+  Enter M-x hello-blaine to run.
   Enter C-h f AND hello-blaine to see the documentation."
   (interactive) ; make func interactive via M-x hello-blaine
   (message "Hello, Blaine!"))
 #+END_SRC
 
 
-**** Jump to the folder of an opened document 
+**** Jump to the folder of an opened document
 
-Function by Chris Kauffman for moving the PWD to the directory of the currently open document. 
+Function by Chris Kauffman for moving the PWD to the directory of the currently open document.
 [[https://www-users.cse.umn.edu/~kauffman/tooltime/02-emacs-customization.html][See]].
 This function is invoked with ~C-c j~.
 
@@ -1533,7 +1533,7 @@ open."
                   (dired-find-directory-at-point)         ; dired mode: find closest directory
                   default-directory))                     ; other buffer: use default dir for buffer
          (dir (replace-regexp-in-string " " "\\\\ " dir)) ; escape spaces
-	 (cmd (concat "cd " dir)))                        ; add on the 'cd' 
+	 (cmd (concat "cd " dir)))                        ; add on the 'cd'
     (when (one-window-p)                                  ; in there is only one window
       (split-window-right))                               ; split to 2 windows, left/right
     (if (get-buffer "*shell*")                            ; check if shell is already active
@@ -1634,7 +1634,7 @@ These three functions enable moving lines up and down with M-<up> and M-<down> r
 #+END_SRC
 #+END_COMMENT
 
-**** Compile tex to PDF with current buffer name 
+**** Compile tex to PDF with current buffer name
 
 The following function compiles a tex file to a PDF in current directory with buffer name as the prefix of the filename.
 
@@ -1962,14 +1962,14 @@ concatenated."
 (global-set-key (kbd "C-x w") 'elfeed)
 (add-to-list 'elfeed-feeds '("http://feeds.nature.com/nchem/rss/current" nature))
 (setq elfeed-feeds
-      '("https://planet.emacslife.com/atom.xml" emacs) 
+      '("https://planet.emacslife.com/atom.xml" emacs)
       ("http://feeds.nature.com/nchem/rss/current" nature))
 ;; Entries older than 2 weeks are marked as read
 (add-hook 'elfeed-new-entry-hook
           (elfeed-make-tagger :before "2 weeks ago"
                               :remove 'unread))
 ;; (add-hook 'elfeed-search-mode-hook 'elfeed-update)
-;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" 
+;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
 ;; "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
 ;;  "http://export.arxiv.org/api/query?search_query=cat:cs.CL&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
 #+END_SRC
@@ -2086,7 +2086,7 @@ The `e` is for Emacs Lisp or elisp.
 Note that eshell is also an Emacs Lisp REPL.
 
 #+BEGIN_SRC emacs-lisp
-(defalias 'erepl 'ielm) 
+(defalias 'erepl 'ielm)
 #+END_SRC
 
 To enhance the default automcomple, use the following code.
@@ -2274,8 +2274,8 @@ There is a ob-fsharp package. Install it from MELPA.
 (use-package fsharp-mode
   :defer t
   :ensure t)
-  
-;; Enter M-x eglot to use the eglot lsp for fsharp.  
+
+;; Enter M-x eglot to use the eglot lsp for fsharp.
 (use-package eglot-fsharp)
 
 ;; Setting the path below requires finding fsharpi, which is a script that is mapped to fsi and that runs fsharp interactively.
@@ -2410,7 +2410,7 @@ There are several options in Emacs
 *** lsp-grammarly
 *** langtool
 
-I recommend lsp-grammarly. 
+I recommend lsp-grammarly.
 
 **** grammar-mode
 
@@ -2472,7 +2472,7 @@ This route is for Java developers, which I am not, yet.
 **** lsp-grammarly
 
 You will need a Grammarly account.
-You need to have `npm` installed. 
+You need to have `npm` installed.
 Run the command suggested [[https://github.com/emacs-grammarly/lsp-grammarly#mag-method-2-login-with-emacs-a-bit-complicated][here]].
 You need to install the keytar package in Emacs.
 
@@ -2666,8 +2666,8 @@ Display documentation strings with commands when running counsel-M-x.
 #+END_COMMENT
 
 
- 
-** J 
+
+** J
 *** JavaScript Configuration
 
 
@@ -2680,83 +2680,83 @@ Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
 #    (use-package js2-mode)
 #    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 #    #+END_SRC
-#   
+#
 #    Hook for shell scripts run via ~Node.js~.
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 #    #+END_SRC
-#   
-#   
+#
+#
 #    For a better imenu, use.
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 #    #+END_SRC
-#   
+#
 #    Add these two packages to enhance the use of ~js2-mode~.
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package js2-refactor)
 #    (use-package xref-js2)
 #    #+END_SRC
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (add-hook 'js2-mode-hook #'js2-refactor-mode)
 #    (js2r-add-keybindings-with-prefix "C-c C-r")
 #    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 #    #+END_SRC
-#   
-#   
+#
+#
 #    ~js-mode~ (which js2 is based on) binds ~M-.~, which conflicts with the package /xref/, so unbind it.
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (define-key js-mode-map (kbd "M-.") nil)
-#   
+#
 #    (add-hook 'js2-mode-hook (lambda ()
 #                   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-#   
+#
 #    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 #    #+END_SRC
-#   
+#
 #    ***** ac-js2
 #    Autocompletion for /js2-mode/.
 #    Enable /ac-js2/ in js2-mode as follows:
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (add-hook 'js2-mode-hook 'ac-js2-mode)
 #    #+END_SRC
-#   
-#   
+#
+#
 #    ***** Setting up autocompletion with company on js files
-#   
+#
 #    [[https://emacs.cafe/emacs/javascript/setup/2017/05/09/emacs-setup-javascript-2.html][source]]
 #    This option seems to be defunct.
 #    I could not find the company tern package.
 #    Perhaps the indium package provides autocompletion.
-#   
+#
 #    **** Indium 2
-#   
+#
 #    Indium is an IDE for Emacs that uses the indium.js package and server.
 #    I installed [[https://indium.readthedocs.io/en/latest/setup.html#chrome-configuration][indium]] from MELPA.
 #    /Indium/ uses the /company/ packagefor autocompletion.
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package indium)
 #    (add-hook 'js-mode-hook #'indium-interaction-mode)
 #    #+END_SRC
-#   
-#   
+#
+#
 #    **** nodejs-repl
-#   
+#
 #    Enter ~M-x nodejs-repl~ to open a buffer with [[https://github.com/abicky/nodejs-repl.el][node REPL]].
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package nodejs-repl)
 #    #+END_SRC
-#   
+#
 #    Key bindings to send JavaScript codes to REPL like below:
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (add-hook 'js-mode-hook
 #              (lambda ()
@@ -2767,11 +2767,11 @@ Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
 #                (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
 #                (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
 #    #+END_SRC
-#   
+#
 #    When a version manager such as nvm is used to run different versions of ~Node.js~, it is often desirable to start the REPL of the version specified in the ~.nvmrc~ file per project.
 #    In such cases, customize the ~nodejs-repl-command~ variable with a function symbol.
 #    That function should query nvm for the ~Node.js~ command to run. For example:
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (use-package nodejs-repl)
 #    (defun nvm-which ()
@@ -2780,18 +2780,18 @@ Emacs comes with a ~js-mode~, but the ~js2-mode~ is superior.
 #        (cadr (split-string output "[\n]+" t))))
 #    (setq nodejs-repl-command #'nvm-which)
 #    #+END_SRC
-#   
+#
 #    The ~nvm-which~ function can be simpler if using bash:
-#   
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (defun nvm-which ()
 #      (let ((output (shell-command-to-string "source ~/.nvm/nvm.sh; nvm which")))
 #        (cadr (split-string output "[\n]+" t))))
 #    #+END_SRC
-#   
-#   
+#
+#
 ** K
- 
+
 *** keycast
 
 The [[https://metaredux.com/posts/2019/12/07/dead-simple-emacs-screencasts.html][keycast]] package enables the display of your keystrokes.
@@ -2857,7 +2857,7 @@ Enhances the access to help information about keybindings, functions, and variab
 
 **** AUCTeX
 
-Configuration from latex-emacs. 
+Configuration from latex-emacs.
 
 #+BEGIN_SRC emacs-lisp
 ;;### auto-complete
@@ -2872,7 +2872,7 @@ Configuration from latex-emacs.
 ;;;### auto-complete-auctex.el --- auto-completion for auctex
 
 ;; Copyright (C) 2012 Christopher Monsanto
-     
+
 ;; Author: Christopher Monsanto <chris@monsan.to>
 ;; Version: 1.0
 ;; Package-Requires: ((yasnippet "0.6.1") (auto-complete "1.4"))
@@ -2986,7 +2986,7 @@ Configuration from latex-emacs.
     (all-completions ac-prefix comlist)))
 
 (defun ac-auctex-macro-action ()
-  (yas/expand-snippet (ac-auctex-macro-snippet (assoc-default candidate TeX-symbol-list)))) 
+  (yas/expand-snippet (ac-auctex-macro-snippet (assoc-default candidate TeX-symbol-list))))
 
 (ac-define-source auctex-macros
   '((init . TeX-symbol-list)
@@ -3045,7 +3045,7 @@ Configuration from latex-emacs.
     (yas/expand-snippet (format "\\begin{%s}%s\n$0\n\\end{%s}"
 				candidate
 				(ac-auctex-macro-snippet (assoc-default candidate LaTeX-environment-list))
-				candidate)))) 
+				candidate))))
 
 (ac-define-source auctex-environments
   '((init . LaTeX-environment-list)
@@ -3330,7 +3330,7 @@ Invoke already under the Python config. dap works for only Python and Java.
 (add-hook 'python-mode-hook 'eglot-ensure)
 (add-hook 'latex-mode-hook 'eglot-ensure)
 (add-hook 'julia-mode-hook 'eglot-ensure)
-(add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))      
+(add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))
 (add-hook 'markdown-mode-hook #'eglot-ensure)
 ;; (add-hook 'R-mode-hook 'eglot-ensure)
 #+END_SRC
@@ -3363,7 +3363,7 @@ Invoke already under the Python config. dap works for only Python and Java.
 
 
 
-*** LaTeX 
+*** LaTeX
 
 
 #+BEGIN_SRC emacs-lisp
@@ -3391,10 +3391,10 @@ Invoke already under the Python config. dap works for only Python and Java.
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
 
-(setq doc-view-continuous t) ;; scroll over all pages in doc view 
+(setq doc-view-continuous t) ;; scroll over all pages in doc view
 
 ;; Settings for minted package issue
-(eval-after-load "tex" 
+(eval-after-load "tex"
   '(setcdr (assoc "LaTeX" TeX-command-list)
           '("%`%l%(mode) -shell-escape%' %t"
           TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")
@@ -3438,7 +3438,7 @@ have to be added after running the function.
 
 
 #+BEGIN_SRC emacs-lisp
-(defun description (beg end) 
+(defun description (beg end)
  "wrap the active region in an 'itemize' environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
@@ -3460,7 +3460,7 @@ Converts a selected list into an enumerated list.
 The elements of the list must begin with a dash.
 
 #+BEGIN_SRC emacs-lisp
-(defun enumerate (beg end) 
+(defun enumerate (beg end)
  "wrap the active region in an 'itemize' environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
@@ -3486,7 +3486,7 @@ and a description list.
 Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-region-filling-when-inserting-itemize}
 
 #+BEGIN_SRC emacs-lisp
-(defun itemize (beg end) 
+(defun itemize (beg end)
  "wrap the active region in an 'itemize' environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
@@ -3567,7 +3567,7 @@ The impatient-mode package takes the content of your buffer, passes it through a
   :commands impatient-mode)
 #+END_SRC
 
-Create a filter function to process the Markdown buffer. 
+Create a filter function to process the Markdown buffer.
 The function my-markdown-filter uses github-markdown-css to mimic the look of GitHub.
 
 #+BEGIN_SRC emacs-lisp
@@ -3583,7 +3583,7 @@ The function my-markdown-filter uses github-markdown-css to mimic the look of Gi
 #+END_SRC
 
 
-Create the function my-markdown-preview to show the preview. 
+Create the function my-markdown-preview to show the preview.
 
 #+BEGIN_SRC emacs-lisp
 (defun my-markdown-preview ()
@@ -3713,7 +3713,7 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 
 *** Org configuration
 
-This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the basics of org-mode in five minutes. 
+This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the basics of org-mode in five minutes.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org)
@@ -3764,7 +3764,7 @@ See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
 #+END_SRC
 
 
-*** org-agenda 
+*** org-agenda
 The following code configures the agenda menu.
 I commented out.
 Something is broken.
@@ -3927,11 +3927,11 @@ The languages with ~nil~ are inactivated.
    (plantuml . nil)
    (lisp . t)
    (org . t)
-   (smiles . t)	
+   (smiles . t)
    (julia . t)
    (python . t)
    (R . t)
-   (jupyter . t)))  
+   (jupyter . t)))
 #+END_SRC
 
 
@@ -4055,7 +4055,7 @@ The latter two columns were columns three and four of the table that I used with
 Then use a gnuplot script to call this table and write out a plot.
 
 I obtained the inspiration for this plot from [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-I needed only the first four columns to generate the GANTT plot. 
+I needed only the first four columns to generate the GANTT plot.
 The remaining columns were left for later work.
 
 Enter ~TAB, RET~ or ~C-c C-c~ to auto-adjust the Table as you enter values and to complete the dates.
@@ -4066,7 +4066,7 @@ Single-digit dates must be preceded by a 0.
 Enter ~S-M-down~ to add a row above.
 Enter ~M-up~ to move a row up.
 
-The column formula calculates the end date. 
+The column formula calculates the end date.
 I included shorten version of the table with the minimum configuration as a template.
 I deleted a number of rows of sensitive information under the manuscript and grant proposal preparation categories.
 
@@ -4109,7 +4109,7 @@ Change the line width of the arrow sytle line to change the thickness of the bar
 
 March 2022 appears on the x-axis.
 I have not figured out how to start from April.
-Maybe the x-range has to be set. 
+Maybe the x-range has to be set.
 
 #+BEGIN_SRC gnuplot :var DATA=gantt-table :file gantt-short.png
 OneMonth = strptime("%m","2")
@@ -4233,10 +4233,10 @@ I had to add the set term, set xtics, and set ytics to expand the size of the pl
 *** org-latex-classes by document class
 
 From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
-For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~. 
+For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~.
 Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "taken".
 
-I am stumped on the configuration. 
+I am stumped on the configuration.
 Did ox-latex get renamed to org-latex?
 No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
 
@@ -4299,7 +4299,7 @@ To use this setup in your org file, reference the name you gave it (e.g., ~#+LAT
 )
 #+END_SRC
 
-*** org-export-latex-no-toc 
+*** org-export-latex-no-toc
 
 #+BEGIN_SRC emacs-lisp
 (defun org-export-latex-no-toc (depth)
@@ -4353,7 +4353,7 @@ The level of the node can be shifted with the Meta and right and left arrow keys
 During the outline of a book, the org file can be used to initiate the outline.
 The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brainstorming.
 
-After the mindmap has matured, it can be exported to a markdown file. 
+After the mindmap has matured, it can be exported to a markdown file.
 The markdown file can be converted to a LaTeX file via pandoc.
 Then outline can be used directly, although I like to parse the chapters into individual documents.
 
@@ -4370,7 +4370,7 @@ Can an org file be imported into iThoughtsX?
 You can export an org file to markdown and then import the markdown into iThoughtsX.
 Perhaps a package for going from org to iThoughtsX is needed.
 
-I had to enable the markdown backend. 
+I had to enable the markdown backend.
 Enter ~M-x customize-option~ and ~org-export-backends~.
 Check the markdown box.
 Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-c C-e~.
@@ -4398,7 +4398,7 @@ This file can be imported into ithoughtsX and then saved as a ~itmz~ file.
   ;; (setq org-mind-map-engine "circo")  ; Circular Layout
   )
 #+END_SRC
-  
+
 Then, run ~M-x org-mind-map-write~ within the org-mode file you would like to make a mind-map for.
 If the program works as expected, a PDF file will be generated in the same directory as the org file.
 You will be prompted for the file type for the exported graph, so you are not limited to PDFs.
@@ -4408,7 +4408,7 @@ See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this projec
 
 Note that the GitHub repo mentions a size limit of 100 x 100 pixels for the embedded images.
 I found that the images do not have to be square.
-Also note that the exape images is about 300 by 300 so this size limit is no longer present. 
+Also note that the exape images is about 300 by 300 so this size limit is no longer present.
 
 **** Cautions with setting up the hierarchy of the outline to be mapped
 - It takes several seconds for the  ~M-x org-mind-map-write~ command to complete so wait for the message "Org mind map finished." to appear in the minibuffer.
@@ -4417,7 +4417,7 @@ Also note that the exape images is about 300 by 300 so this size limit is no lon
 - Child nodes of the same name under different parent nodes will be shared between parents with multiple sets of arrows. Solve this problem by renaming the child nodes to different names or by using unique tags.
 - Tags have no spaces or dashes. The tags are text between two colons.
 - Graphs with more than twenty nodes in a level will not fit on a page of the US letter size.
-- Large graphs need to be exported to vector graphics files to avoid pixelation. 
+- Large graphs need to be exported to vector graphics files to avoid pixelation.
 - You can overwrite prior graph files without being warned that you are about to do so.
 - You may be limited to three or four levels of nodes on an 8.5-inch wide page.
 - Links have to be indented to the same degree as the headline above it.
@@ -4439,8 +4439,8 @@ Note that the video is not narrated, so be patient with it.
 
 You can generate a skeleton of an opened PDF in the current buffer by entering org-noter-skeleton-create.
 You can use the skeleton as an outline in an org document that has been opened in a parallel buffer.
-This facilitates taking notes in a separate document. 
-After reading the article and taking the notes, I recommend writing a summary for the annote section of the corresponding BibTeX record for the article. 
+This facilitates taking notes in a separate document.
+After reading the article and taking the notes, I recommend writing a summary for the annote section of the corresponding BibTeX record for the article.
 
 You have to install pdf-tools first.
 Then you have to run ~M-x pdf-tools-install~.
@@ -4467,8 +4467,8 @@ Anyways, see pdftools for an improved experience for navigating PDFs in Emacs wi
   :ensure t
   :config
   ;; Your org-noter config ........
-  :config 
-  (setq 
+  :config
+  (setq
     org_notes (concat (getenv "HOME") "/org-roam/")
     zot_bib (concat (getenv "HOME") "/Documents/global.bib")
     org-directory org_notes
@@ -4504,7 +4504,7 @@ You can use the usual keybindings to navigate the document
 
 
 
-*** helm-bibtex 
+*** helm-bibtex
 
 Source: https://github.com/tmalsburg/helm-bibtex
 
@@ -4548,17 +4548,17 @@ If the file field is not used but instead the naming scheme bibtex-key + .pdf.
 (setq bibtex-completion-find-additional-pdfs t)
 #+END_SRC
 
-All files whose name start with the BibTeX key will then be associated with an entry. 
+All files whose name start with the BibTeX key will then be associated with an entry.
 Name your files accordingly. For example:
 
 - bibtex-key-annotated.pdf
 - bibtex-key-supplemental.pdf
 - bibtex-key-chapter1.pdf
 
-These additional files are only detected when triggering an action, such as “Open PDF file”. 
+These additional files are only detected when triggering an action, such as “Open PDF file”.
 When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
 
-[[https://github.com/tmalsburg/helm-bibtex][Source]] on github. 
+[[https://github.com/tmalsburg/helm-bibtex][Source]] on github.
 
 **** Set how to open PDFs linked to citation by mode
 
@@ -4584,7 +4584,7 @@ To use the title of the PDF file in the link used in a reading list in org-mode:
 
 
 
-*** deft 
+*** deft
 
 This search engine can scan org-roam entries.
 
@@ -4691,8 +4691,8 @@ A ding occurs at the end of a pomodoro.
 A second ding occurs at the end of a break.
 You have to enter ~C-c o~ to start the next pomodoro.
 
-The tickling timer sound is too erractic right now. 
-This needs to be optimized. 
+The tickling timer sound is too erractic right now.
+This needs to be optimized.
 You might be better off using a stand-a-lone timer or timer app.
 I turn down the volume on to about 10% of maximum, and I can still hear the ding at the end of the pomodoro.
 
@@ -4729,7 +4729,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
   :custom
   (org-ref-default-bibliography "~/Documents/global.bib")
   :config
-    (setq 
+    (setq
     bibtex-completion-bibliography '("~/Documents/global.bib")
 	bibtex-completion-library-path '("/Users/blaine/0papers/")
 	bibtex-completion-notes-path "~/bibliography/notes/"
@@ -4745,7 +4745,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 	bibtex-completion-pdf-open-function
 	(lambda (fpath)
 	  (call-process "open" nil 0 nil fpath)))
-)      
+)
 #+END_SRC
 
 
@@ -4756,7 +4756,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 #+BEGIN_SRC emacs-lisp
 (use-package bibtex
   :config
-    (setq 
+    (setq
     bibtex-autokey-year-length 4
 	bibtex-autokey-name-year-separator "-"
 	bibtex-autokey-year-title-separator "-"
@@ -4766,18 +4766,18 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 	bibtex-autokey-titleword-length 5
 	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
 
-(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)      
-      
+(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+
 (require 'org-ref-ivy)
 
 (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 #+END_SRC
 #+END_COMMENT
- 
+
 *** function for opening the PDF linked to the citation under the point
- 
+
 [[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
- 
+
 #+BEGIN_SRC emacs-lisp
 (defun my/org-ref-open-pdf-at-point ()
   "Open the pdf for bibtex key under point if it exists."
@@ -4930,8 +4930,8 @@ Function for ripgrep org-roam files.
 
 # *** org-speed-keys
 # Cursor must be to the left of the first star in the headline.
-# 
-# 
+#
+#
 # #+BEGIN_SRC emacs-lisp
 # (setq org-use-speed-commands t)
 # #+END_SRC
@@ -5132,7 +5132,7 @@ Marcin Magnus's updated fork of pdb-tools by Charlie Bond and David Love.
 (load-file "~/.emacs.default/plugins/emacs-pdb-mode/pdb-mode.el")
 (setq pdb-rasmol-name "/Applications/PyMOL.app/Contents/bin/pymol")
 (setq auto-mode-alist
-     (cons (cons "pdb$" 'pdb-mode) 
+     (cons (cons "pdb$" 'pdb-mode)
            auto-mode-alist ) )
 (autoload 'pdb-mode "PDB")
 #+END_SRC
@@ -5237,7 +5237,7 @@ See org-noter section
 
 *** projectile
 
-[[https://docs.projectile.mx][Documentation:]] 
+[[https://docs.projectile.mx][Documentation:]]
 
 A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
 A more in-depth introdction is provided by Dave Wilson of System Crafters fame starting at 1:40 [[https://www.youtube.com/watch?v=INTu30BHZGk][here]].
@@ -5273,7 +5273,7 @@ This folder will appear in the dashboard upon restart of Emacs.
 Projectile has three modes of operation:
 
 - native: implemented in Emacs Lisp and known as the native indexing method
-- hybrid 
+- hybrid
 - alien (e.g., git, Maven, lein)
 
 
@@ -5310,7 +5310,7 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map) ; recommended for Mac OS
   (setq projectile-enable-caching t ; Much better performance on large projects
         projectile-completion-system 'ivy)) ; Ideally the minibuffer should aways look similar. Three options are helm, ido, and ivy. I like ido.
-#+END_SRC  
+#+END_SRC
 
 
 
@@ -5318,7 +5318,7 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
 
 #+BEGIN_SRC emacs-lisp
 (projectile-mode +1)
-#+END_SRC 
+#+END_SRC
 
 ***** Sort files by recently opened.
 
@@ -5347,7 +5347,7 @@ JabRef can generate a better cite key.
 The PDF of the current entry can be fetched and displayed in Emacs.
 The PDF can be saved with a the better cite key as the filename prefix.
 
-There are two commands for this page: M-x pubmed-search and M-x pubmed-advanced-search. 
+There are two commands for this page: M-x pubmed-search and M-x pubmed-advanced-search.
 The first returns the results in a buffer.
 There are also functions for sending the search to PubMed in the default buffer.
 
@@ -5376,10 +5376,10 @@ There are the following keybindings:
 - <kbd>\<TAB\></kbd>: Show the BibTeX references of the marked entries or current
   entry.
 
-s lanuches a search query. 
+s lanuches a search query.
 m marked an entry.
 f tries to fetch the PDF and opens it in Emacs in a new buffer.
-The file can be saved to whatever filename. 
+The file can be saved to whatever filename.
 The whitespace function is interfering with entering file paths in the minibuffer
 
 Note that there is a also a  major pubmed-mode that can cause some confusion.
@@ -5404,7 +5404,7 @@ The command ~M-x conda-env-list~ will list the available conda envs.
 
 
 The package elpy used to be popular.
-This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documented]]. 
+This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documented]].
 I am not sure where it stands now and if it is really needed.
 It is big on creating and using pyenvs.
 
@@ -5630,7 +5630,7 @@ Enter C-g to delete the unused arguments in a R function call.
 (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 #+END_SRC
 
-*** R config by Federic Santoas 
+*** R config by Federic Santoas
 
 [[See github repo][https://github.com/ess-intro/presentation-ess-customization/blob/main/tutorial/ess-init.el]] for a detailed tutorial.
 #+BEGIN_SRC emacs-lisp
@@ -5745,12 +5745,12 @@ They are defined in the helm-bibtex configuration in my case.
 #+END_SRC
 
 
-*** search 
+*** search
 
 Harry Schwartz wrote engine-mode to send selections to the browsers.
 He presented this at the [[https://www.youtube.com/watch?v=MBhJBMYfWUo][NYC-Emacs Meetup]] in 2015.
 He installed the package in MELPA.
-He has an informative README.md page [[https://github.com/hrs/engine-mode][on github]]. 
+He has an informative README.md page [[https://github.com/hrs/engine-mode][on github]].
 The prefix is ~C-x \~.
 
 |-----+--------------------|
@@ -5868,7 +5868,7 @@ slime stands for Superior Lisp Interaction Mode for Emacs.
 I already had sbcl installed.
 It provides a repl for Commn Lisp.
 There are about a dozen lisp systems.
-I use sbcl. 
+I use sbcl.
 I had installed it with macports.
 
 I had installed earlier the quicklisp package in sbcl.
@@ -5959,7 +5959,7 @@ Five stan-related packages.
 #+BEGIN_SRC emacs-lisp
 ;;; stan-mode.el
 (use-package stan-mode
-  :esnure t
+  :ensure t
   :mode ("\\.stan\\'" . stan-mode)
   :hook (stan-mode . stan-mode-setup)
   ;;
@@ -6027,7 +6027,7 @@ Five stan-related packages.
 
 *** tab-bar-mode
 
-[[https://mmk2410.org/2022/02/11/using-emacs-tab-bar-mode/][tab-bar-mode]] looks cool. 
+[[https://mmk2410.org/2022/02/11/using-emacs-tab-bar-mode/][tab-bar-mode]] looks cool.
 I will follow-up later.
 
 *** terminals
@@ -6037,10 +6037,10 @@ There are four options: term-mode, vterm-mode, eshell-mode, and shell-mode.
 
 **** term-mode
 *term-mode* gives a nearly native experience in an Emacs buffer.
-It has two modes: line-mode versus char-mode. 
+It has two modes: line-mode versus char-mode.
 line-mode enables normal Emacs keybindings while moving around in the terminal buffer.
-char-mode sends most  keypresses to the underlying terminal. 
-Use char-mode for any terminal applications that have their own keybindings. 
+char-mode sends most  keypresses to the underlying terminal.
+Use char-mode for any terminal applications that have their own keybindings.
 line-mode is sufficient when just using the terminal.
 
 Invoke with ~M-x term!~
@@ -6076,7 +6076,7 @@ Use 256 colors when in the term-mode.
 *** vterm
 
 *vterm* is an improved terminal emulator package that is faster than term-mode.
-It uses a compiled native module to interact with the underlying terminal applications. 
+It uses a compiled native module to interact with the underlying terminal applications.
 It provides a more complete terminal emulation experience.
 On the MacOS, I was able to install it in Emacs29 from MELPA.
 I ran ~M-x vterm-compile~ and it was compiled with Apple's clang.
@@ -6098,7 +6098,7 @@ There is a julia-vterm.
 *eshell* doubles as a Lisp interpreter.
 You get what looks like a terminal prompt but you can enter ~(* 400 4000)~ and get 1600000 returned to the minibuffer.
 Very cool!
-Eshell can be harder to configure than other packages due to where you need to set some options for them to go into effect, the shell completions for some commands are lacking by default, and REPL programs sometimes fail to work. 
+Eshell can be harder to configure than other packages due to where you need to set some options for them to go into effect, the shell completions for some commands are lacking by default, and REPL programs sometimes fail to work.
 
 There is an eshell-julia package.
 
@@ -6145,11 +6145,11 @@ There is an eshell-julia package.
 *** shell
 
 *shell-mode* is between term-mode and Eshell in its nature.
-It is not a terminal emulator;  complex terminal programs will not run in it. 
+It is not a terminal emulator;  complex terminal programs will not run in it.
 However, *shell-mode* has much better integration with Emacs because all command input in this mode is handled by Emacs.
-Emacs sends the commands to the underlying shell once you press Enter. 
+Emacs sends the commands to the underlying shell once you press Enter.
 As a result, you can use evil-mode’s editing motions on the command line, unlike term-mode and vterm.
-*shell-mode* is the only way to run on Windows cmd.exe, PowerShell, Git, Bash, etc from within Emacs. 
+*shell-mode* is the only way to run on Windows cmd.exe, PowerShell, Git, Bash, etc from within Emacs.
 
 **** Useful keybindings
 
@@ -6173,7 +6173,7 @@ There is an iterm.el package.
 
 *** String infleciton (snake_case -> UPCASE -> )
 
-Place cursor at the compound word and enter C-q C-u repeatedly to cycle 
+Place cursor at the compound word and enter C-q C-u repeatedly to cycle
 through the alternatives.
 
 [[https://github.com/akicho8/string-inflection][Source]]
@@ -6702,12 +6702,12 @@ It has a nice table view of the snippets available for the current mode and a fu
 
 ***** Function to insert a fence code block
 
-Source: 
+Source:
 
 #+BEGIN_SRC emacs-lisp
-(defun tws-insert-r-chunk (header) 
+(defun tws-insert-r-chunk (header)
   "Insert an r-chunk in markdown mode."
-  (insert (concat "```{r " header "}\n\n```")) 
+  (insert (concat "```{r " header "}\n\n```"))
   (forward-line -1))
 ;;(global-set-key "\C-f \C-f" 'tws-insert-r-chunk)
 ;;(markdown-mode-map (kbd "C-p C-f") 'tws-insert-r-chunk)
@@ -6738,7 +6738,7 @@ Enable snippet tab triggers to work in the native code language of the code bloc
 #+BEGIN_SRC emacs-lisp
 (defun my-org-mode-hook ()
   (setq-local yas-buffer-local-condition
-             '(not (org-in-src-block-p t))))                 
+             '(not (org-in-src-block-p t))))
   'my-org-mode-hook
   (add-hook 'org-mode-hook `my-org-mode-hook)
 #+END_SRC
