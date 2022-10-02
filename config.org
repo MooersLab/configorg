@@ -5076,14 +5076,13 @@ Enable org-wc to work in org documents.
 Enter `wc` to get word count returned in org files.
 Enter `C-c w` to the samething.
 
-Similar to wc-mode which works in all docments
+Similar to wc-mode which works in all documents.
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-wc)
-;; Total word count for a org file and word count by headline.
+(use-package org-wc
+  :ensure t)
 (add-hook 'org-mode-hook 'org-wc)
 (define-key org-mode-map [("\C-cw")] 'org-wc-display)
-;; (define-key global-map "\C-cw" 'org-wc-display)
 #+END_SRC
 
 See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
