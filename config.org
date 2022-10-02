@@ -3892,25 +3892,36 @@ Do we really have to exit the calendar after each selection?
 
 *** org-babel
 
+Org-babel is key to supporting literate programming in org-mode documents.
+This is where you activate and deactivate programming languages that can be run from source blocks in org documents.
+For example, this document uses source blocks that have elisp code.
+
+The jupyter language allows a second approach in that you can tap into a jupyter kernel for a specific language or a specific python environment.
 Note that jupyter has to come last in the list.
 Invoke jupyter as a language and then specify the kernel.
-You can get by by including only emacs-lisp and jupyter as the languages.
+For examples, use ~#+BEGIN_SRC jupyter :session jl :kernel julia-1.8.2 :output both~.
+You have to specify a session.
+You can include only emacs-lisp and jupyter as the languages.
+
+The available languages are listed below.
+The languages with t are acitvated.
+The languages with nil are inactivated.
 
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
    (shell . t)
-   (c . t)
-   (cpp . t)
+   (c . nil)
+   (cpp . nil)
    (clojure . t)
    (F90 . nil)
    (gnuplot . t)
    (js . nil)
-   (ditaa . t)
+   (ditaa . nil)
    (java . t)
    (mathematica . nil)
-   (plantuml . t)
+   (plantuml . nil)
    (lisp . t)
    (org . t}
    (smiles . t)	
