@@ -2306,7 +2306,7 @@ There is a ob-fsharp package. Install it from MELPA.
 ;; (setq inferior-fsharp-program "path/to/fsharpi --readline-")
 #+END_SRC
 
-*** flycheck
+*** flycheck :COMMENT:
 
 **** add prose-linter
 
