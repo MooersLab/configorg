@@ -2306,130 +2306,130 @@ There is a ob-fsharp package. Install it from MELPA.
 ;; (setq inferior-fsharp-program "path/to/fsharpi --readline-")
 #+END_SRC
 
-*** COMMENT flycheck 
-
-The npm package textlint is fouling things up.
-
-**** add prose-linter
-
-Install with ~pip install proselint~.
-
-#+BEGIN_SRC emacs-lisp
-(flycheck-define-checker proselint
-  "A linter for prose."
-  :command ("proselint" source-inplace)
-  :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ": "
-        (id (one-or-more (not (any " "))))
-        (message) line-end))
-  :modes (latex-mode text-mode markdown-mode gfm-mode))
-
-(add-to-list 'flycheck-checkers 'proselint)
-#+END_SRC
-
-Enter ~M-x proselint~ on a text or LaTeX file.
-
-**** Add textlint
-
-Install via ~npm install -g textlint~.
-
-#+BEGIN_SRC emacs-lisp
-(autoload 'flycheck "flycheck" "" t)
-(flycheck-define-checker textlint
-  "A linter for textlint."
-  :command ("npx" "textlint"
-            "--config" "/Users/blaine/.ƒemacs-default/.textlintrc"
-            "--format" "unix"
-            "--rule" "write-good"
-            "--rule" "no-start-duplicated-conjunction"
-            "--rule" "max-comma"
-            "--rule" "terminology"
-            "--rule" "period-in-list-item"
-            "--rule" "abbr-within-parentheses"
-            "--rule" "alex"
-            "--rule" "common-misspellings"
-            "--rule" "en-max-word-count"
-            "--rule" "diacritics"
-            "--rule" "stop-words"
-            "--plugin"
-            (eval
-             (if (derived-mode-p 'tex-mode)
-                 "latex"
-               "@textlint/text"))
-            source-inplace)
-  :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ": "
-            (message (one-or-more not-newline)
-                     (zero-or-more "\n" (any " ") (one-or-more not-newline)))
-            line-end))
-  :modes (text-mode latex-mode org-mode markdown-mode)
-  )
-(add-to-list 'flycheck-checkers 'textlint)
-#+END_SRC
-
-There are linters for other [[https://www.flycheck.org/en/latest/languages.html#flycheck-languages][languages]] that run with flycheck.
-Some linters are built into Emacs like the linter called ~lintr~.
-Check by opening an R file and enter ~M-x flycheck-list-errors~.
-
-**** Enable flycheck everywhere
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook #'global-flycheck-mode)
-#+END_SRC
-
-Enter ~C-c ! v~.
-
-Enter ~M-x list-flycheck-errors ~ ~C-c ! l~ to list the errors in a separate buffer.
-
-
-**** Configure the buffer with the list of flycheck errors
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'display-buffer-alist
-             `(,(rx bos "*Flycheck errors*" eos)
-              (display-buffer-reuse-window
-               display-buffer-in-side-window)
-              (side            . bottom)
-              (reusable-frames . visible)
-              (window-height   . 0.33)))
-#+END_SRC
-
-*** COMMENT flyspell
-
-Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/config.org][Karl Voit]]
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "aspell")
-
-
-(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
-(setq flyspell-issue-welcome-flag nil)
-
-(when (my-system-type-is-windows)
-  (setq flyspell-default-dictionary "american")
-)
-(when (my-system-type-is-darwin)
-  (setq flyspell-default-dictionary "american")
-  (setq default-dictionary "american")
-)
-
-;; Check spelling only in the comments of these source codes.
-(add-hook          'c-mode-hook 'flyspell-prog-mode)
-(add-hook         'sh-mode-hook 'flyspell-prog-mode)
-(add-hook        'c++-mode-hook 'flyspell-prog-mode)
-(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
-(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
-(add-hook     'python-mode-hook 'flyspell-prog-mode)
-(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
-(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
-(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
-(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mo
-
-;; For quick spell checking
-(define-key global-map [(f5)] 'flyspell-mode)
-(define-key global-map [(f7)] 'flyspell-goto-next-error)
-(define-key global-map [(f8)] 'flyspell-correct-word-before-point)
-#+END_SRC
+#     *** COMMENT flycheck 
+#     
+#     The npm package textlint is fouling things up.
+#     
+#     **** add prose-linter
+#     
+#     Install with ~pip install proselint~.
+#     
+#     #+BEGIN_SRC emacs-lisp
+#     (flycheck-define-checker proselint
+#       "A linter for prose."
+#       :command ("proselint" source-inplace)
+#       :error-patterns
+#       ((warning line-start (file-name) ":" line ":" column ": "
+#             (id (one-or-more (not (any " "))))
+#             (message) line-end))
+#       :modes (latex-mode text-mode markdown-mode gfm-mode))
+#     
+#     (add-to-list 'flycheck-checkers 'proselint)
+#     #+END_SRC
+#     
+#     Enter ~M-x proselint~ on a text or LaTeX file.
+#     
+#     **** Add textlint
+#     
+#     Install via ~npm install -g textlint~.
+#     
+#     #+BEGIN_SRC emacs-lisp
+#     (autoload 'flycheck "flycheck" "" t)
+#     (flycheck-define-checker textlint
+#       "A linter for textlint."
+#       :command ("npx" "textlint"
+#                 "--config" "/Users/blaine/.ƒemacs-default/.textlintrc"
+#                 "--format" "unix"
+#                 "--rule" "write-good"
+#                 "--rule" "no-start-duplicated-conjunction"
+#                 "--rule" "max-comma"
+#                 "--rule" "terminology"
+#                 "--rule" "period-in-list-item"
+#                 "--rule" "abbr-within-parentheses"
+#                 "--rule" "alex"
+#                 "--rule" "common-misspellings"
+#                 "--rule" "en-max-word-count"
+#                 "--rule" "diacritics"
+#                 "--rule" "stop-words"
+#                 "--plugin"
+#                 (eval
+#                  (if (derived-mode-p 'tex-mode)
+#                      "latex"
+#                    "@textlint/text"))
+#                 source-inplace)
+#       :error-patterns
+#       ((warning line-start (file-name) ":" line ":" column ": "
+#                 (message (one-or-more not-newline)
+#                          (zero-or-more "\n" (any " ") (one-or-more not-newline)))
+#                 line-end))
+#       :modes (text-mode latex-mode org-mode markdown-mode)
+#       )
+#     (add-to-list 'flycheck-checkers 'textlint)
+#     #+END_SRC
+#     
+#     There are linters for other [[https://www.flycheck.org/en/latest/languages.html#flycheck-languages][languages]] that run with flycheck.
+#     Some linters are built into Emacs like the linter called ~lintr~.
+#     Check by opening an R file and enter ~M-x flycheck-list-errors~.
+#     
+#     **** Enable flycheck everywhere
+#     
+#     #+BEGIN_SRC emacs-lisp
+#     (add-hook 'after-init-hook #'global-flycheck-mode)
+#     #+END_SRC
+#     
+#     Enter ~C-c ! v~.
+#     
+#     Enter ~M-x list-flycheck-errors ~ ~C-c ! l~ to list the errors in a separate buffer.
+#     
+#     
+#     **** Configure the buffer with the list of flycheck errors
+#     
+#     #+BEGIN_SRC emacs-lisp
+#     (add-to-list 'display-buffer-alist
+#                  `(,(rx bos "*Flycheck errors*" eos)
+#                   (display-buffer-reuse-window
+#                    display-buffer-in-side-window)
+#                   (side            . bottom)
+#                   (reusable-frames . visible)
+#                   (window-height   . 0.33)))
+#     #+END_SRC
+#     
+#     *** COMMENT flyspell
+#     
+#     Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/config.org][Karl Voit]]
+#     
+#     #+BEGIN_SRC emacs-lisp
+#     (when (my-eval-if-binary-or-warn "aspell")
+#     
+#     
+#     (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+#     (setq flyspell-issue-welcome-flag nil)
+#     
+#     (when (my-system-type-is-windows)
+#       (setq flyspell-default-dictionary "american")
+#     )
+#     (when (my-system-type-is-darwin)
+#       (setq flyspell-default-dictionary "american")
+#       (setq default-dictionary "american")
+#     )
+#     
+#     ;; Check spelling only in the comments of these source codes.
+#     (add-hook          'c-mode-hook 'flyspell-prog-mode)
+#     (add-hook         'sh-mode-hook 'flyspell-prog-mode)
+#     (add-hook        'c++-mode-hook 'flyspell-prog-mode)
+#     (add-hook       'ruby-mode-hook 'flyspell-prog-mode)
+#     (add-hook      'cperl-mode-hook 'flyspell-prog-mode)
+#     (add-hook     'python-mode-hook 'flyspell-prog-mode)
+#     (add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
+#     (add-hook   'autotest-mode-hook 'flyspell-prog-mode)
+#     (add-hook   'makefile-mode-hook 'flyspell-prog-mode)
+#     (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mo
+#     
+#     ;; For quick spell checking
+#     (define-key global-map [(f5)] 'flyspell-mode)
+#     (define-key global-map [(f7)] 'flyspell-goto-next-error)
+#     (define-key global-map [(f8)] 'flyspell-correct-word-before-point)
+#     #+END_SRC
 
 ** G
 
