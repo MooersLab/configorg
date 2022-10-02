@@ -2306,7 +2306,9 @@ There is a ob-fsharp package. Install it from MELPA.
 ;; (setq inferior-fsharp-program "path/to/fsharpi --readline-")
 #+END_SRC
 
-*** flycheck :COMMENT:
+*** COMMENT flycheck 
+
+The npm package textlint is fouling things up.
 
 **** add prose-linter
 
@@ -2392,10 +2394,9 @@ Enter ~M-x list-flycheck-errors ~ ~C-c ! l~ to list the errors in a separate buf
               (window-height   . 0.33)))
 #+END_SRC
 
-*** flyspell :COMMENT:
+*** COMMENT flyspell
 
 Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/config.org][Karl Voit]]
-
 
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "aspell")
