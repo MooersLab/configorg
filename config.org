@@ -883,7 +883,7 @@ Configure eglot to work with clangd.
 Cider supports running a Clojure REPL in a parallel window.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-babel-clojure-backend 'cider)
+  (setq org-babel-clojure-backend 'cider)
 (use-package cider
  :ensure t)
 (setq org-edit-src-content-indentation 0
@@ -3900,9 +3900,24 @@ You can get by by including only emacs-lisp and jupyter as the languages.
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
+   (shell . t)
+   (c . t)
+   (cpp . t)
+   (clojure . t)
+   (F90 . nil)
+   (gnuplot . t)
+   (js . nil)
+   (ditaa . t)
+   (java . t)
+   (mathematica . nil)
+   (plantuml . t)
+   (lisp . t)
+   (org . t}
+   (smiles . t)	
    (julia . t)
    (python . t)
    (R . t)
+   (stan . t)
    (jupyter . t)))  
 #+END_SRC
 
