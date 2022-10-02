@@ -2399,9 +2399,6 @@ Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/co
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "aspell")
 
-;;(when (my-system-type-is-darwin)
-;; (add-to-list 'load-path "/opt/local/share/emacs/lisp/textmodes")
-)
 
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
 (setq flyspell-issue-welcome-flag nil)
