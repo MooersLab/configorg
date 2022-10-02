@@ -77,7 +77,7 @@ They are parsed into a half dozen separate files by function.
 
 You still need some settings in your ~/init.el/~ file, including one that calls ~/config.org/~.
 I used a function to do so.
-I obtained this function from [[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][Karl Voit]].
+I obtained this function from [[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][[[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][Karl Voigt]].
 This function is supposed to load the code chunks more rapidly.
 
 You can add the DISABLED tag to some code chunks to block them from being tangled to reduce Emacs startup time.
@@ -3903,9 +3903,12 @@ For examples, use ~#+BEGIN_SRC jupyter :session jl :kernel julia-1.8.2 :output b
 You have to specify a session.
 You can include only emacs-lisp and jupyter as the languages.
 
-The available languages are listed below.
-The languages with t are acitvated.
-The languages with nil are inactivated.
+My selected languages are listed below.
+The accepted language names are listed [[https://orgmode.org/worg/org-contrib/babel/languages/index.html][here]].
+Note that shell includes bash.
+The
+The languages with ~t~ are acitvated.
+The languages with ~nil~ are inactivated.
 
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages
