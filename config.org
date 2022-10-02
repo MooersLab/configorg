@@ -9,6 +9,7 @@
 I first posted this config file on GitHub on 20 July 2021.
 My init.el file had grown to over 700 lines in two weeks.
 It was time to clean it up and bring some order to it.
+(This config.org file is now 6700 lines). 
 
 I followed an alternate approach to managing my /init.el/ file that was inspired by [[https://gitlab.com/dwt1/dotfiles][Derek Taylor]].
 This approach involves putting the elisp code of the /init.el/ into source blocks in an org-mode file called /config.org/.
@@ -16,23 +17,58 @@ Org-mode is a specialized markup language for Emacs.
 It is more powerful than plain markdown and less verbose than LaTeX.
 
 The initial conversion took several hours, but the resulting /config.org/ file is much easier to maintain than the original /init.el/.
-I found that I broke my /init.el/ file less frequently after making the switch to the /config.org/ file..
-This improvement freed up time and mental bandwidth to learn about new Emacs packages.
+I found that I broke my /init.el/ file less frequently after making the switch to the /config.org/ file.
+I might have been breaking my /init.el/ frequently because I was ignorant of the basics of Emacs lisp (elisp).
+The less frequent breaking of my init.el file freed up time and mental bandwidth to learn about new Emacs packages.
  
 Using the /config.org/ file for the configuration has several advantages.
 First, the sections can be folded while editing this file in Emacs by entering TAB when the cursor or point is on the section title.
 When all sections are folded, the entire document is visible in one screen.
+In retrospect, you have to be a big fan of folded text to think that this is advantage.
 Second, the /config.org/ file is rendered directly by GitHub; there is no need to convert it from org to GitHub markdown.
 Unfortunately, the internal links in org do not work on GitHub.
 
 On startup, Emacs strips out (/tangles/ in literate programming parlance) the elisp code and writes it to a /config.el/ file.
 The /config.el/ file is the file that Emacs reads upon startup.
+The /config.el/ file will be written to your Emacs directory, (e.g., ~/Users/blaine/.emacs.d~).
 
-The /config.el/ file will be written to your Emacs directory, (aka ~/Users/blaine/.emacs.d~).
-Recently, I changed my Emacs directory to ~/Users/blaine/mar30-emacs~ because I am using the /chemacs.el/ package, which allows me to switch Emacs configurations easily.
+Recently, I changed my Emacs directory to ~/Users/blaine/.emacs.default~ because I am using the /chemacs.el/ package, which allows me to switch Emacs configurations easily.
 This capability allows me to explore alternate Emacs configurations without displacing my default configuration.
 It also allows me to switch to a minimal configuration for continued productivity when I have broken my default configuration and have not had time to debug it.
- 
+
+Note that if you are using Emacs version 29.0.5 from January 2022 or more recently, you can use the /--init-directory/ flag to switch profiles instead of using the cheamcs package.
+This flag is easier to use because you to not have to setup two configuration files required by chemacs.
+
+I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
+For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from this file).
+These are defined in a ~.bashAppAliases~ file that I source from my ~.zshenv~ file which is  in turn sourced from my ~.zshrc~ startup file.
+I use thousands of bash aliases.
+They are parsed into separate files by function.
+
+#+BEGIN_SRC bash
+alias eib='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave'
+alias eibd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave --debug-init'
+
+alias eic='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/crafted-emacs'
+alias eicd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/crafted-emac --debug-init'
+
+alias eid='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/.emacs.default'
+alias eidd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/.emacs.default --debug-init'
+
+alias eidm='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/doom-emacs'
+alias eidmd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/doom-emac --debug-init'
+
+alias eie='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/ess-emacs'
+alias eied='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/ess-emacs --debug-init'
+
+alias eil='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/latex-emacs'
+alias eild='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/latex-emacs --debug-init'
+
+alias eis='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax'
+alias eisd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax --debug-init'
+#+END_SRC
+
+
 You still need some settings in your ~/init.el/~ file, including one that calls ~/config.org/~.
 I used a function to do so.
 I obtained this function from [[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][Karl Voit]].
@@ -44,7 +80,6 @@ Alternatively, you can start an emacsclient daemon that is always up.
 This approach can eliminate the start-up lag.
 See the README.md file for template code for the ~gnu.emacs.daemon.plist~.
 
-
 On the Mac, launch the daemon with the following command ~launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist~.
 Kill the daemon with the following command ~launchctl unload ~/Library/LaunchAgents/gnu.emacs.daemon.plist~.
 
@@ -52,8 +87,8 @@ You have to do these steps in reverse order when updating your configuration.
 
 You use ~emacsclient~ to load connect to the server and to upload your configuration.
 
+This command starts the server if it is not already running.
 
-This command starts the server if it is not already running.    
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (server-start)
@@ -141,11 +176,6 @@ Source: [[https://www.youtube.com/watch?v=51eSeqcaikM&list=PLEoMzSkcN8oNmd98m_6F
 #+BEGIN_SRC emacs-lisp
 (setq use-dialog-box nil)
 #+END_SRC
-
-
-
-
-
 
 
 ** Dired automated update
@@ -519,20 +549,19 @@ frame: Create a new frame and window in it. Must be using some windowing pacakge
 #+END_SRC
 
 
-#+BEGIN_COMMENT
+
 *** Autocompletion stack
 
 The /consult/, /vertico/, and /marginalia/ autocompletion set of packages is the new toolchain for autocompletion.
 This is an alternative autocompletion system to company and ivy and the built-in /ido-mode/.
 These older systems still work very well.
 The built-in ido-mode is wonderful for aiding the entry of filepaths in the minibuffer after entering ~C-x C-f~.
-#+END_COMMENT
 
-#+BEGIN_COMMENT
+
 **** consult
 
 Example configuration for the pacakge  /consult/.
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
@@ -656,6 +685,7 @@ Example configuration for the pacakge  /consult/.
 
 
 **** marginalia
+
 #+BEGIN_COMMENT
  #+BEGIN_SRC emacs-lisp
  (use-package marginalia
@@ -691,6 +721,7 @@ Example configuration for the pacakge  /consult/.
 
 **** embark-consult
 Consult users will also want the embark-consult package.
+
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
  (use-package embark-consult
@@ -717,6 +748,7 @@ Consult users will also want the embark-consult package.
    (completion-styles '(orderless basic))
    (completion-category-overrides '((file (styles basic partial-completion)))))
 #+END_SRC
+#+END_COMMENT
 
 **** vertico
 
@@ -744,13 +776,14 @@ Consult users will also want the embark-consult package.
 
 **** citar
 
-#+BEGIN_COMMENT
+
  /citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
  Its functionality overlaps with bibtex-ivy and bibtex company.
  It works in markdown, org, and LaTeX.
  
  The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
- 
+
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
  (use-package citar
    :bind (("C-c b" . citar-insert-citation)
@@ -909,7 +942,6 @@ The inf-clojure mode is simpler than cider and easier for beginners of Clojure.
 
 **** clojure-lsp
 
-#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :ensure t
@@ -1192,7 +1224,7 @@ I edited the documentation line to fix the grammar and add the final phrase.
 (global-set-key (kbd "<f1>") 'new-dashboard)
 #+END_SRC
 
-#+BEGIN_COMMENT
+
 *** Denote
 
 This is Prot's new package for note taking in Emacs.
@@ -1200,15 +1232,17 @@ It is an alternative to org-roam.
 It is not in ELPA yet and has to be installed manually.
 The manual is located [[https://protesilaos.com/emacs/denote][here]].
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 ;; Make Elisp files in that directory available to the user.
 (add-to-list 'load-path "~/.emacs.default/manual-packages/denote")
 #+END_SRC
+#+END_COMMENT
 
 Here is the sample configuration.
 Customize the keywords
 
-
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (require 'denote)
 
@@ -1294,11 +1328,13 @@ Customize the keywords
 #+END_SRC
 #+END_COMMENT
 
-#+BEGIN_COMMENT
+
 *** Doom mode-line
 
 The doom mode-line can be used without the Doom configuration.
+This mode-line hides the word count.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
    :ensure t
