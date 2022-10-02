@@ -3933,10 +3933,7 @@ The languages with nil are inactivated.
 #+END_SRC
 
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-babel
-#   :ensure t)
-# #+END_SRC
+
 
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
