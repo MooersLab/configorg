@@ -43,7 +43,7 @@ The latter can be tricky to set up and debug.
 
 Emacs version 29.0.5 is the bleeding edge version.
 I have been using the bleeding edge version for a 18 months and have not had any issues.
-This might be because I am still a na\"{i}ive advanced beginner.
+This might be because I am still a na$\"{i}$ve advanced beginner.
 
 I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
 For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from this file).
