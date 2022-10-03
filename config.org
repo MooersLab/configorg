@@ -2029,8 +2029,9 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
       (when matched-arxiv-number
         (message "Going to arXiv: %s" matched-arxiv-number)
         (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
+#+END_SRC
 
-
+#+BEGIN_COMMENT
 ;; (map! :leader
 ;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
 ;;       :desc "Elfeed" "n e" #'elfeed)
@@ -2066,7 +2067,7 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
     )
 )
 (setq org-ref-pdf-directory arxiv_pdf_loc)
-#+END_SRC
+#+END_COMMENT
 
 
 - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
