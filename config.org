@@ -3816,21 +3816,56 @@ See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
 
 
 *** org-agenda
-The following code configures the agenda menu.
-I commented out.
-Something is broken.
-The defualt configuration is good enough for now.
+The following code configures the org-agenda menu.
+It configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
+This is the best intoduction to org-agenda for academcis that I have read.
+I recommended starting with it.
+Eventually, you should read the org-agenda chapter in the Org-mode manual.
 
 Note that paths to the org files used by org-agenda are stored in init.el.
-I was using tasks.org, tickler.org, and the proj.org.
-ticker.org has the recurring events programmed to pop up in agenda several days or several in advance of the events.
+I am not sure why.
+
+I was using /tasks.org/, /tickler.org/, and the /proj.org/.
+/ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
 I do not see the point of keeping projects separate from tasks.
 They are being combined as I go.
 I am now using just tasks.org and tickler.org.
 I might even combine these two files eventually.
 
+Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
+Run ~M-x org-lint~ to find the errors in the tasks.org file.
+You should run it on the config.org file too.
+
+Note that you should not worry about the default start date at 0800.
+I wasted an hour or more trying to configure this feature.
+If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
+
+~C-c .~  isentered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
+Use this for most events.
+Use ~C-c C-s~ to set timestamps with the scheduled keyword.
+This is for events that are not to be started until the scheduled time.
+Use ~C-s C-d~ to set timestamps with the deadline keyword.
+The format of the data must by YYYY-MM-DD. 
+Single digit months and days must be accompanied by a zero in the left position.
+
+**** Basic configuration for org-agenda
+
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-ca" 'org-agenda)
+(setq org-agenda-files '("~/gtd/tasks/tasks.org"))
+(setq org-tag-alist '(("meeting" . ?m) ("talk" . ?t) ("seminar" . ?s)))
+(setq org-todo-keywords
+        '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" |" "DONE(d!)" "CANCELLED(c!)")))
+#+END_SRC
+
+
+
+**** customized agenda views
+
 These are my customized agenda views by project.
 I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
+
 
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
