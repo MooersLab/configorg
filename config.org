@@ -4792,16 +4792,16 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
     :config
     (setq alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))))
 
-(use-package sound-wav)
-(setq org-pomodoro-ticking-sound-p nil)
-; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
-(setq org-pomodoro-ticking-sound-states '(:pomodoro))
-(setq org-pomodoro-ticking-frequency 1)
-(setq org-pomodoro-audio-player "mplayer")
-(setq org-pomodoro-finished-sound-args "-volume 0.9")
-(setq org-pomodoro-long-break-sound-args "-volume 0.9")
-(setq org-pomodoro-short-break-sound-args "-volume 0.9")
-(setq org-pomodoro-ticking-sound-args "-volume 0.3")
+;; (use-package sound-wav)
+;; (setq org-pomodoro-ticking-sound-p nil)
+;; ; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
+;; (setq org-pomodoro-ticking-sound-states '(:pomodoro))
+;; (setq org-pomodoro-ticking-frequency 1)
+;; (setq org-pomodoro-audio-player "mplayer")
+;; (setq org-pomodoro-finished-sound-args "-volume 0.9")
+;; (setq org-pomodoro-long-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-short-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-ticking-sound-args "-volume 0.3")
 
 (global-set-key (kbd "C-c o") 'org-pomodoro)
 #+END_SRC
