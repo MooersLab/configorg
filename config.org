@@ -3668,8 +3668,8 @@ I need a use-package version.
 #    #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-(use-package mathpix
-  :ensure t
+(use-package mathpix.el
+  :straight (:host github :repo "jethrokuan/mathpix.el")
   :custom ((mathpix-app-id "app-id")
            (mathpix-app-key "app-key"))
   :bind
