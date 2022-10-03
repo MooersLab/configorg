@@ -4861,7 +4861,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 *** org-ref-ivy
 
-#+BEGIN_COMMENT
+
 #+BEGIN_SRC emacs-lisp
 (use-package bibtex
   :config
@@ -4882,7 +4882,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 #+END_SRC
-#+END_COMMENT
+
 
 *** function for opening the PDF linked to the citation under the point
 
