@@ -3879,7 +3879,7 @@ Single digit months and days must be accompanied by a zero in the left position.
                "* TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))"))
 (setq org-refile-targets '(("~/gtd/tasks/tasks.org" :maxlevel . 1)
                            ("~/gtd/someday.org" :maxlevel . 1)))
-setq org-refile-use-outline-path 'file)
+(setq org-refile-use-outline-path 'file)
 #+END_SRC
 
 
