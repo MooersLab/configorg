@@ -1859,7 +1859,8 @@ Enter M-x elfeed to fire up a session.
 Enter S-g to update the feeds.
 
 #+BEGIN_SRC emacs-lisp
-(use-package elfeed)
+(use-package elfeed
+  :ensure t)
 (setq elfeed-curl-program-name "/opt/local/bin/curl")
 (setq elfeed-search-title-max-width 130)
 (use-package elfeed-org)
@@ -1966,31 +1967,9 @@ concatenated."
 #+END_SRC
 
 
-
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package elfeed)
-(setq elfeed-curl-program-name "/opt/local/bin/curl")
-(setq-default elfeed-search-filter "@1-week-ago +unread ")
-(global-set-key (kbd "C-x w") 'elfeed)
-(add-to-list 'elfeed-feeds '("http://feeds.nature.com/nchem/rss/current" nature))
-(setq elfeed-feeds
-      '("https://planet.emacslife.com/atom.xml" emacs)
-      ("http://feeds.nature.com/nchem/rss/current" nature))
-;; Entries older than 2 weeks are marked as read
-(add-hook 'elfeed-new-entry-hook
-          (elfeed-make-tagger :before "2 weeks ago"
-                              :remove 'unread))
-;; (add-hook 'elfeed-search-mode-hook 'elfeed-update)
-;; (setq elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
-;; "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
-;;  "http://export.arxiv.org/api/query?search_query=cat:cs.CL&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
-#+END_SRC
-#+END_COMMENT
-
 The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/][post]].
 
-#+BEGIN_COMMENT
+#  #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (defun concatenate-authors (authors-list)
     "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
@@ -2030,6 +2009,7 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 
 (use-package elfeed-score
   :after elfeed
+  :ensure t
   :config
   (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
   (elfeed-score-enable)
@@ -2085,7 +2065,7 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 
 (setq org-ref-pdf-directory arxiv_pdf_loc)
 #+END_SRC
-#+END_COMMENT
+#  #+END_COMMENT
 
 - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
 
@@ -2506,7 +2486,7 @@ The build takes 11 minutes or more.
 I am baffled as to want to do next.
 This route is for Java developers, which I am not, yet.
 
-
+#+BEGIN_COMMENT
 # #+BEGIN_SRC emacs-lisp
 ;; (setq langtool-language-tool-jar "/Users/blaine/software/languagetool-commandline.jar")
 ;; (require 'langtool)
@@ -2670,8 +2650,10 @@ Make M-x and other mini-buffers sortable, filterable
 Add vim key binding for use in ivy menus.
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-(use-package command-log-mode)
+(use-package command-log-mode
+  :ensure t)
 (use-package ivy
+  :ensure t
   :diminish
   :bind (("C-s" . swiper)
          :map ivy-minibuffer-map
@@ -2698,7 +2680,8 @@ Add vim key binding for use in ivy menus.
 *** ivy-bibtex
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-(use-package ivy-bibtex)
+(use-package ivy-bibtex
+  :ensure t)
 #+END_SRC
 #+END_COMMENT
 
@@ -3660,12 +3643,14 @@ Here is the configuration to load the package from github via straight.
 Remember that use-package is a macro that can be used with either straight or package.
 I want to avoid the use of straight.el.
 I downloaded via git clone the mathpix.el repo.
+
 I renamed it mathpix.
 I am getting the need for five arguments witht the require command.
 I have only three.
 I need a use-package version.
+I am stumped
 
-#  #+BEGIN_COMMENT
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
 (use-package mathpix
@@ -3677,7 +3662,7 @@ I need a use-package version.
 ;; maybe a required setting for Macs
 (setq mathpix-screenshot-method "screencapture -i %s")
 #+END_SRC
-#  #+END_COMMENT
+#+END_COMMENT
 
 
 
