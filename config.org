@@ -4939,6 +4939,7 @@ Conflicts with another server.
    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
     (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
     (setq bibtex-dialect 'bibtex))
+#+END_SRC
 #   #+END_COMMENT
 
 *** org-roam
