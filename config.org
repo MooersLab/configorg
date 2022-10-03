@@ -4104,7 +4104,7 @@ You have to install org-drill from MELPA.
 This is a YouTube video about how to use org-drill[[https://www.youtube.com/watch?v=uraPXeLfWcM][to learn Chinese]].
 You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-table][flashcards]].
 
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
 (use-package org-drill
              :config (progn
                           (add-to-list 'org-modules 'org-drill)
@@ -4594,37 +4594,37 @@ You can use the usual keybindings to navigate the document
 
 Source: https://github.com/tmalsburg/helm-bibtex
 
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package helm-bibtex
-#      :config
-#      (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
-#            bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
-#            bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
-#            bibtex-completion-pdf-field "file"
-#            bibtex-completion-notes-template-multiple-files
-#      (concat
-#       "#+TITLE: ${title}\n"
-#       "#+ROAM_KEY: cite:${=key=}\n"
-#       "* TODO Notes\n"
-#       ":PROPERTIES:\n"
-#       ":Custom_ID: ${=key=}\n"
-#       ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-#       ":AUTHOR: ${author-abbrev}\n"
-#       ":JOURNAL: ${journaltitle}\n"
-#       ":DATE: ${date}\n"
-#       ":YEAR: ${year}\n"
-#       ":DOI: ${doi}\n"
-#       ":URL: ${url}\n"
-#       ":END:\n\n"
-#       )
-#      )
-#      :bind
-#          (("C-c n B" . helm-bibtex))
-#    )
-#    
-#    ;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
-#    ;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
-#    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package helm-bibtex
+  :config
+  (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
+        bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
+        bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
+        bibtex-completion-pdf-field "file"
+        bibtex-completion-notes-template-multiple-files
+  (concat
+   "#+TITLE: ${title}\n"
+   "#+ROAM_KEY: cite:${=key=}\n"
+   "* TODO Notes\n"
+   ":PROPERTIES:\n"
+   ":Custom_ID: ${=key=}\n"
+   ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+   ":AUTHOR: ${author-abbrev}\n"
+   ":JOURNAL: ${journaltitle}\n"
+   ":DATE: ${date}\n"
+   ":YEAR: ${year}\n"
+   ":DOI: ${doi}\n"
+   ":URL: ${url}\n"
+   ":END:\n\n"
+   )
+  )
+  :bind
+      (("C-c n B" . helm-bibtex))
+)
+
+;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
+;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
+#+END_SRC
 
 
 
@@ -4934,32 +4934,32 @@ The configuration for org-roam, the most advanced zettlekasten system for Emacs.
 This package provides an interface between helm and org-roam.
 
 
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-roam-bibtex
-#        :hook (org-roam-mode . org-roam-bibtex-mode))
-#    
-#      (setq orb-preformat-keywords
-#            '("citekey" "title" "url" "author-or-editor" "keywords" "file")
-#            orb-process-file-keyword t
-#            orb-file-field-extensions '("pdf"))
-#    
-#      (setq orb-templates
-#            '(("r" "ref" plain(function org-roam-capture--get-point)
-#               ""
-#               :file-name "${citekey}"
-#               :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
-#    - tags ::
-#    - keywords :: ${keywords}
-#    
-#    *Notes
-#    :PROPERTIES:
-#    :Custom_ID: ${citekey}
-#    :URL: ${url}
-#    :AUTHOR: ${author-or-editor}
-#    :NOTER_DOCUMENT: ${file}
-#    :NOTER_PAGE:
-#    :END:")))
-#    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam-bibtex
+    :hook (org-roam-mode . org-roam-bibtex-mode))
+
+  (setq orb-preformat-keywords
+        '("citekey" "title" "url" "author-or-editor" "keywords" "file")
+        orb-process-file-keyword t
+        orb-file-field-extensions '("pdf"))
+
+  (setq orb-templates
+        '(("r" "ref" plain(function org-roam-capture--get-point)
+           ""
+           :file-name "${citekey}"
+           :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+- tags ::
+- keywords :: ${keywords}
+
+*Notes
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: ${file}
+:NOTER_PAGE:
+:END:")))
+#+END_SRC
 
 *** org-roam-ui
 
@@ -4980,14 +4980,14 @@ Start by entering ~M-x org-roam-ui-mode~.
 
 Function for ripgrep org-roam files.
 
-#    #+BEGIN_SRC emacs-lisp
-#    (defun bms/org-roam-rg-search ()
-#      "Search org-roam directory using consult-ripgrep. With live-preview."
-#      (interactive)
-#      (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
-#        (consult-ripgrep org-roam-directory)))
-#    (global-set-key (kbd "C-c rr") 'bms/org-roam-rg-search)
-#    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(defun bms/org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-roam-directory)))
+(global-set-key (kbd "C-c rr") 'bms/org-roam-rg-search)
+#+END_SRC
 
 
 
