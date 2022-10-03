@@ -3665,11 +3665,11 @@ I am getting the need for five arguments witht the require command.
 I have only three.
 I need a use-package version.
 
-#    #+BEGIN_COMMENT
+#  #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
 (use-package mathpix.el
-  :straight (:host github :repo "jethrokuan/mathpix.el")
+  :ensure t
   :custom ((mathpix-app-id "app-id")
            (mathpix-app-key "app-key"))
   :bind
@@ -3677,7 +3677,7 @@ I need a use-package version.
 ;; maybe a required setting for Macs
 (setq mathpix-screenshot-method "screencapture -i %s")
 #+END_SRC
-#    #+END_COMMENT
+#  #+END_COMMENT
 
 
 
