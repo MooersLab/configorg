@@ -4934,32 +4934,32 @@ The configuration for org-roam, the most advanced zettlekasten system for Emacs.
 This package provides an interface between helm and org-roam.
 
 
-#+BEGIN_SRC emacs-lisp
-(use-package org-roam-bibtex
-    :hook (org-roam-mode . org-roam-bibtex-mode))
-
-  (setq orb-preformat-keywords
-        '("citekey" "title" "url" "author-or-editor" "keywords" "file")
-        orb-process-file-keyword t
-        orb-file-field-extensions '("pdf"))
-
-  (setq orb-templates
-        '(("r" "ref" plain(function org-roam-capture--get-point)
-           ""
-           :file-name "${citekey}"
-           :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
-- tags ::
-- keywords :: ${keywords}
-
-*Notes
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: ${file}
-:NOTER_PAGE:
-:END:")))
-#+END_SRC
+#    #+BEGIN_SRC emacs-lisp
+#    (use-package org-roam-bibtex
+#        :hook (org-roam-mode . org-roam-bibtex-mode))
+#    
+#      (setq orb-preformat-keywords
+#            '("citekey" "title" "url" "author-or-editor" "keywords" "file")
+#            orb-process-file-keyword t
+#            orb-file-field-extensions '("pdf"))
+#    
+#      (setq orb-templates
+#            '(("r" "ref" plain(function org-roam-capture--get-point)
+#               ""
+#               :file-name "${citekey}"
+#               :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+#    - tags ::
+#    - keywords :: ${keywords}
+#    
+#    *Notes
+#    :PROPERTIES:
+#    :Custom_ID: ${citekey}
+#    :URL: ${url}
+#    :AUTHOR: ${author-or-editor}
+#    :NOTER_DOCUMENT: ${file}
+#    :NOTER_PAGE:
+#    :END:")))
+#    #+END_SRC
 
 *** org-roam-ui
 
