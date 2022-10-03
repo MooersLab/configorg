@@ -3665,10 +3665,11 @@ I am getting the need for five arguments witht the require command.
 I have only three.
 I need a use-package version.
 
-#+BEGIN_COMMENT
+#    #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-(require 'mathpix
+(use-package mathpix
+  :ensure t
   :custom ((mathpix-app-id "app-id")
            (mathpix-app-key "app-key"))
   :bind
@@ -3676,16 +3677,7 @@ I need a use-package version.
 ;; maybe a required setting for Macs
 (setq mathpix-screenshot-method "screencapture -i %s")
 #+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package mathpix.el
-  :straight (:host github :repo "jethrokuan/mathpix.el")
-  :custom ((mathpix-app-id "app-id")
-           (mathpix-app-key "app-key"))
-  :bind
-  ("C-x m" . mathpix-screenshot))
-#+END_SRC
-#+END_COMMENT
+#    #+END_COMMENT
 
 
 
@@ -4054,6 +4046,7 @@ The languages with ~nil~ are inactivated.
 #+END_COMMENT
 
 
+#+BEGIN_COMMENT
 # #+BEGIN_SRC emacs-lisp
 # :after (ob-jupyter ob-python)
 # :config
@@ -4067,7 +4060,7 @@ The languages with ~nil~ are inactivated.
 # (setq ob-async-no-async-languages-alist '("jupyter-python"))
 # (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python")))
 # #+END_SRC
-
+#+END_COMMENT
 
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
