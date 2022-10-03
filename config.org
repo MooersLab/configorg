@@ -4594,37 +4594,37 @@ You can use the usual keybindings to navigate the document
 
 Source: https://github.com/tmalsburg/helm-bibtex
 
-#+BEGIN_SRC emacs-lisp
-(use-package helm-bibtex
-  :config
-  (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
-        bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
-        bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
-        bibtex-completion-pdf-field "file"
-        bibtex-completion-notes-template-multiple-files
-  (concat
-   "#+TITLE: ${title}\n"
-   "#+ROAM_KEY: cite:${=key=}\n"
-   "* TODO Notes\n"
-   ":PROPERTIES:\n"
-   ":Custom_ID: ${=key=}\n"
-   ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-   ":AUTHOR: ${author-abbrev}\n"
-   ":JOURNAL: ${journaltitle}\n"
-   ":DATE: ${date}\n"
-   ":YEAR: ${year}\n"
-   ":DOI: ${doi}\n"
-   ":URL: ${url}\n"
-   ":END:\n\n"
-   )
-  )
-  :bind
-      (("C-c n B" . helm-bibtex))
-)
-
-;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
-;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
-#+END_SRC
+#    #+BEGIN_SRC emacs-lisp
+#    (use-package helm-bibtex
+#      :config
+#      (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
+#            bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
+#            bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
+#            bibtex-completion-pdf-field "file"
+#            bibtex-completion-notes-template-multiple-files
+#      (concat
+#       "#+TITLE: ${title}\n"
+#       "#+ROAM_KEY: cite:${=key=}\n"
+#       "* TODO Notes\n"
+#       ":PROPERTIES:\n"
+#       ":Custom_ID: ${=key=}\n"
+#       ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+#       ":AUTHOR: ${author-abbrev}\n"
+#       ":JOURNAL: ${journaltitle}\n"
+#       ":DATE: ${date}\n"
+#       ":YEAR: ${year}\n"
+#       ":DOI: ${doi}\n"
+#       ":URL: ${url}\n"
+#       ":END:\n\n"
+#       )
+#      )
+#      :bind
+#          (("C-c n B" . helm-bibtex))
+#    )
+#    
+#    ;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
+#    ;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
+#    #+END_SRC
 
 
 
