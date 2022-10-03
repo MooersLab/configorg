@@ -4861,7 +4861,9 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 *** org-ref-ivy
 
+Conflicts with another server.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package bibtex
   :config
@@ -4882,7 +4884,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 #+END_SRC
-
+#+END_COMMENT
 
 *** function for opening the PDF linked to the citation under the point
 
@@ -4915,27 +4917,29 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 *** org-ref, newer config
 
-#+BEGIN_COMMENT
-#     (use-package org-ref
-#       :after org
-#       :config
-#       (defun blaine/reformat-bib-library (&optional filename)
-#         "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
-#         (interactive "P")
-#         (or filename (setq filename blaine/main-bib-library))
-#         (let ((cmnd (concat
-#                      (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
-#                      (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
-#                      (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
-#                      (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
-#                      )))
-#           (async-shell-command cmnd)))
-#       (defun blaine/reformat-bib-lib-hook ()
-#         "Reformat the main bib library whenever it is saved.."
-#         (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
-#       (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
-#       (setq bibtex-dialect 'bibtex))
-#+END_COMMENT
+#   #+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :after org
+  :config
+  (defun blaine/reformat-bib-library (&optional filename)
+    "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
+    (interactive "P")
+    (or filename (setq filename blaine/main-bib-library))
+    (let ((cmnd (concat
+                 (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
+                 (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
+                (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
+                (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
+                )))
+    (async-shell-command cmnd)))
+
+(defun blaine/reformat-bib-lib-hook ()
+   "Reformat the main bib library whenever it is saved.."
+   (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
+    (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
+    (setq bibtex-dialect 'bibtex))
+#   #+END_COMMENT
 
 *** org-roam
 
