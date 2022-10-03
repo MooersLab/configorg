@@ -3857,7 +3857,7 @@ Single digit months and days must be accompanied by a zero in the left position.
 (setq org-agenda-files '("~/gtd/tasks/tasks.org"))
 (setq org-tag-alist '(("meeting" . ?m) ("talk" . ?t) ("seminar" . ?s)))
 (setq org-todo-keywords
-        '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "|" "DONE(d!)" "CANCELLED(c!)")))
+        '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
 (setq org-capture-templates
           '(("t" "Default capture" entry (file "~/gtd/inbox.org")
              "* %?\n%u\n%a\n")))
