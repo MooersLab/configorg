@@ -5674,29 +5674,18 @@ Add the following Emacs function to the ~config.org~ file.
 ** Q
 
 *** quarto-mode
-#+BEGIN_SRC emacs-lisp
-;; load the library
-(require 'quarto-mode)
-;; Note that the following is not necessary to run quarto-mode in .qmd files! It's merely illustrating
-;; how to associate different extensions to the mode.
-;; (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-quarto-mode))
-
-;;
-;;;; Or, with use-package:
-;;(use-package quarto-mode
-;;  :mode (("\\.Rmd" . poly-quarto-mode))
-;;  )
-#+END_SRC
 
 
 Source: \url{https://github.com/quarto-dev/quarto-emacs}
-#+BEGIN_COMMENT
+#    #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-quarto-mode))
 (use-package quarto-mode
+  :ensure t
   :mode (("\\.Rmd" . poly-quarto-mode))
   )
 #+END_SRC
-#+END_COMMENT
+#    #+END_COMMENT
 
 
 ** R
