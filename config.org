@@ -1969,109 +1969,109 @@ concatenated."
 
 The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/post/emacs_research_workflow/][post]].
 
-#  #+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(defun concatenate-authors (authors-list)
-    "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
-    (if (> (length authors-list) 1)
-        (format "%s et al." (plist-get (nth 0 authors-list) :name))
-      (plist-get (nth 0 authors-list) :name)))
-
-(defun my-search-print-fn (entry)
-    "Print ENTRY to the buffer."
-    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-        (title (or (elfeed-meta entry :title)
-                    (elfeed-entry-title entry) ""))
-        (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-        (entry-authors (concatenate-authors
-                        (elfeed-meta entry :authors)))
-        (title-width (- (window-width) 10
-                        elfeed-search-trailing-width))
-        (title-column (elfeed-format-column
-                        title 100
-                        :left))
-        (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
-        (authors-column (elfeed-format-column entry-authors 40 :left)))
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-
-    (insert (propertize title-column
-                        'face title-faces 'kbd-help title) " ")
-    (insert (propertize authors-column
-                        'kbd-help entry-authors) " ")
-    (insert entry-score " ")))
-
-(setq elfeed-search-print-entry-function #'my-search-print-fn)
-(setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
-(setq elfeed-search-title-max-width 110)
-(setq elfeed-search-filter "@2-week-ago +unread")
-#+END_SRC
-
-#+BEGIN_COMMENT
-(use-package elfeed-score
-  :after elfeed
-  :ensure t
-  :config
-  (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
-  (elfeed-score-enable)
-  (define-key elfeed-search-mode-map "=" elfeed-score-map))
-(setq arxiv_bib "~/Downloads/global.bib")
-(setq arxiv_pdf_loc "~/0papersLabeled/")
-#+END_COMMENT
-
-
-#+BEGIN_SRC emacs-lisp
-(defun my/elfeed-entry-to-arxiv ()
-    "Fetch an arXiv paper into the local library from the current elfeed entry."
-    (interactive)
-    (let* ((link (elfeed-entry-link elfeed-show-entry))
-           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-           (matched-arxiv-number (match-string 1 link)))
-      (when matched-arxiv-number
-        (message "Going to arXiv: %s" matched-arxiv-number)
-        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
-#+END_SRC
-
-#+BEGIN_COMMENT
-;; (map! :leader
-;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
-;;       :desc "Elfeed" "n e" #'elfeed)
-
-(defun my/elfeed-entry-to-arxiv ()
-    "Fetch an arXiv paper into the local library from the current elfeed entry.
-- Update the bib entry with the pdf file location"
-    (interactive)
-    (let* ((link (elfeed-entry-link elfeed-show-entry))
-           (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-           (matched-arxiv-number (match-string 1 link)))
-      (when matched-arxiv-number
-        (message "Going to arXiv: %s" matched-arxiv-number)
-        (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
-        ;; Now, we are updating the most recent bib file with the pdf location
-        (save-window-excursion
-                ;; Get the bib file
-                (find-file arxiv_bib)
-                ;; get to last line
-                (goto-char (point-max))
-                ;; get to the first line of bibtex
-                (bibtex-beginning-of-entry)
-                (let* ((entry (bibtex-parse-entry))
-                        (key (cdr (assoc "=key=" entry)))
-                        (pdf (org-ref-get-pdf-filename key)))
-                        (message (concat "checking for key: " key))
-                        (message (concat "value of pdf: " pdf))
-                        (when (file-exists-p pdf)
-                        (bibtex-set-field "file" pdf)
-                        (save-buffer)
-                        )))
-        )
-    )
-)
-(setq org-ref-pdf-directory arxiv_pdf_loc)
-#+END_COMMENT
-
-
-- [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
-
+#    #  #+BEGIN_COMMENT
+#    #+BEGIN_SRC emacs-lisp
+#    (defun concatenate-authors (authors-list)
+#        "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
+#        (if (> (length authors-list) 1)
+#            (format "%s et al." (plist-get (nth 0 authors-list) :name))
+#          (plist-get (nth 0 authors-list) :name)))
+#    
+#    (defun my-search-print-fn (entry)
+#        "Print ENTRY to the buffer."
+#        (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+#            (title (or (elfeed-meta entry :title)
+#                        (elfeed-entry-title entry) ""))
+#            (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+#            (entry-authors (concatenate-authors
+#                            (elfeed-meta entry :authors)))
+#            (title-width (- (window-width) 10
+#                            elfeed-search-trailing-width))
+#            (title-column (elfeed-format-column
+#                            title 100
+#                            :left))
+#            (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
+#            (authors-column (elfeed-format-column entry-authors 40 :left)))
+#        (insert (propertize date 'face 'elfeed-search-date-face) " ")
+#    
+#        (insert (propertize title-column
+#                            'face title-faces 'kbd-help title) " ")
+#        (insert (propertize authors-column
+#                            'kbd-help entry-authors) " ")
+#        (insert entry-score " ")))
+#    
+#    (setq elfeed-search-print-entry-function #'my-search-print-fn)
+#    (setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
+#    (setq elfeed-search-title-max-width 110)
+#    (setq elfeed-search-filter "@2-week-ago +unread")
+#    #+END_SRC
+#    
+#    #+BEGIN_COMMENT
+#    (use-package elfeed-score
+#      :after elfeed
+#      :ensure t
+#      :config
+#      (elfeed-score-load-score-file "~/.emacs.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
+#      (elfeed-score-enable)
+#      (define-key elfeed-search-mode-map "=" elfeed-score-map))
+#    (setq arxiv_bib "~/Downloads/global.bib")
+#    (setq arxiv_pdf_loc "~/0papersLabeled/")
+#    #+END_COMMENT
+#    
+#    
+#    #+BEGIN_SRC emacs-lisp
+#    (defun my/elfeed-entry-to-arxiv ()
+#        "Fetch an arXiv paper into the local library from the current elfeed entry."
+#        (interactive)
+#        (let* ((link (elfeed-entry-link elfeed-show-entry))
+#               (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+#               (matched-arxiv-number (match-string 1 link)))
+#          (when matched-arxiv-number
+#            (message "Going to arXiv: %s" matched-arxiv-number)
+#            (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
+#    #+END_SRC
+#    
+#    #+BEGIN_COMMENT
+#    ;; (map! :leader
+#    ;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
+#    ;;       :desc "Elfeed" "n e" #'elfeed)
+#    
+#    (defun my/elfeed-entry-to-arxiv ()
+#        "Fetch an arXiv paper into the local library from the current elfeed entry.
+#    - Update the bib entry with the pdf file location"
+#        (interactive)
+#        (let* ((link (elfeed-entry-link elfeed-show-entry))
+#               (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+#               (matched-arxiv-number (match-string 1 link)))
+#          (when matched-arxiv-number
+#            (message "Going to arXiv: %s" matched-arxiv-number)
+#            (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc)
+#            ;; Now, we are updating the most recent bib file with the pdf location
+#            (save-window-excursion
+#                    ;; Get the bib file
+#                    (find-file arxiv_bib)
+#                    ;; get to last line
+#                    (goto-char (point-max))
+#                    ;; get to the first line of bibtex
+#                    (bibtex-beginning-of-entry)
+#                    (let* ((entry (bibtex-parse-entry))
+#                            (key (cdr (assoc "=key=" entry)))
+#                            (pdf (org-ref-get-pdf-filename key)))
+#                            (message (concat "checking for key: " key))
+#                            (message (concat "value of pdf: " pdf))
+#                            (when (file-exists-p pdf)
+#                            (bibtex-set-field "file" pdf)
+#                            (save-buffer)
+#                            )))
+#            )
+#        )
+#    )
+#    (setq org-ref-pdf-directory arxiv_pdf_loc)
+#    #+END_COMMENT
+#    
+#    
+#    - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
+#    
 
 
 *** Emacs lisp REPL
