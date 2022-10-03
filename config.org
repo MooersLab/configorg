@@ -3853,10 +3853,33 @@ Single digit months and days must be accompanied by a zero in the left position.
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
 (setq org-agenda-files '("~/gtd/tasks/tasks.org"))
 (setq org-tag-alist '(("meeting" . ?m) ("talk" . ?t) ("seminar" . ?s)))
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "|" "DONE(d!)" "CANCELLED(c!)")))
+(setq org-capture-templates
+          '(("t" "Default capture" entry (file "~/gtd/inbox.org")
+             "* %?\n%u\n%a\n")))
+;; Prompt user for a description, displaying the string "Description"
+;; Also prompt for a set of tags (%^g) and a inactive timestamp,
+;; displaying "Date and time",
+(add-to-list 'org-capture-templates
+             '("c"
+               "Calendar entry"
+               entry
+               (file org-default-notes-file)
+               "* CAL %^{Description} %^g\n%^{Date and time}T "))
+;; Insert a new TODO item under the "emails" headline in org-default-notes-file
+;; Add a link to the current location (likely the email itself) and a deadline
+;; to the next day, by evaluating the elisp s-expression
+;; "(org-insert-time-stamp (org-read-date nil t \"+1d\"))"
+(add-to-list 'org-capture-templates
+             '("e" "email" entry (file+headline org-default-notes-file "emails")
+               "* TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))"))
+(setq org-refile-targets '(("~/gtd/tasks/tasks.org" :maxlevel . 1)
+                           ("~/gtd/someday.org" :maxlevel . 1)))
+setq org-refile-use-outline-path 'file)
 #+END_SRC
 
 
@@ -5032,79 +5055,79 @@ These are functions for tangling tables from org files.
 
 
 
-#.    #+BEGIN_SRC emacs-lisp
-#    (defun org+-tangle-table-at-point ()
-#      "Tangle Org table at point.
-#    The table is ignored if it is not preceeded by a line like:
-#    #+ATTR_TANGLE: DATAFILE
-#    or
-#    #+ATTR_TANGLE: (\"DATAFILE\" \"TYPE\")"
-#      (interactive)
-#      (unless (org-at-table-p)
-#        (user-error "Not at Org table"))
-#      (let* (type
-#         (data (org-element-context))
-#         (parent (org-element-property :parent data))
-#         file)
-#        (while parent
-#          (setq data parent)
-#          (setq parent (org-element-property :parent data)))
-#        (when (and (setq prop (org-element-property :attr_tangle data))
-#               (setq file (read prop)))
-#          (cond
-#           ((symbolp file)
-#        (setq file (symbol-name file)))
-#           ((stringp file)) ;; keep it that way
-#           ((consp file)
-#        (setq type (nth 1 file)
-#              file (car file)))
-#           (t
-#        (user-error "Unexpected format of table to be tangled")))
-#          (org-table-export file (or type org-table-export-default-format))
-#          t)))
-#    
-#    (defun org+-tangle-tables (fun &optional arg target-file lang)
-#      "Tangle Org tables in current buffer.
-#    For around advice with `org-babel-tangle' as FUN.
-#    See `org-babel-tangle' for the args ARG, TARGET-FILE and LANG.
-#    
-#    Currently, only one table per file is possible."
-#      (cond
-#       ((equal arg '(4)) ;; at point
-#        (if (org-at-table-p)
-#        (org+-tangle-table-at-point)
-#          (funcall fun arg target-file lang)))
-#       ((equal arg '(16))
-#        (funcall fun arg target-file lang))
-#       (t
-#        (funcall fun arg target-file lang)
-#        (let ((table-count 0))
-#          (org-with-wide-buffer
-#           (goto-char (point-min))
-#           (while (re-search-forward "^[ \t\r]*|" nil t)
-#         (goto-char (match-beginning 0))
-#         (when (org+-tangle-table-at-point)
-#           (cl-incf table-count))
-#         (goto-char (org-table-end)))
-#           )
-#          (message "Tangled %d tables from %s." table-count (buffer-name))))))
-#    
-#    (advice-add 'org-babel-tangle :around #'org+-tangle-tables)
-#    #+END_SRC
-#    
-#    The tables have to be preceded by the appropriate header.
-#    
-#    Another approach is to store the file path and file format in a properites drawer for the enclosing section.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    ;; :Properties:
-#    ;; :TABLE_EXPORT_FILE: observations2.csv
-#    ;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
-#    ;; :END:
-#    #+END_SRC
-#    
-#    Place cursor in table and enter "M-x org-table-export" to send to a csv file.
-#    
+ #+BEGIN_SRC emacs-lisp
+(defun org+-tangle-table-at-point ()
+  "Tangle Org table at point.
+The table is ignored if it is not preceeded by a line like:
+#+ATTR_TANGLE: DATAFILE
+or
+#+ATTR_TANGLE: (\"DATAFILE\" \"TYPE\")"
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Not at Org table"))
+  (let* (type
+     (data (org-element-context))
+     (parent (org-element-property :parent data))
+     file)
+    (while parent
+      (setq data parent)
+      (setq parent (org-element-property :parent data)))
+    (when (and (setq prop (org-element-property :attr_tangle data))
+           (setq file (read prop)))
+      (cond
+       ((symbolp file)
+    (setq file (symbol-name file)))
+       ((stringp file)) ;; keep it that way
+       ((consp file)
+    (setq type (nth 1 file)
+          file (car file)))
+       (t
+    (user-error "Unexpected format of table to be tangled")))
+      (org-table-export file (or type org-table-export-default-format))
+      t)))
+
+(defun org+-tangle-tables (fun &optional arg target-file lang)
+  "Tangle Org tables in current buffer.
+For around advice with `org-babel-tangle' as FUN.
+See `org-babel-tangle' for the args ARG, TARGET-FILE and LANG.
+
+Currently, only one table per file is possible."
+  (cond
+   ((equal arg '(4)) ;; at point
+    (if (org-at-table-p)
+    (org+-tangle-table-at-point)
+      (funcall fun arg target-file lang)))
+   ((equal arg '(16))
+    (funcall fun arg target-file lang))
+   (t
+    (funcall fun arg target-file lang)
+    (let ((table-count 0))
+      (org-with-wide-buffer
+       (goto-char (point-min))
+       (while (re-search-forward "^[ \t\r]*|" nil t)
+     (goto-char (match-beginning 0))
+     (when (org+-tangle-table-at-point)
+       (cl-incf table-count))
+     (goto-char (org-table-end)))
+       )
+      (message "Tangled %d tables from %s." table-count (buffer-name))))))
+
+(advice-add 'org-babel-tangle :around #'org+-tangle-tables)
+#+END_SRC
+
+The tables have to be preceded by the appropriate header.
+
+Another approach is to store the file path and file format in a properites drawer for the enclosing section.
+
+#+BEGIN_SRC emacs-lisp
+;; :Properties:
+;; :TABLE_EXPORT_FILE: observations2.csv
+;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
+;; :END:
+#+END_SRC
+
+Place cursor in table and enter "M-x org-table-export" to send to a csv file.
+
 
 *** org-wc
 Enable org-wc to work in org documents.
