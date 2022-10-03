@@ -4726,7 +4726,7 @@ This package integrates org-noter and pdftools.
 
 The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
 
-#+BEGIN_COMMENT
+
 #+BEGIN_SRC emacs-lisp
 (use-package org-noter
   :after org
@@ -4780,7 +4780,7 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 #+END_SRC
-#+END_COMMENT
+
 
 
 
@@ -4877,7 +4877,8 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
 
-(require 'org-ref-ivy)
+(use-pacakge org-ref-ivy
+  :ensure t)
 
 (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 #+END_SRC
