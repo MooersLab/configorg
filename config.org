@@ -3659,7 +3659,7 @@ It requires the Mathpix.app and the key (i.e., you have to subscribe to this ser
 Here is the configuration to load the package from github via straight.
 Remember that use-package is a macro that can be used with either straight or package.
 I want to avoid the use of straight.el.
-I download via git clone the mathpix.el repo.
+I downloaded via git clone the mathpix.el repo.
 I renamed it mathpix.
 I am getting the need for five arguments witht the require command.
 I have only three.
@@ -3668,7 +3668,7 @@ I need a use-package version.
 #  #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
-(use-package mathpix.el
+(use-package mathpix
   :ensure t
   :custom ((mathpix-app-id "app-id")
            (mathpix-app-key "app-key"))
