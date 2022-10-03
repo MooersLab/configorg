@@ -2004,9 +2004,9 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 (setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
 (setq elfeed-search-title-max-width 110)
 (setq elfeed-search-filter "@2-week-ago +unread")
+#+END_SRC
 
-
-
+#+BEGIN_COMMENT
 (use-package elfeed-score
   :after elfeed
   :ensure t
@@ -2016,7 +2016,10 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
   (define-key elfeed-search-mode-map "=" elfeed-score-map))
 (setq arxiv_bib "~/Downloads/global.bib")
 (setq arxiv_pdf_loc "~/0papersLabeled/")
+#+END_COMMENT
 
+
+#+BEGIN_SRC emacs-lisp
 (defun my/elfeed-entry-to-arxiv ()
     "Fetch an arXiv paper into the local library from the current elfeed entry."
     (interactive)
@@ -2062,10 +2065,9 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
         )
     )
 )
-
 (setq org-ref-pdf-directory arxiv_pdf_loc)
 #+END_SRC
-#  #+END_COMMENT
+
 
 - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
 
