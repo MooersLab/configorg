@@ -3781,102 +3781,102 @@ You write posts in org and then publish them in WordPress.
 #+END_SRC
 #+END_COMMENT
 
-#    *** org-ac
-#    
-#    See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-ac)
-#    (org-ac/config-default)
-#    #+END_SRC
-#    
-#    
-#    *** org-agenda
-#    The following code configures the org-agenda menu.
-#    It configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
-#    This is the best intoduction to org-agenda for academcis that I have read.
-#    I recommended starting with it.
-#    Eventually, you should read the org-agenda chapter in the Org-mode manual.
-#    
-#    Note that paths to the org files used by org-agenda are stored in init.el.
-#    I am not sure why.
-#    
-#    I was using /tasks.org/, /tickler.org/, and the /proj.org/.
-#    /ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
-#    I do not see the point of keeping projects separate from tasks.
-#    They are being combined as I go.
-#    I am now using just tasks.org and tickler.org.
-#    I might even combine these two files eventually.
-#    
-#    Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
-#    Run ~M-x org-lint~ to find the errors in the tasks.org file.
-#    You should run it on the config.org file too.
-#    
-#    Note that you should not worry about the default start date at 0800.
-#    I wasted an hour or more trying to configure this feature.
-#    If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
-#    
-#    ~C-c .~  isentered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
-#    Use this for most events.
-#    Use ~C-c C-s~ to set timestamps with the scheduled keyword.
-#    This is for events that are not to be started until the scheduled time.
-#    Use ~C-s C-d~ to set timestamps with the deadline keyword.
-#    The format of the data must by YYYY-MM-DD. 
-#    Single digit months and days must be accompanied by a zero in the left position.
-#    
-#    **** Basic configuration for org-agenda
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (define-key global-map "\C-ca" 'org-agenda)
-#    (setq org-log-done t)
-#    ;; org-capture
-#    (define-key global-map "\C-cc" 'org-capture)
-#    (define-key global-map "\C-cl" 'org-store-link)
-#    
-#    (setq org-agenda-files '("/Users/blaine/gtd/tasks/JournalArticles.org"
-#       "/Users/blaine/gtd/tasks/Proposals.org"
-#       "/Users/blaine/gtd/tasks/Books.org"
-#       "/Users/blaine/gtd/tasks/Talks.org"
-#       "/Users/blaine/gtd/tasks/Posters.org"
-#       "/Users/blaine/gtd/tasks/ManuscritReviews.org"
-#       "/Users/blaine/gtd/tasks/Private.org"
-#       "/Users/blaine/gtd/tasks/Service.org"
-#       "/Users/blaine/gtd/tasks/Teaching.org"
-#       "/Users/blaine/gtd/tasks/Workshops.org"))
-#    (setq org-todo-keywords
-#            '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
-#    (setq org-capture-templates
-#              '(("t" "Default capture" entry (file "~/gtd/inbox.org")
-#                 "* %?\n%u\n%a\n")))
-#    ;; Prompt user for a description, displaying the string "Description"
-#    ;; Also prompt for a set of tags (%^g) and a inactive timestamp,
-#    ;; displaying "Date and time",
-#    (add-to-list 'org-capture-templates
-#                 '("c"
-#                   "Calendar entry"
-#                   entry
-#                   (file org-default-notes-file)
-#                   "* CAL %^{Description} %^g\n%^{Date and time}T "))
-#    ;; Insert a new TODO item under the "emails" headline in org-default-notes-file
-#    ;; Add a link to the current location (likely the email itself) and a deadline
-#    ;; to the next day, by evaluating the elisp s-expression
-#    ;; "(org-insert-time-stamp (org-read-date nil t \"+1d\"))"
-#    (add-to-list 'org-capture-templates
-#                 '("e" "email" entry (file+headline org-default-notes-file "emails")
-#                   "* TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))"))
-#    (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Books.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Talks.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/ManuscritReviews.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Private.org" :maxlevel . 1)
-#       ("mate/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 1)
-#       ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 1)))
-#    (setq org-refile-use-outline-path 'file)
-#    #+END_SRC
+*** org-ac
+
+See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ac)
+(org-ac/config-default)
+#+END_SRC
+
+
+*** org-agenda
+The following code configures the org-agenda menu.
+It configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
+This is the best intoduction to org-agenda for academcis that I have read.
+I recommended starting with it.
+Eventually, you should read the org-agenda chapter in the Org-mode manual.
+
+Note that paths to the org files used by org-agenda are stored in init.el.
+I am not sure why.
+
+I was using /tasks.org/, /tickler.org/, and the /proj.org/.
+/ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
+I do not see the point of keeping projects separate from tasks.
+They are being combined as I go.
+I am now using just tasks.org and tickler.org.
+I might even combine these two files eventually.
+
+Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
+Run ~M-x org-lint~ to find the errors in the tasks.org file.
+You should run it on the config.org file too.
+
+Note that you should not worry about the default start date at 0800.
+I wasted an hour or more trying to configure this feature.
+If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
+
+~C-c .~  isentered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
+Use this for most events.
+Use ~C-c C-s~ to set timestamps with the scheduled keyword.
+This is for events that are not to be started until the scheduled time.
+Use ~C-s C-d~ to set timestamps with the deadline keyword.
+The format of the data must by YYYY-MM-DD. 
+Single digit months and days must be accompanied by a zero in the left position.
+
+**** Basic configuration for org-agenda
+
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+;; org-capture
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cl" 'org-store-link)
+
+(setq org-agenda-files '("/Users/blaine/gtd/tasks/JournalArticles.org"
+   "/Users/blaine/gtd/tasks/Proposals.org"
+   "/Users/blaine/gtd/tasks/Books.org"
+   "/Users/blaine/gtd/tasks/Talks.org"
+   "/Users/blaine/gtd/tasks/Posters.org"
+   "/Users/blaine/gtd/tasks/ManuscriptReviews.org"
+   "/Users/blaine/gtd/tasks/Private.org"
+   "/Users/blaine/gtd/tasks/Service.org"
+   "/Users/blaine/gtd/tasks/Teaching.org"
+   "/Users/blaine/gtd/tasks/Workshops.org"))
+(setq org-todo-keywords
+        '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
+(setq org-capture-templates
+          '(("t" "Default capture" entry (file "~/gtd/inbox.org")
+             "* %?\n%u\n%a\n")))
+;; Prompt user for a description, displaying the string "Description"
+;; Also prompt for a set of tags (%^g) and a inactive timestamp,
+;; displaying "Date and time",
+(add-to-list 'org-capture-templates
+             '("c"
+               "Calendar entry"
+               entry
+               (file org-default-notes-file)
+               "* CAL %^{Description} %^g\n%^{Date and time}T "))
+;; Insert a new TODO item under the "emails" headline in org-default-notes-file
+;; Add a link to the current location (likely the email itself) and a deadline
+;; to the next day, by evaluating the elisp s-expression
+;; "(org-insert-time-stamp (org-read-date nil t \"+1d\"))"
+(add-to-list 'org-capture-templates
+             '("e" "email" entry (file+headline org-default-notes-file "emails")
+               "* TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))"))
+(setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Books.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Talks.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/ManuscriptReviews.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Private.org" :maxlevel . 1)
+   ("mate/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 1)))
+(setq org-refile-use-outline-path 'file)
+#+END_SRC
 #    
 #    
 #    
@@ -6275,591 +6275,591 @@ You write posts in org and then publish them in WordPress.
 #       ;; default
 #       (string-inflection-java-style-cycle))))
 #   #+END_SRC
-#   
-#   ** T
-#   
-#   *** Timers
-#   
-#   Use the pomodoto.app. It is hard to beat.
-#   
-#   
-#   *** themes
-#   
-#   **** leuven-theme
-#   The leuven-theme has high color contrast on light background.
-#   
-#   #+BEGIN_COMMENT
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package leuven-theme
-#     :init (load-theme 'leuven t))
-#   #+END_SRC
-#   #+END_COMMENT
-#   
-#   **** ef-theme from Prot
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (add-to-list 'load-path "~/.emacs.default/elisp/ef-themes")
-#   
-#   (require 'ef-themes)
-#   ;; If you like two specific themes and want to switch between them, you
-#   ;; can specify them in `ef-themes-to-toggle' and then invoke the command
-#   ;; `ef-themes-toggle'.  All the themes are included in the variable
-#   ;; `ef-themes-collection'.
-#   (setq ef-themes-to-toggle '(ef-summer ef-winter))
-#   
-#   ;; Make customisations that affect Emacs faces BEFORE loading a theme
-#   ;; (any change needs a theme re-load to take effect).
-#   
-#   (setq ef-themes-headings ; read the manual's entry or the doc string
-#         '((0 . (variable-pitch light 1.9))
-#           (1 . (variable-pitch light 1.8))
-#           (2 . (variable-pitch regular 1.7))
-#           (3 . (variable-pitch regular 1.6))
-#           (4 . (variable-pitch regular 1.5))
-#           (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
-#           (6 . (variable-pitch 1.3))
-#           (7 . (variable-pitch 1.2))
-#           (t . (variable-pitch 1.1))))
-#   
-#   ;; They are nil by default...
-#   (setq ef-themes-mixed-fonts t
-#         ef-themes-variable-pitch-ui t)
-#   
-#   ;; Disable all other themes to avoid awkward blending:
-#   (mapc #'disable-theme custom-enabled-themes)
-#   
-#   ;; Load the theme of choice:
-#   (load-theme 'ef-summer :no-confirm)
-#   
-#   ;; The themes we provide:
-#   ;;
-#   ;; Light: `ef-day', `ef-light', `ef-spring', `ef-summer'.
-#   ;; Dark:  `ef-autumn', `ef-dark', `ef-night', `ef-winter'.
-#   ;;
-#   ;; Also those which are optimized for deuteranopia (red-green color
-#   ;; deficiency): `ef-deuteranopia-dark', `ef-deuteranopia-light'.
-#   
-#   ;; We also provide these commands, but do not assign them to any key:
-#   ;;
-#   ;; - `ef-themes-toggle'
-#   ;; - `ef-themes-select'
-#   ;; - `ef-themes-load-random'
-#   ;; - `ef-themes-preview-colors'
-#   ;; - `ef-themes-preview-colors-current'#+END_SRC
-#   #+END_SRC
-#   
-#   
-#   ** U
-#   
-#   
-#   ** V
-#   
-#   
-#   *** Vegalite
-#   
-#   Take vega-lite plots as png files rather than svg.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq vega-view-prefer-png t)
-#   #+END_SRC
-#   
-#   
-#   
-#   ** W
-#   
-#   *** wc-mode
-#   
-#   This is a minor mode that provides the wc function that returns line, word, and character counts for the current buffer.
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package wc-mode)
-#   (add-hook 'text-mode-hook 'wc-mode)
-#   ;; Suggested setting
-#   (global-set-key "\C-cw" 'wc-mode)
-#   #+END_SRC
-#   
-#   
-#   
-#   *** Word count by section
-#   
-#   Only works in LaTeX documents.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun latex-word-count ()
-#     (interactive)
-#     (shell-command (concat "/usr/local/bin/texcount.pl"))
-#     (buffer-file-name))
-#   #+END_SRC
-#   
-#   
-#   
-#   *** wolfram-mode
-#   
-#   The wolfram language runs the Mathematica software.
-#   
-#   #+begin_src emacs-lisp
-#   (autoload 'wolfram-mode "wolfram-mode" nil t)
-#     (autoload 'run-wolfram "wolfram-mode" nil t)
-#     (setq wolfram-program "/Applications/Mathematica.app/Contents/MacOS/MathKernel")
-#      (add-to-list 'auto-mode-alist '("\\.m$" . wolfram-mode))
-#     (setq wolfram-path "direcotry-in-Mathematica-$Path")  ;; e.g. on Linux "~/.Mathematica/Applications"
-#   #+end_src
-#   
-#   
-#   ** X
-#   
-#   *** xah-lookup (web lookup launched from Emacs)
-#   
-#   [[http://ergoemacs.org/emacs/xah-lookup.html][Source]]
-#   You have to pay $15 for this package, but it is worth it.
-#   xah-lookup-X for the built-in commands.
-#   my-lookup-X are my extensions.
-#   
-#   
-#   |-------------------------------+-------------|
-#   | Command                       | key-binding |
-#   |-------------------------------+-------------|
-#   |xah-lookup-wikipedia           | C-h 5       |
-#   |xah-lookup-web                 | C-h 7       |
-#   |xah-lookup-wikitionary         | C-h 6       |
-#   |xah-lookup-google              |             |
-#   |xah-lookup-word-dict-org       | C-h 2       |
-#   |xah-lookup-all-dictionaries    |             |
-#   |xah-lookup-all-etymology       | C-h 1       |
-#   |xah-lookup-word-definition     | C-h 9       |
-#   |xah-lookup--asciify-region     |             |
-#   |xah-lookup-word-on-internet    |             |
-#   |-------------------------------+-------------|
-#   |my-lookup-github               | C-h C-g     |
-#   |my-lookup-julia                | C-h C-j     |
-#   |my-lookup-pymol                | C-h C-m     |
-#   |my-lookup-juliapackages        | C-h C-o     |
-#   |my-lookup-pubmed               | C-h C-b     |
-#   |my-lookup-jstor                | C-h C-t     |
-#   |my-lookup-connect              | C-h C-c     |
-#   |my-lookup-matplotlib           | C-h C-l     |
-#   |my-lookup-python               | C-h C-p     |
-#   |my-lookup-r                    | C-h C-r     |
-#   |my-lookup-scholar              | C-h C-s     |
-#   |my-lookup-wikipedia            | C-h C-w     |
-#   |my-lookup-wolframalpha         | C-h C-a     |
-#   |my-lookup-cctbx                | C-h C-x     |
-#   |my-lookup-tensorfolw           | C-h C-f     |
-#   |my-lookup-pdbj                 | C-h C-f     |
-#   |-------------------------------+-------------|
-#   
-#   
-#   The curlicue below is a placeholder for the lookup word query string.
-#   
-#   #+begin_src emacs-lisp
-#   (add-to-list 'load-path "~/.emacs.default/elisp/lookup-word-on-internet")
-#   (require 'xah-lookup)
-#   (define-key help-map (kbd "7") 'xah-lookup-web) ; C-h 7
-#   (global-set-key (kbd "<f2>") 'xah-lookup-wikipedia) ; F2
-#   
-#   (defun my-lookup-cctbx (&optional @word)
-#     "Lookup cctbx documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-cctbx 'xah-lookup-url )
-#      (get 'my-lookup-cctbx 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-cctbx 'xah-lookup-url "https://cctbx.github.io/search.html?q=curlicue")
-#   (put 'my-lookup-cctbx 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-github (&optional @word)
-#     "Lookup github documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-github 'xah-lookup-url )
-#      (get 'my-lookup-github 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-github 'xah-lookup-url "https://github.com/search?q==curlicue")
-#   (put 'my-lookup-github 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-jstor (&optional @word)
-#     "Lookup jstor documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-jstor 'xah-lookup-url )
-#      (get 'my-lookup-jstor 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-jstor 'xah-lookup-url "https://www.jstor.org/action/doBasicSearch?Query=curlicue")
-#   (put 'my-lookup-jstor 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-julia (&optional @word)
-#     "Lookup cctbx documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-julia 'xah-lookup-url )
-#      (get 'my-lookup-julia 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-julia 'xah-lookup-url "https://docs.julialang.org/en/v1/search/?q=curlicue")
-#   (put 'my-lookup-julia 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-juliapackages (&optional @word)
-#     "Lookup cctbx documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-juliapackages 'xah-lookup-url )
-#      (get 'my-lookup-juliapackages 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-juliapackages 'xah-lookup-url "https://juliapackages.com/packages?search=curlicue")
-#   (put 'my-lookup-juliapackages 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-connect (&optional @word)
-#     "lookup connected papers of word under cursor"
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-connect 'xah-lookup-url )
-#      (get 'my-lookup-connect 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-connect 'xah-lookup-url "https://www.connectedpapers.com/search?q=curlicue")
-#   (put 'my-lookup-connect 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-matplotlib (&optional @word)
-#     "lookup connected papers of word under cursor"
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-matplotlib 'xah-lookup-url )
-#      (get 'my-lookup-matplotlib 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-connect 'xah-lookup-url "https://matplotlib.org/stable/search.html?q=curlicue")
-#   (put 'my-lookup-connect 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   
-#   (defun my-lookup-php (&optional @word)
-#     "lookup php doc of word under cursor"
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-php 'xah-lookup-url )
-#      (get 'my-lookup-php 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-php 'xah-lookup-url "https://us.php.net/curlicue")
-#   (put 'my-lookup-php 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-pubmed (&optional @word)
-#     "Lookup cctbx documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-pubmed 'xah-lookup-url )
-#      (get 'my-lookup-pubmed 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-pubmed 'xah-lookup-url "https://pubmed.ncbi.nlm.nih.gov/?term=curlicue")
-#   (put 'my-lookup-pubmed 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-pymol (&optional @word)
-#     "Lookup cctbx documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-pymol 'xah-lookup-url )
-#      (get 'my-lookup-pymol 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-pymol 'xah-lookup-url "https://pymol.org/dokuwiki/doku.php?do=search&id=curlicue")
-#   (put 'my-lookup-pymol 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-python (&optional @word)
-#     "Lookup Python.org doc of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-python 'xah-lookup-url )
-#      (get 'my-lookup-python 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-python 'xah-lookup-url "https://www.python.org/search/?q=curlicue")
-#   (put 'my-lookup-python 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-r (&optional @word)
-#     "Lookup R documentation of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-r 'xah-lookup-url )
-#      (get 'my-lookup-r 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-r 'xah-lookup-url "https://www.rdocumentation.org/search?q=curlicue")
-#   (put 'my-lookup-r 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-scholar (&optional @word)
-#     "Lookup Goolge Scholar doc of word under cursor"
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-scholar 'xah-lookup-url )
-#      (get 'my-lookup-scholar 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-scholar 'xah-lookup-url "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C37&q=curlicue")
-#   (put 'my-lookup-scholar 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-wikipedia (&optional @word)
-#     "Lookup wikipedia doc of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-wikipedia 'xah-lookup-url )
-#      (get 'my-lookup-wikipedia 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-wikipedia 'xah-lookup-url "https://en.wikipedia.org/wiki/curlicue")
-#   (put 'my-lookup-wikipedia 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-wolframalpha (&optional @word)
-#     "Lookup wolframalpha doc of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-wolframalpha 'xah-lookup-url )
-#      (get 'my-lookup-wolframalpha 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-wolframalpha 'xah-lookup-url "https://www.wolframalpha.com/input/?i=curlicue")
-#   (put 'my-lookup-wolframalpha 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-pdbj (&optional @word)
-#     "Lookup wolframalpha doc of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-pdbj 'xah-lookup-url )
-#      (get 'my-lookup-pdbj 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-pdbj 'xah-lookup-url "https://pdbj.org/search/pdb?query=curlicue")
-#   (put 'my-lookup-pdbj 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (defun my-lookup-pdbj (&optional @word)
-#     "Lookup wolframalpha doc of word under cursor."
-#     (interactive)
-#     (require 'xah-lookup)
-#     (xah-lookup-word-on-internet
-#      @word
-#      (get 'my-lookup-tensorfolw 'xah-lookup-url )
-#      (get 'my-lookup-tensorfolw 'xah-lookup-browser-function )))
-#   
-#   (put 'my-lookup-tensorfolw 'xah-lookup-url "https://www.tensorflow.org/s/results/?q=curlicue")
-#   (put 'my-lookup-tensorfolw 'xah-lookup-browser-function 'browse-url)
-#   
-#   
-#   (define-key help-map (kbd "\C-g") 'my-lookup-github) ; C-h C-g
-#   (define-key help-map (kbd "\C-j") 'my-lookup-julia) ; C-h C-j
-#   (define-key help-map (kbd "\C-m") 'my-lookup-pymol) ; C-h C-m
-#   (define-key help-map (kbd "\C-o") 'my-lookup-juliaobserver) ; C-h C-o
-#   (define-key help-map (kbd "\C-b") 'my-lookup-pubmed) ; C-h C-b
-#   (define-key help-map (kbd "\C-t") 'my-lookup-jstor) ; C-h C-t
-#   (define-key help-map (kbd "\C-c") 'my-lookup-connect) ; C-h C-c
-#   (define-key help-map (kbd "\C-l") 'my-lookup-matplotlib) ; C-h C-l
-#   (define-key help-map (kbd "\C-p") 'my-lookup-python) ; C-h C-p
-#   (define-key help-map (kbd "\C-r") 'my-lookup-r) ; C-h C_r
-#   (define-key help-map (kbd "\C-s") 'my-lookup-scholar) ; C-h C- s
-#   (define-key help-map (kbd "\C-w") 'my-lookup-wikipedia) ; C-h C-w
-#   (define-key help-map (kbd "\C-a") 'my-lookup-wolframalpha) ; C-h C-a
-#   (define-key help-map (kbd "\C-x") 'my-lookup-cctbx) ; C-h C-x
-#   (define-key help-map (kbd "\C-f") 'my-lookup-tensorfolw) ; C-h C-f
-#   (define-key help-map (kbd "\C-d") 'my-lookup-pdbj) ; C-h C-f
-#   (put 'narrow-to-region 'disabled nil)
-#   #+END_SRC
-#   
-#   
-#   *** xah-reformat-to-sentence-lines
-#   
-#   This function rewrites paragraphs with one line per sentence.
-#   With one sentence per line, it is easy to shuffle the sentences when rewriting a paragraph.
-#   This also supports reverse outling well.
-#   You undo this reformatting by entering ~M-q~.
-#   
-#   This function fails where there is a period insde of a sentence, such as with the initials in a full name.
-#   
-#   ~M-q~ adds two whitespaces at the end of each sentence because by default, Emacs expects two whitespaces at the end of each sentence.
-#   This is an archaic practice.
-#   To enforce the use of one whitespace, enter ~(setq sentence-end-double-space nil)~.
-#   I have set this above under S.
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun xah-reformat-to-sentence-lines ()
-#     "Break a long line or text block into multiple lines by ending period.
-#   Work on text selection if there is one, else the current text block.
-#   URL `http://xahlee.info/emacs/emacs/elisp_reformat_to_sentence_lines.html'
-#   Version 2020-12-02 2021-04-14 2021-08-01"
-#     (interactive)
-#     (let ($p1 $p2)
-#       (if (use-region-p)
-#           (setq $p1 (region-beginning) $p2 (region-end))
-#         (progn
-#           (if (re-search-backward "\n[ \t]*\n+" nil "move")
-#               (progn (re-search-forward "\n[ \t]*\n+")
-#                      (setq $p1 (point)))
-#             (setq $p1 (point)))
-#           (re-search-forward "\n[ \t]*\n" nil "move")
-#           (setq $p2 (point))))
-#       (save-restriction
-#         (narrow-to-region $p1 $p2)
-#         (progn (goto-char (point-min)) (while (search-forward "\n" nil t) (replace-match " " )))
-#         (progn (goto-char (point-min)) (while (re-search-forward "  +" nil t) (replace-match " " )))
-#         (progn (goto-char (point-min)) (while (re-search-forward "\\. +\\([0-9A-Za-z]+\\)" nil t) (replace-match ".\n\\1" )))
-#         (progn (goto-char (point-min)) (while (search-forward " <a " nil t) (replace-match "\n<a " )))
-#         (progn (goto-char (point-min)) (while (search-forward "</a>" nil t) (replace-match "</a>\n" )))
-#         (goto-char (point-max))
-#         (while (eq (char-before ) 32) (delete-char -1))
-#         (insert "\n\n"))))
-#   #+END_SRC
-#   
-#   ** Y
-#   
-#   *** Yasnippet
-#   
-#   This is the snippet manager.
-#   It has a nice table view of the snippets available for the current mode and a function for automating the writing of new snippets.
-#   
-#   **** main configuration
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package yasnippet
-#     :ensure t
-#     :config
-#     (yas-global-mode 1)
-#   ;; Turn on yasnippet (minor) mode when editing R files:
-#      (add-hook 'ess-r-mode-hook #'yas-minor-mode)
-#      (add-hook 'markdown-mode-hook #'yas-minor-mode)
-#      (add-hook 'poly-gfm+r-mode#'yas-minor-mode)
-#      (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
-#      (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
-#      (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
-#   )
-#   #+END_SRC
-#   
-#   
-#   
-#   ***** Function to insert a fence code block
-#   
-#   Source:
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun tws-insert-r-chunk (header)
-#     "Insert an r-chunk in markdown mode."
-#     (insert (concat "```{r " header "}\n\n```"))
-#     (forward-line -1))
-#   ;;(global-set-key "\C-f \C-f" 'tws-insert-r-chunk)
-#   ;;(markdown-mode-map (kbd "C-p C-f") 'tws-insert-r-chunk)
-#   #+END_SRC
-#   
-#   
-#   **** keybinding to insert snippet
-#   
-#   Insert snippet with C-o. This normally mapped to TAB.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (global-set-key "\C-o" 'yas-expand)
-#   #+END_SRC
-#   
-#   **** Tab triggers in org code blocks
-#   
-#   Enable snippet tab triggers to work in the native code language of the code block.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq   org-src-tab-acts-natively t
-#           org-confirm-babel-evaluate nil
-#           org-edit-src-content-indentation 0)
-#   #+END_SRC
-#   
-#   
-#   **** Turn off org-mode snippets in code blocks.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun my-org-mode-hook ()
-#     (setq-local yas-buffer-local-condition
-#                '(not (org-in-src-block-p t))))
-#     'my-org-mode-hook
-#     (add-hook 'org-mode-hook `my-org-mode-hook)
-#   #+END_SRC
-#   
-#   
-#   
-#   **** Yasnippet pop-up menu to aid snippet selection
-#   
-#   [[https://blog.iany.me/2012/03/use-popup-isearch-for-yasnippet-prompt/][Blogpost]] about the pop-up menu
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package popup
-#     :ensure t)
-#   (require 'yasnippet)
-#   ;; add some shotcuts in popup menu mode
-#   (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
-#   (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-#   (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
-#   (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
-#   (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
-#   
-#   (defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
-#     (when (featurep 'popup)
-#       (popup-menu*
-#        (mapcar
-#         (lambda (choice)
-#           (popup-make-item
-#            (or (and display-fn (funcall display-fn choice))
-#                choice)
-#            :value choice))
-#         choices)
-#        :prompt prompt
-#        ;; start isearch mode immediately
-#        :isearch t
-#        )))
-#   (setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
-#   #+END_SRC
-#   
-#   
-#   **** Automatically trigger completion at each snippet tabstop
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun complete-if-yas-field (&rest _)
-#     (let ((field (yas-current-field)))
-#       (when (and field
-#                  (not (yas--field-modified-p field)))
-#         (company-manual-begin))))
-#   
-#   (advice-add 'company-complete-selection :after 'complete-if-yas-field)
-#   (advice-add 'yas-next-field :after 'complete-if-yas-field)
-#   #+END_SRC
-#   
-#   
-#   ** Z
+
+** T
+
+*** Timers
+
+Use the pomodoto.app. It is hard to beat.
+
+
+*** themes
+
+**** leuven-theme
+The leuven-theme has high color contrast on light background.
+
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package leuven-theme
+  :init (load-theme 'leuven t))
+#+END_SRC
+#+END_COMMENT
+
+**** ef-theme from Prot
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.default/elisp/ef-themes")
+
+(require 'ef-themes)
+;; If you like two specific themes and want to switch between them, you
+;; can specify them in `ef-themes-to-toggle' and then invoke the command
+;; `ef-themes-toggle'.  All the themes are included in the variable
+;; `ef-themes-collection'.
+(setq ef-themes-to-toggle '(ef-summer ef-winter))
+
+;; Make customisations that affect Emacs faces BEFORE loading a theme
+;; (any change needs a theme re-load to take effect).
+
+(setq ef-themes-headings ; read the manual's entry or the doc string
+      '((0 . (variable-pitch light 1.9))
+        (1 . (variable-pitch light 1.8))
+        (2 . (variable-pitch regular 1.7))
+        (3 . (variable-pitch regular 1.6))
+        (4 . (variable-pitch regular 1.5))
+        (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
+        (6 . (variable-pitch 1.3))
+        (7 . (variable-pitch 1.2))
+        (t . (variable-pitch 1.1))))
+
+;; They are nil by default...
+(setq ef-themes-mixed-fonts t
+      ef-themes-variable-pitch-ui t)
+
+;; Disable all other themes to avoid awkward blending:
+(mapc #'disable-theme custom-enabled-themes)
+
+;; Load the theme of choice:
+(load-theme 'ef-summer :no-confirm)
+
+;; The themes we provide:
+;;
+;; Light: `ef-day', `ef-light', `ef-spring', `ef-summer'.
+;; Dark:  `ef-autumn', `ef-dark', `ef-night', `ef-winter'.
+;;
+;; Also those which are optimized for deuteranopia (red-green color
+;; deficiency): `ef-deuteranopia-dark', `ef-deuteranopia-light'.
+
+;; We also provide these commands, but do not assign them to any key:
+;;
+;; - `ef-themes-toggle'
+;; - `ef-themes-select'
+;; - `ef-themes-load-random'
+;; - `ef-themes-preview-colors'
+;; - `ef-themes-preview-colors-current'#+END_SRC
+#+END_SRC
+
+
+** U
+
+
+** V
+
+
+*** Vegalite
+
+Take vega-lite plots as png files rather than svg.
+
+#+BEGIN_SRC emacs-lisp
+(setq vega-view-prefer-png t)
+#+END_SRC
+
+
+
+** W
+
+*** wc-mode
+
+This is a minor mode that provides the wc function that returns line, word, and character counts for the current buffer.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package wc-mode)
+(add-hook 'text-mode-hook 'wc-mode)
+;; Suggested setting
+(global-set-key "\C-cw" 'wc-mode)
+#+END_SRC
+
+
+
+*** Word count by section
+
+Only works in LaTeX documents.
+
+#+BEGIN_SRC emacs-lisp
+(defun latex-word-count ()
+  (interactive)
+  (shell-command (concat "/usr/local/bin/texcount.pl"))
+  (buffer-file-name))
+#+END_SRC
+
+
+
+*** wolfram-mode
+
+The wolfram language runs the Mathematica software.
+
+#+begin_src emacs-lisp
+(autoload 'wolfram-mode "wolfram-mode" nil t)
+  (autoload 'run-wolfram "wolfram-mode" nil t)
+  (setq wolfram-program "/Applications/Mathematica.app/Contents/MacOS/MathKernel")
+   (add-to-list 'auto-mode-alist '("\\.m$" . wolfram-mode))
+  (setq wolfram-path "direcotry-in-Mathematica-$Path")  ;; e.g. on Linux "~/.Mathematica/Applications"
+#+end_src
+
+
+** X
+
+*** xah-lookup (web lookup launched from Emacs)
+
+[[http://ergoemacs.org/emacs/xah-lookup.html][Source]]
+You have to pay $15 for this package, but it is worth it.
+xah-lookup-X for the built-in commands.
+my-lookup-X are my extensions.
+
+
+|-------------------------------+-------------|
+| Command                       | key-binding |
+|-------------------------------+-------------|
+|xah-lookup-wikipedia           | C-h 5       |
+|xah-lookup-web                 | C-h 7       |
+|xah-lookup-wikitionary         | C-h 6       |
+|xah-lookup-google              |             |
+|xah-lookup-word-dict-org       | C-h 2       |
+|xah-lookup-all-dictionaries    |             |
+|xah-lookup-all-etymology       | C-h 1       |
+|xah-lookup-word-definition     | C-h 9       |
+|xah-lookup--asciify-region     |             |
+|xah-lookup-word-on-internet    |             |
+|-------------------------------+-------------|
+|my-lookup-github               | C-h C-g     |
+|my-lookup-julia                | C-h C-j     |
+|my-lookup-pymol                | C-h C-m     |
+|my-lookup-juliapackages        | C-h C-o     |
+|my-lookup-pubmed               | C-h C-b     |
+|my-lookup-jstor                | C-h C-t     |
+|my-lookup-connect              | C-h C-c     |
+|my-lookup-matplotlib           | C-h C-l     |
+|my-lookup-python               | C-h C-p     |
+|my-lookup-r                    | C-h C-r     |
+|my-lookup-scholar              | C-h C-s     |
+|my-lookup-wikipedia            | C-h C-w     |
+|my-lookup-wolframalpha         | C-h C-a     |
+|my-lookup-cctbx                | C-h C-x     |
+|my-lookup-tensorfolw           | C-h C-f     |
+|my-lookup-pdbj                 | C-h C-f     |
+|-------------------------------+-------------|
+
+
+The curlicue below is a placeholder for the lookup word query string.
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.default/elisp/lookup-word-on-internet")
+(require 'xah-lookup)
+(define-key help-map (kbd "7") 'xah-lookup-web) ; C-h 7
+(global-set-key (kbd "<f2>") 'xah-lookup-wikipedia) ; F2
+
+(defun my-lookup-cctbx (&optional @word)
+  "Lookup cctbx documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-cctbx 'xah-lookup-url )
+   (get 'my-lookup-cctbx 'xah-lookup-browser-function )))
+
+(put 'my-lookup-cctbx 'xah-lookup-url "https://cctbx.github.io/search.html?q=curlicue")
+(put 'my-lookup-cctbx 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-github (&optional @word)
+  "Lookup github documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-github 'xah-lookup-url )
+   (get 'my-lookup-github 'xah-lookup-browser-function )))
+
+(put 'my-lookup-github 'xah-lookup-url "https://github.com/search?q==curlicue")
+(put 'my-lookup-github 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-jstor (&optional @word)
+  "Lookup jstor documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-jstor 'xah-lookup-url )
+   (get 'my-lookup-jstor 'xah-lookup-browser-function )))
+
+(put 'my-lookup-jstor 'xah-lookup-url "https://www.jstor.org/action/doBasicSearch?Query=curlicue")
+(put 'my-lookup-jstor 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-julia (&optional @word)
+  "Lookup cctbx documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-julia 'xah-lookup-url )
+   (get 'my-lookup-julia 'xah-lookup-browser-function )))
+
+(put 'my-lookup-julia 'xah-lookup-url "https://docs.julialang.org/en/v1/search/?q=curlicue")
+(put 'my-lookup-julia 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-juliapackages (&optional @word)
+  "Lookup cctbx documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-juliapackages 'xah-lookup-url )
+   (get 'my-lookup-juliapackages 'xah-lookup-browser-function )))
+
+(put 'my-lookup-juliapackages 'xah-lookup-url "https://juliapackages.com/packages?search=curlicue")
+(put 'my-lookup-juliapackages 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-connect (&optional @word)
+  "lookup connected papers of word under cursor"
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-connect 'xah-lookup-url )
+   (get 'my-lookup-connect 'xah-lookup-browser-function )))
+
+(put 'my-lookup-connect 'xah-lookup-url "https://www.connectedpapers.com/search?q=curlicue")
+(put 'my-lookup-connect 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-matplotlib (&optional @word)
+  "lookup connected papers of word under cursor"
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-matplotlib 'xah-lookup-url )
+   (get 'my-lookup-matplotlib 'xah-lookup-browser-function )))
+
+(put 'my-lookup-connect 'xah-lookup-url "https://matplotlib.org/stable/search.html?q=curlicue")
+(put 'my-lookup-connect 'xah-lookup-browser-function 'browse-url)
+
+
+
+(defun my-lookup-php (&optional @word)
+  "lookup php doc of word under cursor"
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-php 'xah-lookup-url )
+   (get 'my-lookup-php 'xah-lookup-browser-function )))
+
+(put 'my-lookup-php 'xah-lookup-url "https://us.php.net/curlicue")
+(put 'my-lookup-php 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-pubmed (&optional @word)
+  "Lookup cctbx documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-pubmed 'xah-lookup-url )
+   (get 'my-lookup-pubmed 'xah-lookup-browser-function )))
+
+(put 'my-lookup-pubmed 'xah-lookup-url "https://pubmed.ncbi.nlm.nih.gov/?term=curlicue")
+(put 'my-lookup-pubmed 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-pymol (&optional @word)
+  "Lookup cctbx documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-pymol 'xah-lookup-url )
+   (get 'my-lookup-pymol 'xah-lookup-browser-function )))
+
+(put 'my-lookup-pymol 'xah-lookup-url "https://pymol.org/dokuwiki/doku.php?do=search&id=curlicue")
+(put 'my-lookup-pymol 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-python (&optional @word)
+  "Lookup Python.org doc of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-python 'xah-lookup-url )
+   (get 'my-lookup-python 'xah-lookup-browser-function )))
+
+(put 'my-lookup-python 'xah-lookup-url "https://www.python.org/search/?q=curlicue")
+(put 'my-lookup-python 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-r (&optional @word)
+  "Lookup R documentation of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-r 'xah-lookup-url )
+   (get 'my-lookup-r 'xah-lookup-browser-function )))
+
+(put 'my-lookup-r 'xah-lookup-url "https://www.rdocumentation.org/search?q=curlicue")
+(put 'my-lookup-r 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-scholar (&optional @word)
+  "Lookup Goolge Scholar doc of word under cursor"
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-scholar 'xah-lookup-url )
+   (get 'my-lookup-scholar 'xah-lookup-browser-function )))
+
+(put 'my-lookup-scholar 'xah-lookup-url "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C37&q=curlicue")
+(put 'my-lookup-scholar 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-wikipedia (&optional @word)
+  "Lookup wikipedia doc of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-wikipedia 'xah-lookup-url )
+   (get 'my-lookup-wikipedia 'xah-lookup-browser-function )))
+
+(put 'my-lookup-wikipedia 'xah-lookup-url "https://en.wikipedia.org/wiki/curlicue")
+(put 'my-lookup-wikipedia 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-wolframalpha (&optional @word)
+  "Lookup wolframalpha doc of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-wolframalpha 'xah-lookup-url )
+   (get 'my-lookup-wolframalpha 'xah-lookup-browser-function )))
+
+(put 'my-lookup-wolframalpha 'xah-lookup-url "https://www.wolframalpha.com/input/?i=curlicue")
+(put 'my-lookup-wolframalpha 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-pdbj (&optional @word)
+  "Lookup wolframalpha doc of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-pdbj 'xah-lookup-url )
+   (get 'my-lookup-pdbj 'xah-lookup-browser-function )))
+
+(put 'my-lookup-pdbj 'xah-lookup-url "https://pdbj.org/search/pdb?query=curlicue")
+(put 'my-lookup-pdbj 'xah-lookup-browser-function 'browse-url)
+
+
+(defun my-lookup-pdbj (&optional @word)
+  "Lookup wolframalpha doc of word under cursor."
+  (interactive)
+  (require 'xah-lookup)
+  (xah-lookup-word-on-internet
+   @word
+   (get 'my-lookup-tensorfolw 'xah-lookup-url )
+   (get 'my-lookup-tensorfolw 'xah-lookup-browser-function )))
+
+(put 'my-lookup-tensorfolw 'xah-lookup-url "https://www.tensorflow.org/s/results/?q=curlicue")
+(put 'my-lookup-tensorfolw 'xah-lookup-browser-function 'browse-url)
+
+
+(define-key help-map (kbd "\C-g") 'my-lookup-github) ; C-h C-g
+(define-key help-map (kbd "\C-j") 'my-lookup-julia) ; C-h C-j
+(define-key help-map (kbd "\C-m") 'my-lookup-pymol) ; C-h C-m
+(define-key help-map (kbd "\C-o") 'my-lookup-juliaobserver) ; C-h C-o
+(define-key help-map (kbd "\C-b") 'my-lookup-pubmed) ; C-h C-b
+(define-key help-map (kbd "\C-t") 'my-lookup-jstor) ; C-h C-t
+(define-key help-map (kbd "\C-c") 'my-lookup-connect) ; C-h C-c
+(define-key help-map (kbd "\C-l") 'my-lookup-matplotlib) ; C-h C-l
+(define-key help-map (kbd "\C-p") 'my-lookup-python) ; C-h C-p
+(define-key help-map (kbd "\C-r") 'my-lookup-r) ; C-h C_r
+(define-key help-map (kbd "\C-s") 'my-lookup-scholar) ; C-h C- s
+(define-key help-map (kbd "\C-w") 'my-lookup-wikipedia) ; C-h C-w
+(define-key help-map (kbd "\C-a") 'my-lookup-wolframalpha) ; C-h C-a
+(define-key help-map (kbd "\C-x") 'my-lookup-cctbx) ; C-h C-x
+(define-key help-map (kbd "\C-f") 'my-lookup-tensorfolw) ; C-h C-f
+(define-key help-map (kbd "\C-d") 'my-lookup-pdbj) ; C-h C-f
+(put 'narrow-to-region 'disabled nil)
+#+END_SRC
+
+
+*** xah-reformat-to-sentence-lines
+
+This function rewrites paragraphs with one line per sentence.
+With one sentence per line, it is easy to shuffle the sentences when rewriting a paragraph.
+This also supports reverse outling well.
+You undo this reformatting by entering ~M-q~.
+
+This function fails where there is a period insde of a sentence, such as with the initials in a full name.
+
+~M-q~ adds two whitespaces at the end of each sentence because by default, Emacs expects two whitespaces at the end of each sentence.
+This is an archaic practice.
+To enforce the use of one whitespace, enter ~(setq sentence-end-double-space nil)~.
+I have set this above under S.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun xah-reformat-to-sentence-lines ()
+  "Break a long line or text block into multiple lines by ending period.
+Work on text selection if there is one, else the current text block.
+URL `http://xahlee.info/emacs/emacs/elisp_reformat_to_sentence_lines.html'
+Version 2020-12-02 2021-04-14 2021-08-01"
+  (interactive)
+  (let ($p1 $p2)
+    (if (use-region-p)
+        (setq $p1 (region-beginning) $p2 (region-end))
+      (progn
+        (if (re-search-backward "\n[ \t]*\n+" nil "move")
+            (progn (re-search-forward "\n[ \t]*\n+")
+                   (setq $p1 (point)))
+          (setq $p1 (point)))
+        (re-search-forward "\n[ \t]*\n" nil "move")
+        (setq $p2 (point))))
+    (save-restriction
+      (narrow-to-region $p1 $p2)
+      (progn (goto-char (point-min)) (while (search-forward "\n" nil t) (replace-match " " )))
+      (progn (goto-char (point-min)) (while (re-search-forward "  +" nil t) (replace-match " " )))
+      (progn (goto-char (point-min)) (while (re-search-forward "\\. +\\([0-9A-Za-z]+\\)" nil t) (replace-match ".\n\\1" )))
+      (progn (goto-char (point-min)) (while (search-forward " <a " nil t) (replace-match "\n<a " )))
+      (progn (goto-char (point-min)) (while (search-forward "</a>" nil t) (replace-match "</a>\n" )))
+      (goto-char (point-max))
+      (while (eq (char-before ) 32) (delete-char -1))
+      (insert "\n\n"))))
+#+END_SRC
+
+** Y
+
+*** Yasnippet
+
+This is the snippet manager.
+It has a nice table view of the snippets available for the current mode and a function for automating the writing of new snippets.
+
+**** main configuration
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+;; Turn on yasnippet (minor) mode when editing R files:
+   (add-hook 'ess-r-mode-hook #'yas-minor-mode)
+   (add-hook 'markdown-mode-hook #'yas-minor-mode)
+   (add-hook 'poly-gfm+r-mode#'yas-minor-mode)
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
+)
+#+END_SRC
+
+
+
+***** Function to insert a fence code block
+
+Source:
+
+#+BEGIN_SRC emacs-lisp
+(defun tws-insert-r-chunk (header)
+  "Insert an r-chunk in markdown mode."
+  (insert (concat "```{r " header "}\n\n```"))
+  (forward-line -1))
+;;(global-set-key "\C-f \C-f" 'tws-insert-r-chunk)
+;;(markdown-mode-map (kbd "C-p C-f") 'tws-insert-r-chunk)
+#+END_SRC
+
+
+**** keybinding to insert snippet
+
+Insert snippet with C-o. This normally mapped to TAB.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-o" 'yas-expand)
+#+END_SRC
+
+**** Tab triggers in org code blocks
+
+Enable snippet tab triggers to work in the native code language of the code block.
+
+#+BEGIN_SRC emacs-lisp
+(setq   org-src-tab-acts-natively t
+        org-confirm-babel-evaluate nil
+        org-edit-src-content-indentation 0)
+#+END_SRC
+
+
+**** Turn off org-mode snippets in code blocks.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-mode-hook ()
+  (setq-local yas-buffer-local-condition
+             '(not (org-in-src-block-p t))))
+  'my-org-mode-hook
+  (add-hook 'org-mode-hook `my-org-mode-hook)
+#+END_SRC
+
+
+
+**** Yasnippet pop-up menu to aid snippet selection
+
+[[https://blog.iany.me/2012/03/use-popup-isearch-for-yasnippet-prompt/][Blogpost]] about the pop-up menu
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package popup
+  :ensure t)
+(require 'yasnippet)
+;; add some shotcuts in popup menu mode
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+(define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+(define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+(defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
+  (when (featurep 'popup)
+    (popup-menu*
+     (mapcar
+      (lambda (choice)
+        (popup-make-item
+         (or (and display-fn (funcall display-fn choice))
+             choice)
+         :value choice))
+      choices)
+     :prompt prompt
+     ;; start isearch mode immediately
+     :isearch t
+     )))
+(setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
+#+END_SRC
+
+
+**** Automatically trigger completion at each snippet tabstop
+
+#+BEGIN_SRC emacs-lisp
+(defun complete-if-yas-field (&rest _)
+  (let ((field (yas-current-field)))
+    (when (and field
+               (not (yas--field-modified-p field)))
+      (company-manual-begin))))
+
+(advice-add 'company-complete-selection :after 'complete-if-yas-field)
+(advice-add 'yas-next-field :after 'complete-if-yas-field)
+#+END_SRC
+
+
+** Z
