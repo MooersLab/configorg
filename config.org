@@ -3989,1487 +3989,1487 @@ Do we really have to exit the calendar after each selection?
 #    #+END_SRC
 #+END_COMMENT
 
-#    *** org-babel
-#    
-#    Org-babel is key to supporting literate programming in org-mode documents.
-#    This is where you activate and deactivate programming languages that can be run from source blocks in org documents.
-#    For example, this document uses source blocks that have elisp code.
-#    
-#    The jupyter language allows a second approach in that you can tap into a jupyter kernel for a specific language or a specific python environment.
-#    Note that jupyter has to come last in the list.
-#    Invoke jupyter as a language and then specify the kernel.
-#    For examples, use ~#+BEGIN_SRC jupyter :session jl :kernel julia-1.8.2 :output both~.
-#    You have to specify a session.
-#    You can include only emacs-lisp and jupyter as the languages.
-#    
-#    My selected languages are listed below.
-#    The accepted language names are listed [[https://orgmode.org/worg/org-contrib/babel/languages/index.html][here]].
-#    Note that shell includes bash.
-#    The
-#    The languages with ~t~ are acitvated.
-#    The languages with ~nil~ are inactivated.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (org-babel-do-load-languages
-#     'org-babel-load-languages
-#     '((emacs-lisp . t)
-#       (shell . t)
-#       (c . nil)
-#       (cpp . nil)
-#       (clojure . t)
-#       (F90 . nil)
-#       (gnuplot . t)
-#       (js . nil)
-#       (ditaa . nil)
-#       (java . t)
-#       (mathematica . nil)
-#       (plantuml . nil)
-#       (lisp . t)
-#       (org . t)
-#       (smiles . t)
-#       (julia . t)
-#       (python . t)
-#       (R . t)
-#       (jupyter . t)))
-#    #+END_SRC
-#    
-#    
-#    
-#    
-#    #+BEGIN_COMMENT
-#    #+BEGIN_SRC emacs-lisp
-#    ;; (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
-#    (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
-#    #+END_SRC
-#    #+END_COMMENT
-#    
-#    
-#    #+BEGIN_COMMENT
-#    # #+BEGIN_SRC emacs-lisp
-#    # :after (ob-jupyter ob-python)
-#    # :config
-#    # (setq jupyter-api-authentication-method 'password)
-#    # (setq jupyter-eval-use-overlays nil)
-#    # (setq org-babel-default-header-args:jupyter-python '((:session . "/jpy:localhost#8888:py")
-#    #                                                      (:kernel . "conda-env-edge-py")
-#    #                                                      (:async . "yes")
-#    #                                (:pandoc t)))
-#    # (add-to-list 'savehist-additional-variables 'jupyter-server-kernel-names)
-#    # (setq ob-async-no-async-languages-alist '("jupyter-python"))
-#    # (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python")))
-#    # #+END_SRC
-#    #+END_COMMENT
-#    
-#    #+BEGIN_COMMENT
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package jupyter
-#      :ensure t)
-#    #+END_SRC
-#    #+END_COMMENT
-#    
-#    
-#    I add to add ~:results value scalar~ to get the appropriate output.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (add-to-list 'org-babel-default-header-args:emacs-lisp
-#                 '(:results . "output"))
-#    #+END_SRC
-#    
-#    
-#    *** Turn off security confirmation for langs in list.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    ;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
-#    (defun my-org-confirm-babel-evaluate (lang body)
-#      (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
-#    (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-#    #+END_SRC
-#    
-#    
-#    *** consult-org-headings
-#    
-#    Eric Fraga's wrapper for the consult-org-heading function.
-#    Gives plain text headers listed in minibuffer.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun esf/consult-org-heading ()
-#      "Eric's wrapper about consult-org-heading."
-#      (interactive)
-#      (let ((org-level-faces nil))
-#        (consult-org-heading)))
-#    (global-set-key (kbd "C-c s") 'esf/consult-org-heading)
-#    #+END_SRC
-#    
-#    I like the default settings with color coding.
-#    I have mapped these to the ~C-c s~.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (global-set-key (kbd "C-c s") 'consult-org-heading)
-#    ;;(add-hook 'org-mode-hook
-#    ;;          (lambda ()
-#    ;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
-#    #+END_SRC
-#    
-#    
-#    *** org-drill for spaced repetition learning in org-mode
-#    
-#    You have to install org-drill from MELPA.
-#    
-#    This is a YouTube video about how to use org-drill[[https://www.youtube.com/watch?v=uraPXeLfWcM][to learn Chinese]].
-#    You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-table][flashcards]].
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-drill
-#                 :config (progn
-#                              (add-to-list 'org-modules 'org-drill)
-#                              (setq org-drill-add-random-noise-to-intervals-p t)
-#                              (setq org-drill-hint-separator "||")
-#                              (setq org-drill-left-cloze-delimiter "<[")
-#                              (setq org-drill-right-cloze-delimiter "]>")
-#                              (setq org-drill-learn-fraction 0.25)
-#                 )
-#    )
-#    #+END_SRC
-#    
-#    
-#    
-#    *** org-download
-#    
-#    To drag and drop images into org files, see the associate [[https://github.com/abo-abo/org-download][GitHub page]].
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-download)
-#    ;; Drag-and-drop to `dired`
-#    (add-hook 'dired-mode-hook 'org-download-enable)
-#    #+END_SRC
-#    
-#    
-#    *** org gantt plots
-#    
-#    There is a number of ways to make these type of plots in Emacs.
-#    The ~elgantt.el~ project is promising due to its integration with org.
-#    The [[plantuml-mode][https://github.com/skuro/plantuml-mode]] can also be used to make a GANTT plot with the plantuml code in a code block and the output below.
-#    
-#    The simplist and most robust is the generate a table in an org document of the events, days of effort, their start date, and their end date.
-#    The latter two columns were columns three and four of the table that I used with the script below.
-#    Then use a gnuplot script to call this table and write out a plot.
-#    
-#    I obtained the inspiration for this plot from [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-#    I needed only the first four columns to generate the GANTT plot.
-#    The remaining columns were left for later work.
-#    
-#    Enter ~TAB, RET~ or ~C-c C-c~ to auto-adjust the Table as you enter values and to complete the dates.
-#    The numerical value of the date can be entered and the day of the week will be determined automatically after entering ~C-c C-c~.
-#    The date needs to be added in the YYYY-MM-DD format.
-#    Single-digit dates must be preceded by a 0.
-#    
-#    Enter ~S-M-down~ to add a row above.
-#    Enter ~M-up~ to move a row up.
-#    
-#    The column formula calculates the end date.
-#    I included shorten version of the table with the minimum configuration as a template.
-#    I deleted a number of rows of sensitive information under the manuscript and grant proposal preparation categories.
-#    
-#    
-#    #+tblname: gantt-table
-#    | Task                                  | Effort in Days | Start date       | End date         | Responsible | Spent | Progress | Projected Effort | Over/Under time |
-#    |---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
-#    | Service:                              |                |                  |                  |             |       |          |                  |                 |
-#    | MRAB study section                    |             30 | <2022-06-01 Wed> | <2022-06-28 Tue> |             |       |          |                  |                 |
-#    | MRAB study section                    |             30 | <2022-10-01 Sat> | [2022-10-31 Mon] |             |       |          |                  |                 |
-#    | MRAB study section                    |             30 | <2023-02-10 Thu> | <2023-03-08 Tue> |             |       |          |                  |                 |
-#    | Meetings:                             |                |                  |                  |             |       |          |                  |                 |
-#    | SciPy22 Mtg                           |              6 | <2022-07-11 Mon> | [2022-07-18 Sun] |             |       |          |                  |                 |
-#    | ACA abstract                          |             15 | <2022-04-03 Sun> | <2022-04-15 Fri> |             |       |          |                  |                 |
-#    | ACA Mtg                               |              5 | <2022-07-29 Fri> | <2022-08-02 Tue> |             |       |          |                  |                 |
-#    | GRC abstract                          |             15 | <2022-06-01 Wed> | <2022-06-15 Wed> |             |       |          |                  |                 |
-#    | GRC Mtg                               |              7 | <2022-07-24 Sun> | <2022-07-29 Fri> |             |       |          |                  |                 |
-#    | SSRL/LCLS Mtg                         |              6 | <2022-09-26 Mon> | <2022-09-30 Fri> |             |       |          |                  |                 |
-#    | JuptyerCon 2023 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
-#    | JupyterCon 2023                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
-#    | EmacsConf22 abstract                  |             15 | <2022-09-01 Thu> | <2022-09-15 Mon> |             |       |          |                  |                 |
-#    | EmacsConf22                           |              2 | <2022-11-26 Sat> | <2022-11-27 Sun> |             |       |          |                  |                 |
-#    | Grant reports:                        |                |                  |                  |             |       |          |                  |                 |
-#    | NIH/NCI R01 grant                     |              2 | <2022-03-21 Mon> | <2022-04-15 Fri> |             |       |          |                  |                 |
-#    | NIH/NGMS COBRE phase 2                |              5 | <2022-06-01 Wed> | <2022-07-31 Sun> |             |       |          |                  |                 |
-#    | PHF Year 2                            |              5 | <2022-07-01 Fri> | <2022-07-31 Sun> |             |       |          |                  |                 |
-#    | OCAST Year 2                          |              2 | <2022-07-25 Mon> | <2022-07-29 Fri> |             |       |          |                  |                 |
-#    | COBRE ECA mid-yr                      |              5 | <2022-05-21 Sat> | <2022-05-31 Tue> |             |       |          |                  |                 |
-#    | COBRE ECA CY2022                      |              5 | <2022-12-06 Tue> | <2022-12-10 Sat> |             |       |          |                  |                 |
-#    |---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
-#    #+TBLFM: $4=if("$-1"!="",date(<$-1>)+<$-2>,string(""));E
-#    
-#    The source of the Gnuplot code below is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-#    I modifed the code to accommodate a GANTT plot with 60 events and to write it out to a PDF.
-#    This plot takes up a full page (7 by 9 inches).
-#    I switched to using PNG for this demo because PDFs can be hard to display in some browsers.
-#    
-#    Enter ~C-c C-c~ in the code block to run it.
-#    Change the line width of the arrow sytle line to change the thickness of the bars.
-#    
-#    March 2022 appears on the x-axis.
-#    I have not figured out how to start from April.
-#    Maybe the x-range has to be set.
-#    
-#    #+BEGIN_SRC gnuplot :var DATA=gantt-table :file gantt-short.png
-#    OneMonth = strptime("%m","2")
-#    timeformat = "%Y-%m-%d"
-#    T(N) = timecolumn(N,timeformat)
-#    
-#    set term png size 700,900 enhanced font "Helvetica"
-#    #set term pdfcairo size 7in,9in
-#    set xtics font ",10"
-#    set ytics font ",10"
-#    set xdata time
-#    set format x "%b\n'%y"
-#    set xtics OneMonth nomirror
-#    set xtics scale 2, 0.5
-#    set mxtics 4
-#    
-#    
-#    skiptorow=3
-#    set yrange [(skiptorow-2):] reverse
-#    set ytics nomirror
-#    
-#    unset key
-#    set title "{/=10 GANTT Chart of Mooers Lab: April 2022 - March 2023\n {/=8 (minus teaching duties)}}"
-#    set grid x y
-#    set border 3
-#    set style arrow 1 nohead filled size screen 0.02, 15 fixed lt 3 lw 12
-#    
-#    plot DATA using (T(3)) : ($0) : (T(4)-T(3)) : (0.0) : yticlabel(1) with vector as 1
-#    #+END_SRC
-#    
-#    [[gantt-short.png][Click here to see the resulting Gantt plot]]
-#    
-#    SVG files are opened by Inkscape.
-#    PS files are not writing output.
-#    PNG files work ok.
-#    PDF works well, but it is opened by the system default PDF viewer.
-#    Close the prior version of the file to allow the new version to open.
-#    PNG files, once loaded, will update automatically.
-#    
-#    The source of this code is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-#    Enter ~C-c C-c~ in the code block to run it.
-#    Change the line width of the arrow style line to change the thickness of the bars.
-#    
-#    March 2022 appears on the x-axis.
-#    I have not figured out how to start from April.
-#    Maybe the x-range has to be set.
-#    
-#    This file can be added to the list of files in the init.el file that are opened on start-up of org.
-#    This may be a practice to facilitate the updating and tuning of the plot and to keep remind you to look at it from time-to-time.
-#    I tend to make annual plans and then forget about them until annual-review time a year later.
-#    
-#    This plot took several hours to figure out.
-#    I probably spent another 5-6 hours making and adjusting the entries.
-#    Maybe Monday.com or asana would be better for team planning on a shorter time horizon, but this is plot works for annual planning and is under my local control.
-#    
-#    I tried to deploy the column formula shown on the video, but I had a typo that held me back for a long time.
-#    I had to add the set term, set xtics, and set ytics to expand the size of the plot and to adjust the size of the labels to accommodate 55 entries.
-#    
-#    **** elgantt
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/elgantt") ;; Or wherever it is located
-#    (require 'elgantt)
-#    (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org")
-#    
-#    (setq elgantt-user-set-color-priority-counter 0)
-#    (elgantt-create-display-rule draw-scheduled-to-deadline
-#      :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
-#                                   (s-split " " colors)))))
-#      :args (elgantt-scheduled elgantt-color elgantt-org-id)
-#      :body ((when elgantt-scheduled
-#               (let ((point1 (point))
-#                     (point2 (save-excursion
-#                               (elgantt--goto-date elgantt-scheduled)
-#                               (point)))
-#                     (color1 (or (car elgantt-color)
-#                                 "black"))
-#                     (color2 (or (cadr elgantt-color)
-#                                 "red")))
-#                 (when (/= point1 point2)
-#                   (elgantt--draw-gradient
-#                    color1
-#                    color2
-#                    (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
-#                    (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
-#                    nil
-#                    `(priority ,(setq elgantt-user-set-color-priority-counter
-#                                      (1- elgantt-user-set-color-priority-counter))
-#                               ;; Decrease the priority so that earlier entries take
-#                               ;; precedence over later ones (note: it doesn’t matter if the number is negative)
-#                               :elgantt-user-overlay ,elgantt-org-id)))))))
-#    (setq elgantt-header-type 'outline
-#          elgantt-insert-blank-line-between-top-level-header t
-#          elgantt-startup-folded nil
-#          elgantt-show-header-depth t
-#          elgantt-draw-overarching-headers t)
-#    
-#    (setq elgantt-header-type 'hashtag
-#          elgantt-insert-blank-line-between-top-level-header nil
-#          elgantt-startup-folded t)
-#    #+END_SRC
-#    
-#    
-#    *** org-latex minted
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (add-to-list 'org-latex-packages-alist '("" "minted"))
-#    (setq org-latex-listings 'minted)
-#    
-#    (setq org-latex-minted-options
-#         '(("frame" "lines") ("linenos=false") ("framerule=2pt") ("breaklines")))
-#    (setq org-latex-pdf-process
-#          '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-#            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-#            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-#    (setq org-src-fontify-natively t)
-#    #+END_SRC
-#    
-#    
-#    *** org-latex-classes by document class
-#    
-#    From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
-#    For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~.
-#    Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "taken".
-#    
-#    I am stumped on the configuration.
-#    Did ox-latex get renamed to org-latex?
-#    No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
-#    
-#    To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
-#    
-#    
-#    [[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
-#    #+BEGIN_SRC emacs-lisp
-#    (with-eval-after-load "ox-latex"
-#      (add-to-list 'org-latex-classes
-#                   '("koma-article" "\\documentclass{scrartcl}"
-#                     ("\\section{%s}" . "\\section*{%s}")
-#                     ("\\subsection{%s}" . "\\subsection*{%s}")
-#                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#    
-#      (add-to-list 'org-latex-classes
-#                   '("apa6" "\\documentclass{apa6}"
-#                     ("\\section{%s}" . "\\section*{%s}")
-#                     ("\\subsection{%s}" . "\\subsection*{%s}")
-#                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#    
-#      (add-to-list 'org-latex-classes
-#                   '("report" "\\documentclass{report}"
-#                     ("\\chapter{%s}" . "\\chapter*{%s}")
-#                     ("\\section{%s}" . "\\section*{%s}")
-#                     ("\\subsection{%s}" . "\\subsection*{%s}")
-#                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-#    
-#      (add-to-list 'org-latex-classes
-#                   '("memoir" "\\documentclass{memoir}"
-#                     ("\\book{%s}" . "\\book*{%s}")
-#                     ("\\part{%s}" . "\\part*{%s}")
-#                     ("\\chapter{%s} .\\chapter*{%s}")
-#                     ("\\section{%s}" . "\\section*{%s}")
-#                     ("\\subsection{%s}" . "\\subsection*{%s}")
-#                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#    
-#      (add-to-list 'org-latex-classes
-#                   '("paper" "\\documentclass{paper}"
-#                     ("\\section{%s}" . "\\section*{%s}")
-#                     ("\\subsection{%s}" . "\\subsection*{%s}")
-#                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#    
-#    (add-to-list 'org-latex-classes
-#                '("Springer"
-#                   "\\documentclass[natbib]{svjour3}"
-#                   ("\\section{%s}" . "\\section*{%s}")
-#                   ("\\subsection{%s}" . "\\subsection*{%s}")
-#                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#    )
-#    #+END_SRC
-#    
-#    *** org-export-latex-no-toc
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun org-export-latex-no-toc (depth)
-#      (when depth
-#        (format "%% Org-mode is exporting headings to %s levels.\n"
-#                  depth)))
-#    #+END_SRC
-#    
-#    
-#    
-#    
-#    *** org-gcal
-#    
-#    [[https://github.com/myuhe/org-gcal.el][See org-gcal]]'s GitHub repo.
-#    There are 13 steps required to set this up.
-#    It will take several hours.
-#    
-#    
-#    
-#    *** org-gtd
-#    
-#    This project is relatively new. See the [[https://github.com/Trevoke/org-gtd.el/blob/master/doc/org-gtd.org][documentation]] on the reop.
-#    Requires org-edna.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-gtd :after 'org)
-#    #+END_SRC
-#    
-#    
-#    
-#    *** org-mind-map
-#    
-#    This Emacs package creates graphs from the headings of an org file.
-#    The package depends on Grpahviz being installed.
-#    On the Mac, you can install graphviz with macports or home brew.
-#    
-#    The graphs can be directed.
-#    They can also have a radial layout.
-#    You control the layout of the graph with the settings below.
-#    
-#    This package looks like a very useful way to prepare small graphs to illustrate manuscripts and books by just using org to layout the graph.
-#    This spares you of the several hours required to relearn the dot language.
-#    
-#    To brainstorm a very large project, the IthoughtsX software may be more useful because you interact with the nodes in a GUI.
-#    They are easy to drag around and shift to different levels of the hierarchy.
-#    
-#    However, org can be used to quickly layout a graph by copying and pasting subtrees of nodes.
-#    The nodes are easy shuffle around by using the Meta and up and down arrow keys.
-#    The level of the node can be shifted with the Meta and right and left arrow keys.
-#    
-#    During the outline of a book, the org file can be used to initiate the outline.
-#    The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brainstorming.
-#    
-#    After the mindmap has matured, it can be exported to a markdown file.
-#    The markdown file can be converted to a LaTeX file via pandoc.
-#    Then outline can be used directly, although I like to parse the chapters into individual documents.
-#    
-#    Alternatively, the markdown file can be converted into an org file by using pandoc: ~pandoc --from=markdown --to=org -o testOutline.org xtallizationPlan.md~.
-#    Each node will acquire a properties drawer with a unique identifier.
-#    This exported org file needs a title line added.
-#    Otherwise, it is competent for exporting mindmap files via graphviz.
-#    
-#    The text that is added below a headline will appear in a box below the node.
-#    You can also include links to images.
-#    The links have to be indented to the same degree as the headline.
-#    
-#    Can an org file be imported into iThoughtsX?
-#    You can export an org file to markdown and then import the markdown into iThoughtsX.
-#    Perhaps a package for going from org to iThoughtsX is needed.
-#    
-#    I had to enable the markdown backend.
-#    Enter ~M-x customize-option~ and ~org-export-backends~.
-#    Check the markdown box.
-#    Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-c C-e~.
-#    
-#    A simple org file without much customization can be easily converted into a markdown file by manual editing.
-#    Delete the title line and do a search-and-replace to swamp the asterisks for pound signs.
-#    Then save the file with a ~md~ file extension.
-#    This file can be imported into ithoughtsX and then saved as a ~itmz~ file.
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-mind-map
-#      :init
-#      (require 'ox-org)
-#      :ensure t
-#      ;; Uncomment the below if 'ensure-system-packages` is installed
-#      ;;:ensure-system-package (gvgen . graphviz)
-#      :config
-#      (setq org-mind-map-engine "dot")       ; Default. Directed Graph
-#      ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
-#      ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
-#      ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
-#      ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
-#      ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
-#      ;; (setq org-mind-map-engine "circo")  ; Circular Layout
-#      )
-#    #+END_SRC
-#    
-#    Then, run ~M-x org-mind-map-write~ within the org-mode file you would like to make a mind-map for.
-#    If the program works as expected, a PDF file will be generated in the same directory as the org file.
-#    You will be prompted for the file type for the exported graph, so you are not limited to PDFs.
-#    Other file types include png, jpeg, svg, eps, gif, and tiff.
-#    You can use tags for the nodes, and you can import images.
-#    See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this project for more information and examples.
-#    
-#    Note that the GitHub repo mentions a size limit of 100 x 100 pixels for the embedded images.
-#    I found that the images do not have to be square.
-#    Also note that the exape images is about 300 by 300 so this size limit is no longer present.
-#    
-#    **** Cautions with setting up the hierarchy of the outline to be mapped
-#    - It takes several seconds for the  ~M-x org-mind-map-write~ command to complete so wait for the message "Org mind map finished." to appear in the minibuffer.
-#    - The mother node should be the only one at the top heading level with a single asterisk.
-#    - The title of the org file will be used in the stem of the export image filename.
-#    - Child nodes of the same name under different parent nodes will be shared between parents with multiple sets of arrows. Solve this problem by renaming the child nodes to different names or by using unique tags.
-#    - Tags have no spaces or dashes. The tags are text between two colons.
-#    - Graphs with more than twenty nodes in a level will not fit on a page of the US letter size.
-#    - Large graphs need to be exported to vector graphics files to avoid pixelation.
-#    - You can overwrite prior graph files without being warned that you are about to do so.
-#    - You may be limited to three or four levels of nodes on an 8.5-inch wide page.
-#    - Links have to be indented to the same degree as the headline above it.
-#    - Text entered above or below a link to an image will always appear above the image. This text area can be used as a caption.
-#    - The org Caption keyword does not work as expected.
-#    
-#    
-#    *** org-notebook
-#    
-#    This is an intriguing project designed to ease note-taking in class.
-#    I do not have much use for this functionality but there as several clever features with regards to setting up an org-centered project.
-#    The package is not maintained nor is it well [[https://github.com/Rahi374/org-notebook][documented]], so you need to read the elisp code.
-#    
-#    
-#    *** org-pdftools and org-noter-pdftools integration
-#    
-#    This YouTube [[https://www.youtube.com/watch?v=lCc3UoQku-E][video]] by Alexander Fu demonstrates the integration of these two packages.
-#    Note that the video is not narrated, so be patient with it.
-#    
-#    You can generate a skeleton of an opened PDF in the current buffer by entering org-noter-skeleton-create.
-#    You can use the skeleton as an outline in an org document that has been opened in a parallel buffer.
-#    This facilitates taking notes in a separate document.
-#    After reading the article and taking the notes, I recommend writing a summary for the annote section of the corresponding BibTeX record for the article.
-#    
-#    You have to install pdf-tools first.
-#    Then you have to run ~M-x pdf-tools-install~.
-#    Then install org-pdftools and org-noter-pdftools.
-#    
-#    To link a specific page of a .pdf-file in an org-file, use the following syntax:  ~[[pdf:~/file.pdf::3][Link to page 3]]~.
-#    
-#    When browsing a pdftools-buffer, use org-store-link (by default ~C-c l~) to get a link to this location within the PDF.
-#    Then use org-insert-link (by default C-c C-l) to create a link to this page and this place on the page.
-#    
-#    This is the recommended configuration from this GitHub [[https://github.com/fuxialexander/org-pdftools][site]] for this project.
-#    
-#    I failed to get the outline generation to work in two hours of effort.
-#    I may have used the wrong PDFs.
-#    A PDF may have to have an outline stored in its Metadata.
-#    
-#    Anyways, see pdftools for an improved experience for navigating PDFs in Emacs with pdftools.
-#    
-#    *** org-noter
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-noter
-#      :after org
-#      :ensure t
-#      :config
-#      ;; Your org-noter config ........
-#      :config
-#      (setq
-#        org_notes (concat (getenv "HOME") "/org-roam/")
-#        zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-#        org-directory org_notes
-#        deft-directory org_notes
-#        org-roam-directory org_notes
-#        ;; keep an empty line between headings and content in Org file
-#        org-noter-separate-notes-from-heading t))
-#    
-#    ;;(use-package org-noter-pdf-tools)
-#    #+END_SRC
-#    
-#    
-#    **** Org-noter keybindings and commands @@html:<a name="keys">@@
-#    :PROPERTIES:
-#    :CUSTOM_ID: keys
-#    :END:
-#    | Key                                | Description                | Where?                    |
-#    | @@html:<kbd>@@i@@html:</kbd>@@     | Insert note                | Document buffer           |
-#    | @@html:<kbd>@@M-i@@html:</kbd>@@   | Insert precise note        | Document buffer           |
-#    | @@html:<kbd>@@q@@html:</kbd>@@     | Kill session               | Document buffer           |
-#    | @@html:<kbd>@@M-p@@html:</kbd>@@   | Sync previous page/chapter | Document and notes buffer |
-#    | @@html:<kbd>@@M-.@@html:</kbd>@@   | Sync current page/chapter  | Document and notes buffer |
-#    | @@html:<kbd>@@M-n@@html:</kbd>@@   | Sync next page/chapter     | Document and notes buffer |
-#    | @@html:<kbd>@@C-M-p@@html:</kbd>@@ | Sync previous notes        | Document and notes buffer |
-#    | @@html:<kbd>@@C-M-.@@html:</kbd>@@ | Sync selected notes        | Document and notes buffer |
-#    | @@html:<kbd>@@C-M-n@@html:</kbd>@@ | Sync next notes            | Document and notes buffer |
-#    
-#    You can use the usual keybindings to navigate the document
-#    (@@html:<kbd>@@n@@html:</kbd>@@, @@html:<kbd>@@p@@html:</kbd>@@,
-#    @@html:<kbd>@@SPC@@html:</kbd>@@, ...).
-#    
-#    
-#    
-#    
-#    
-#    *** helm-bibtex
-#    
-#    Source: https://github.com/tmalsburg/helm-bibtex
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package helm-bibtex
-#      :config
-#      (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
-#            bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
-#            bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
-#            bibtex-completion-pdf-field "file"
-#            bibtex-completion-notes-template-multiple-files
-#      (concat
-#       "#+TITLE: ${title}\n"
-#       "#+ROAM_KEY: cite:${=key=}\n"
-#       "* TODO Notes\n"
-#       ":PROPERTIES:\n"
-#       ":Custom_ID: ${=key=}\n"
-#       ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-#       ":AUTHOR: ${author-abbrev}\n"
-#       ":JOURNAL: ${journaltitle}\n"
-#       ":DATE: ${date}\n"
-#       ":YEAR: ${year}\n"
-#       ":DOI: ${doi}\n"
-#       ":URL: ${url}\n"
-#       ":END:\n\n"
-#       )
-#      )
-#      :bind
-#          (("C-c n B" . helm-bibtex))
-#    )
-#    
-#    ;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
-#    ;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
-#    #+END_SRC
-#    
-#    
-#    
-#    If the file field is not used but instead the naming scheme bibtex-key + .pdf.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (setq bibtex-completion-find-additional-pdfs t)
-#    #+END_SRC
-#    
-#    All files whose name start with the BibTeX key will then be associated with an entry.
-#    Name your files accordingly. For example:
-#    
-#    - bibtex-key-annotated.pdf
-#    - bibtex-key-supplemental.pdf
-#    - bibtex-key-chapter1.pdf
-#    
-#    These additional files are only detected when triggering an action, such as “Open PDF file”.
-#    When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
-#    
-#    [[https://github.com/tmalsburg/helm-bibtex][Source]] on github.
-#    
-#    **** Set how to open PDFs linked to citation by mode
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (setq bibtex-completion-format-citation-functions
-#      '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
-#        (latex-mode    . bibtex-completion-format-citation-cite)
-#        (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-#        (default       . bibtex-completion-format-citation-default)))
-#    #+END_SRC
-#    
-#    **** Reading list for org
-#    
-#    To use the title of the PDF file in the link used in a reading list in org-mode:
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (setq bibtex-completion-format-citation-functions
-#      '((org-mode      . bibtex-completion-format-citation-org-title-link-to-PDF)
-#        (latex-mode    . bibtex-completion-format-citation-cite)
-#        (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-#        (default       . bibtex-completion-format-citation-default)))
-#    #+END_SRC
-#    
-#    
-#    
-#    *** deft
-#    
-#    This search engine can scan org-roam entries.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package deft
-#      :commands deft
-#      :init
-#      (setq deft-default-extension "org"
-#            ;; de-couples filename and note title:
-#            deft-use-filename-as-title nil
-#            deft-use-filter-string-for-filename t
-#            ;; disable auto-save
-#            deft-auto-save-interval -1.0
-#            ;; converts the filter string into a readable file-name using kebab-case:
-#            deft-file-naming-rules
-#            '((noslash . "-")
-#              (nospace . "-")
-#              (case-fn . downcase)))
-#      :config
-#      (add-to-list 'deft-extensions "tex")
-#      )
-#    #+END_SRC
-#    
-#    
-#    
-#    
-#    *** org-noter-pdftools
-#    
-#    This package integrates org-noter and pdftools.
-#    
-#    The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-noter
-#      :after org
-#      :ensure t
-#      :config
-#      ;; Your org-noter config ........
-#      :config
-#      (setq
-#        org_notes (concat (getenv "HOME") "/org-roam/")
-#        zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-#        org-directory org_notes
-#        deft-directory org_notes
-#        org-roam-directory org_notes
-#        ;; keep an empty line between headings and content in Org file
-#        org-noter-separate-notes-from-heading t)
-#      (require 'org-noter-pdftools))
-#    
-#    (use-package org-pdftools
-#      :hook (org-mode . org-pdftools-setup-link))
-#    
-#    (use-package org-noter-pdftools
-#      :after org-noter
-#      :config
-#      ;; Add a function to ensure precise note is inserted
-#      (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-#        (interactive "P")
-#        (org-noter--with-valid-session
-#         (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-#                                                       (not org-noter-insert-note-no-questions)
-#                                                     org-noter-insert-note-no-questions))
-#               (org-pdftools-use-isearch-link t)
-#               (org-pdftools-use-freepointer-annot t))
-#           (org-noter-insert-note (org-noter--get-precise-info)))))
-#    
-#      ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-#      (defun org-noter-set-start-location (&optional arg)
-#        "When opening a session with this document, go to the current location.
-#    With a prefix ARG, remove start location."
-#        (interactive "P")
-#        (org-noter--with-valid-session
-#         (let ((inhibit-read-only t)
-#               (ast (org-noter--parse-root))
-#               (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-#           (with-current-buffer (org-noter--session-notes-buffer session)
-#             (org-with-wide-buffer
-#              (goto-char (org-element-property :begin ast))
-#              (if arg
-#                  (org-entry-delete nil org-noter-property-note-location)
-#                (org-entry-put nil org-noter-property-note-location
-#                               (org-noter--pretty-print-location location))))))))
-#      (with-eval-after-load 'pdf-annot
-#        (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-#    #+END_SRC
-#    
-#    
-#    
-#    
-#    
-#    *** org-pomodoro
-#    
-#    Place the point (cursor) on the task you are to work on and then enter ~C-c o
-#    ~ to start a 25-minute pomodoro.
-#    The time remaining on the pomodoro appears to the right of the clock on the modeline.
-#    To the right of this is the total time spent on the task and the name of the task.
-#    A :LOGBOOK: property will appear in tasks.org below the task.
-#    The logbook is closed by default.
-#    Open the logbook by placing the cursor on it and entering TAB.
-#    If that fails, enter ~M-x outline-show-entry RET~  or ~M-x ou-s-e~.
-#    
-#    A ding occurs at the end of a pomodoro.
-#    A second ding occurs at the end of a break.
-#    You have to enter ~C-c o~ to start the next pomodoro.
-#    
-#    The tickling timer sound is too erractic right now.
-#    This needs to be optimized.
-#    You might be better off using a stand-a-lone timer or timer app.
-#    I turn down the volume on to about 10% of maximum, and I can still hear the ding at the end of the pomodoro.
-#    
-#    
-#    There is a github gist of a org-pomodoro-plus.el file that has more configurations.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-pomodoro
-#        :ensure t
-#        :commands (org-pomodoro)
-#        :config
-#        (setq alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))))
-#    
-#    ;; (use-package sound-wav)
-#    ;; (setq org-pomodoro-ticking-sound-p nil)
-#    ;; ; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
-#    ;; (setq org-pomodoro-ticking-sound-states '(:pomodoro))
-#    ;; (setq org-pomodoro-ticking-frequency 1)
-#    ;; (setq org-pomodoro-audio-player "mplayer")
-#    ;; (setq org-pomodoro-finished-sound-args "-volume 0.9")
-#    ;; (setq org-pomodoro-long-break-sound-args "-volume 0.9")
-#    ;; (setq org-pomodoro-short-break-sound-args "-volume 0.9")
-#    ;; (setq org-pomodoro-ticking-sound-args "-volume 0.3")
-#    
-#    (global-set-key (kbd "C-c o") 'org-pomodoro)
-#    #+END_SRC
-#    
-#    
-#    **** org-ref
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-ref
-#      :custom
-#      (org-ref-default-bibliography "~/Documents/global.bib")
-#      :config
-#        (setq
-#        bibtex-completion-bibliography '("~/Documents/global.bib")
-#    	bibtex-completion-library-path '("/Users/blaine/0papers/")
-#    	bibtex-completion-notes-path "~/bibliography/notes/"
-#    	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
-#    
-#    	bibtex-completion-additional-search-fields '(keywords)
-#    	bibtex-completion-display-formats
-#    	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-#    	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-#    	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-#    	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-#    	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-#    	bibtex-completion-pdf-open-function
-#    	(lambda (fpath)
-#    	  (call-process "open" nil 0 nil fpath)))
-#    )
-#    #+END_SRC
-#    
-#    
-#    
-#    *** org-ref-ivy
-#    
-#    Conflicts with another server.
-#    
-#    #+BEGIN_COMMENT
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package bibtex
-#      :config
-#        (setq
-#        bibtex-autokey-year-length 4
-#    	bibtex-autokey-name-year-separator "-"
-#    	bibtex-autokey-year-title-separator "-"
-#    	bibtex-autokey-titleword-separator "-"
-#    	bibtex-autokey-titlewords 2
-#    	bibtex-autokey-titlewords-stretch 1
-#    	bibtex-autokey-titleword-length 5
-#    	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
-#    
-#    (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
-#    
-#    (use-pacakge org-ref-ivy
-#      :ensure t)
-#    
-#    (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
-#    #+END_SRC
-#    #+END_COMMENT
-#    
-#    *** function for opening the PDF linked to the citation under the point
-#    
-#    [[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun my/org-ref-open-pdf-at-point ()
-#      "Open the pdf for bibtex key under point if it exists."
-#      (interactive)
-#      (let* ((results (org-ref-get-bibtex-key-and-file))
-#             (key (car results))
-#             (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-#        (if (file-exists-p pdf-file)
-#            (find-file pdf-file)
-#          (message "No PDF found for %s" key))))
-#    
-#      (setq org-ref-completion-library 'org-ref-ivy-cite
-#            org-export-latex-format-toc-function 'org-export-latex-no-toc
-#            org-ref-get-pdf-filename-function
-#            (lambda (key) (car (bibtex-completion-find-pdf key)))
-#            ;; See the function I defined above.
-#            org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point
-#            ;; For pdf export engines.
-#            org-latex-pdf-process (list "latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -f -output-directory=%o %f")
-#            ;; I use orb to link org-ref, helm-bibtex and org-noter together (see below for more on org-noter and orb).
-#            org-ref-notes-function 'orb-edit-notes)
-#    #+END_SRC
-#    
-#    
-#    
-#    *** org-ref, newer config
-#    
-#    #   #+BEGIN_COMMENT
-#    # #+BEGIN_SRC emacs-lisp
-#    # (use-package org-ref
-#    #   :after org
-#    #   :config
-#    #   (defun blaine/reformat-bib-library (&optional filename)
-#    #     "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
-#    #     (interactive "P")
-#    #     (or filename (setq filename blaine/main-bib-library))
-#    #     (let ((cmnd (concat
-#    #                  (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
-#    #                  (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
-#    #                 (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
-#    #                 (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
-#    #                 )))
-#    #     (async-shell-command cmnd)))
-#    # 
-#    # (defun blaine/reformat-bib-lib-hook ()
-#    #    "Reformat the main bib library whenever it is saved.."
-#    #    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
-#    #     (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
-#    #     (setq bibtex-dialect 'bibtex))
-#    # #+END_SRC
-#    #   #+END_COMMENT
-#    
-#    *** org-roam
-#    
-#    The configuration for org-roam, the most advanced zettlekasten system for Emacs.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-roam
-#      :ensure t
-#      :custom
-#      (org-roam-directory "~/org-roam")
-#      :bind (("C-c n l" . org-roam-buffer-toggle)
-#             ("C-c n f" . org-roam-node-find)
-#             ("C-c n i" . org-roam-node-insert))
-#      :config
-#      (org-roam-setup))
-#    #+END_SRC
-#    
-#    *** org-roam-bibtex (orb)
-#    
-#    This package provides an interface between helm and org-roam.
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-roam-bibtex
-#        :hook (org-roam-mode . org-roam-bibtex-mode))
-#    
-#      (setq orb-preformat-keywords
-#            '("citekey" "title" "url" "author-or-editor" "keywords" "file")
-#            orb-process-file-keyword t
-#            orb-file-field-extensions '("pdf"))
-#    
-#      (setq orb-templates
-#            '(("r" "ref" plain(function org-roam-capture--get-point)
-#               ""
-#               :file-name "${citekey}"
-#               :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
-#    - tags ::
-#    - keywords :: ${keywords}
-#    
-#    *Notes
-#    :PROPERTIES:
-#    :Custom_ID: ${citekey}
-#    :URL: ${url}
-#    :AUTHOR: ${author-or-editor}
-#    :NOTER_DOCUMENT: ${file}
-#    :NOTER_PAGE:
-#    :END:")))
-#    #+END_SRC
-#    
-#    *** org-roam-ui
-#    
-#    This package displays the zettelkasten as a graph in your default browser.
-#    It only work with version 2 of org-roam.
-#    If installed from MELPA, no configuration is required.
-#    Start by entering ~M-x org-roam-ui-mode~.
-#    
-#    [[https://github.com/org-roam/org-roam-ui][source]]
-#    
-#    
-#    **** Visualize with igraph and R
-#    
-#    [[https://lucidmanager.org/data-science/visualise-org-roam/][See this post]] on how to visualize parts of your zettelkasten in igraph.
-#    
-#    
-#    *** org-roam ripgrep
-#    
-#    Function for ripgrep org-roam files.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun bms/org-roam-rg-search ()
-#      "Search org-roam directory using consult-ripgrep. With live-preview."
-#      (interactive)
-#      (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
-#        (consult-ripgrep org-roam-directory)))
-#    (global-set-key (kbd "C-c rr") 'bms/org-roam-rg-search)
-#    #+END_SRC
-#    
-#    
-#    
-#    # *** org-speed-keys
-#    # Cursor must be to the left of the first star in the headline.
-#    #
-#    #
-#    # #+BEGIN_SRC emacs-lisp
-#    # (setq org-use-speed-commands t)
-#    # #+END_SRC
-#    
-#    
-#    *** org-show-headings
-#    
-#    [[https://stackoverflow.com/questions/25161792/emacs-org-mode-how-can-i-fold-everything-but-the-current-headline][source]]
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun org-show-current-heading-tidily ()
-#      (interactive)  ;Inteactive
-#      "Show next entry, keeping other entries closed."
-#      (if (save-excursion (end-of-line) (outline-invisible-p))
-#          (progn (org-show-entry) (show-children))
-#        (outline-back-to-heading)
-#        (unless (and (bolp) (org-on-heading-p))
-#          (org-up-heading-safe)
-#          (hide-subtree)
-#          (error "Boundary reached"))
-#        (org-overview)
-#        (let ((current-prefix-arg '(4))) (call-interactively 'org-reveal))
-#        (org-show-entry)
-#        (show-children)))
-#    (add-hook 'org-mode-hook (lambda () (local-set-key "\M-=" 'org-show-current-heading-tidily)))
-#     #+END_SRC
-#    
-#    
-#    *** org, tables
-#    
-#    This is not a package.
-#    These are functions for tangling tables from org files.
-#    [[https://emacs.stackexchange.com/questions/53723/export-table-to-csv-file-without-prompt][Source]].
-#    
-#    
-#    
-#     #+BEGIN_SRC emacs-lisp
-#    (defun org+-tangle-table-at-point ()
-#      "Tangle Org table at point.
-#    The table is ignored if it is not preceeded by a line like:
-#    #+ATTR_TANGLE: DATAFILE
-#    or
-#    #+ATTR_TANGLE: (\"DATAFILE\" \"TYPE\")"
-#      (interactive)
-#      (unless (org-at-table-p)
-#        (user-error "Not at Org table"))
-#      (let* (type
-#         (data (org-element-context))
-#         (parent (org-element-property :parent data))
-#         file)
-#        (while parent
-#          (setq data parent)
-#          (setq parent (org-element-property :parent data)))
-#        (when (and (setq prop (org-element-property :attr_tangle data))
-#               (setq file (read prop)))
-#          (cond
-#           ((symbolp file)
-#        (setq file (symbol-name file)))
-#           ((stringp file)) ;; keep it that way
-#           ((consp file)
-#        (setq type (nth 1 file)
-#              file (car file)))
-#           (t
-#        (user-error "Unexpected format of table to be tangled")))
-#          (org-table-export file (or type org-table-export-default-format))
-#          t)))
-#    
-#    (defun org+-tangle-tables (fun &optional arg target-file lang)
-#      "Tangle Org tables in current buffer.
-#    For around advice with `org-babel-tangle' as FUN.
-#    See `org-babel-tangle' for the args ARG, TARGET-FILE and LANG.
-#    
-#    Currently, only one table per file is possible."
-#      (cond
-#       ((equal arg '(4)) ;; at point
-#        (if (org-at-table-p)
-#        (org+-tangle-table-at-point)
-#          (funcall fun arg target-file lang)))
-#       ((equal arg '(16))
-#        (funcall fun arg target-file lang))
-#       (t
-#        (funcall fun arg target-file lang)
-#        (let ((table-count 0))
-#          (org-with-wide-buffer
-#           (goto-char (point-min))
-#           (while (re-search-forward "^[ \t\r]*|" nil t)
-#         (goto-char (match-beginning 0))
-#         (when (org+-tangle-table-at-point)
-#           (cl-incf table-count))
-#         (goto-char (org-table-end)))
-#           )
-#          (message "Tangled %d tables from %s." table-count (buffer-name))))))
-#    
-#    (advice-add 'org-babel-tangle :around #'org+-tangle-tables)
-#    #+END_SRC
-#    
-#    The tables have to be preceded by the appropriate header.
-#    
-#    Another approach is to store the file path and file format in a properites drawer for the enclosing section.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    ;; :Properties:
-#    ;; :TABLE_EXPORT_FILE: observations2.csv
-#    ;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
-#    ;; :END:
-#    #+END_SRC
-#    
-#    Place cursor in table and enter "M-x org-table-export" to send to a csv file.
-#    
-#    
-#    *** org-wc
-#    Enable org-wc to work in org documents.
-#    Enter `wc` to get word count returned in org files.
-#    Enter `C-c w` to the samething.
-#    
-#    Similar to wc-mode which works in all documents.
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package org-wc
-#      :ensure t)
-#    (define-key org-mode-map [("\C-cw")] 'org-wc-display)
-#    #+END_SRC
-#    
-#    See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
-#    
-#    
-#    
-#    *** org-count-words
-#    [[https://www.reddit.com/r/emacs/comments/8qm1lb/new_orgcountwords_command/][org-count-words]]
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun ap/org-forward-to-entry-content (&optional unsafe)
-#        "Skip headline, planning line, and all drawers in current entry.
-#    If UNSAFE is non-nil, assume point is on headline."
-#        (unless unsafe
-#          ;; To improve performance in loops (e.g. with `org-map-entries')
-#          (org-back-to-heading))
-#        (cl-loop for element = (org-element-at-point)
-#                 for pos = (pcase element
-#                             (`(headline . ,_) (org-element-property :contents-begin element))
-#                             (`(,(or 'planning 'property-drawer 'drawer) . ,_) (org-element-property :end element)))
-#                 while pos
-#                 do (goto-char pos)))
-#    
-#    (defun ap/org-count-words ()
-#        "If region is active, count words in it; otherwise count words in current subtree."
-#        (interactive)
-#        (if (use-region-p)
-#            (funcall-interactively #'count-words-region (region-beginning) (region-end))
-#          (org-with-wide-buffer
-#           (cl-loop for (lines words characters)
-#                    in (org-map-entries
-#                        (lambda ()
-#                          (ap/org-forward-to-entry-content 'unsafe)
-#                          (let ((end (org-entry-end-position)))
-#                            (list (count-lines (point) end)
-#                                  (count-words (point) end)
-#                                  (- end (point)))))
-#                        nil 'tree)
-#                    sum lines into total-lines
-#                    sum words into total-words
-#                    sum characters into total-characters
-#                    finally do (message "Subtree \"%s\" has %s lines, %s words, and %s characters."
-#                                        (org-get-heading t t) total-lines total-words total-characters)))))
-#    #+END_SRC
-#    
-#    
-#    ** P
-#    
-#    *** paredit
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (use-package paredit
-#      :ensure t)
-#    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-#    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-#    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-#    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-#    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-#    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-#    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-#    #+END_SRC
-#    
-#    
-#    *** pdb-tools
-#    
-#    Marcin Magnus's updated fork of pdb-tools by Charlie Bond and David Love.
-#    [[https://github.com/mmagnus/emacs-pdb-mode][Gitub repo]]]
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    ;; pdb.el
-#    (load-file "~/.emacs.default/plugins/emacs-pdb-mode/pdb-mode.el")
-#    (setq pdb-rasmol-name "/Applications/PyMOL.app/Contents/bin/pymol")
-#    (setq auto-mode-alist
-#         (cons (cons "pdb$" 'pdb-mode)
-#               auto-mode-alist ) )
-#    (autoload 'pdb-mode "PDB")
-#    #+END_SRC
-#   
-#   
-#   
-#   *** pdf-tools
-#   
-#   This is an alternative to the built-in DocView package.
-#   
-#   
-#   The pdf-tools package runs on top of pdf-view package.
-#   This making capturing text from PDFs much easier.
-#   
-#   I followed a [[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools][blog post]].
-#   You enter highlights by selecting with the mouse and entering C-c C-a h.
-#   An annotation menu opens in the minibuffer.
-#   Enter ~C-c C-c~ to save the annotation.
-#   Enter ~C-c C-a t~ to enter text notes.
-#   Enter the note and enter ~C-c C-c~ to save.
-#   Right-click the mouse to get a menu of more options.
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package pdf-tools
-#     :pin manual ;; manually update
-#     :config
-#     ;; initialise
-#     (pdf-tools-install)
-#   
-#     ;; This means that pdfs are fitted to width by default when you open them
-#     (setq-default pdf-view-display-size 'fit-width)
-#     ;; open pdfs scaled to fit page
-#     ;;  (setq-default pdf-view-display-size 'fit-page)
-#      ;; automatically annotate highlights
-#     (setq pdf-annot-activate-created-annotations t)
-#     ;; use normal isearch
-#     (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
-#     ;; Setting for sharper images with Macs with Retina displays
-#     (setq pdf-view-use-scaling t)
-#   #+END_SRC
-#   
-#   
-#   **** Useful keybindings for viewing PDFs
-#   |------------------------------------------+-----------------|
-#   | Display                                  |                 |
-#   |------------------------------------------+-----------------|
-#   | Zoom in / Zoom out                       | ~+~ / ~-~       |
-#   | Fit height / Fit width / Fit page        | ~H~ / ~W~ / ~P~ |
-#   | Trim margins (set slice to bounding box) | ~s b~           |
-#   | Reset margins                            | ~s r~           |
-#   | Reset z oom                              | ~0~             |
-#   |------------------------------------------+-----------------|
-#   
-#   **** Useful keybindings for navigating PDFs
-#   
-#   |-----------------------------------------------+-----------------------|
-#   | Navigation                                    |                       |
-#   |-----------------------------------------------+-----------------------|
-#   | Scroll Up / Down by Page-full                 | ~space~ / ~backspace~ |
-#   | Scroll Up / Down by Line                      | ~C-n~ / ~C-p~         |
-#   | Scroll Right / Left                           | ~C-f~ / ~C-b~         |
-#   | First Page / Last Page                        | ~<~ / ~>~             |
-#   | Next Page / Previous Page                     | ~n~ / ~p~             |
-#   | First Page / Last Page                        | ~M-<~ / ~M->~         |
-#   | Incremental Search Forward / Backward         | ~C-s~ / ~C-r~         |
-#   | Occur (list all lines containing a phrase)    | ~M-s o~               |
-#   | Jump to Occur Line                            | ~RETURN~              |
-#   | Pick a Link and Jump                          | ~F~                   |
-#   | Incremental Search in Links                   | ~f~                   |
-#   | History Back / Forwards                       | ~l~ / ~r~             |
-#   | Display Outline                               | ~o~                   |
-#   | Jump to Section from Outline                  | ~RETURN~              |
-#   | Jump to Page                                  | ~M-g g~               |
-#   | Store position / Jump to position in register | ~m~ / ~'~             |
-#   |-----------------------------------------------+-----------------------|
-#   
-#   
-#   See org-noter section
-#   
-#   
-#   
-#   *** poly-mode
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package poly-markdown
-#     :ensure t)
-#   #+END_SRC
-#   
-#   *** poly-R
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package poly-R
-#     :ensure t)
-#   ;; associate the new polymode to Rmd files:
-#   (add-to-list 'auto-mode-alist
-#                '("\\.[rR]md\\'" . poly-gfm+r-mode))
-#   ;; uses braces around code block language strings:
-#   (setq markdown-code-block-braces t)
-#   #+END_SRC
-#   
-#   
-#   *** projectile
-#   
-#   [[https://docs.projectile.mx][Documentation:]]
-#   
-#   A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
-#   A more in-depth introdction is provided by Dave Wilson of System Crafters fame starting at 1:40 [[https://www.youtube.com/watch?v=INTu30BHZGk][here]].
-#   
-#   Projectile is used to manage projects and for common functionality like project-wide searching, fuzzy file finding, etc.
-#   
-#   
-#   **** Features of projectile
-#   
-#   Projectile supports the following
-#   
-#   - finding a file in project
-#   - switching projects quickly
-#   - jump to a project buffer
-#   - jump to a test in project
-#   - jump to recently visited files in the project
-#   - kill (close) all project buffers
-#   - replace in project
-#   - grep (search) in project
-#   - run shell commands in a project (e.g. ~make~, ~lein~)
-#   - support for multiple minibuffer completion/selection libraries (~ido~, ~ivy~, ~helm~ and the default completion system)
-#   
-#   
-#   **** projects
-#   
-#   Projectile will use most existing version control systems like .git for the list of files in a project.
-#   Projectile will also use most project types for various programming languages; this includes Ruby projects with Gemfiles, Maven Java projects with pom.xml files, Clojure CLI  projects with deps.edn files, Leiningen projects with project.clj, make with Makefile, cmake with CMakeLists.txt, pip with requirements.txt, setuptools project with setup.py.
-#   For folders not under version control or not a project, add the empty file .projectile with the command `touch .projectile` to make the folder into a project.
-#   This folder will appear in the dashboard upon restart of Emacs.
-#   
-#   **** modes of operation
-#   
-#   Projectile has three modes of operation:
-#   
-#   - native: implemented in Emacs Lisp and known as the native indexing method
-#   - hybrid
-#   - alien (e.g., git, Maven, lein)
-#   
-#   
-#   **** Dependencies
-#   
-#   Projectile uses ag, fd, or rg (ripgrep) for searches.
-#   
-#   
-#   **** Some basic Commands
-#   
-#   |-----------------------------------------------------------------------+------------|
-#   | Description                                                           | keybinding |
-#   |-----------------------------------------------------------------------+------------|
-#   | Find file in current project                                          | s-p f      |
-#   | Switch project                                                        | s-p p      |
-#   | Switch between open projects with                                     | s-p q      |
-#   | Grep (search for text/regexp) in project                              | s-p s g    |
-#   | Replace in project                                                    | s-p r      |
-#   | Invoke any Projectile command via the Projectile Commander            | s-p m      |
-#   | Toggle between implementation and test                                | s-p t      |
-#   | Toggle between related files                                          | s-p a      |
-#   | Run a shell command in the root of the project                        | s-p !      |
-#   | For a sync command and for an async command                           | s-p &      |
-#   | Build/compile project                                                 | s-p c      |
-#   | Test project                                                          | s-p T      |
-#   |-----------------------------------------------------------------------+------------|
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package projectile
-#     :init
-#     (projectile-mode t) ;; Enable this immediately
-#     :config
-#     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map) ; recommended for Mac OS
-#     (setq projectile-enable-caching t ; Much better performance on large projects
-#           projectile-completion-system 'ivy)) ; Ideally the minibuffer should aways look similar. Three options are helm, ido, and ivy. I like ido.
-#   #+END_SRC
-#   
-#   
-#   
-#   ***** Turn on projectile on restart up of Emacs.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (projectile-mode +1)
-#   #+END_SRC
-#   
-#   ***** Sort files by recently opened.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq projectile-sort-order 'recentf)
-#   #+END_SRC
-#   
-#   **** counsel-projectile
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package counsel-projectile
-#     :config (counsel-projectile-mode))
-#   #+END_SRC
-#   
-#   
-#   *** pubmed
-#   
-#   This package is very useful for most biomedical scientists who relie on PubMed.
-#   It allows you to submit searches from inside Emacs to Pubmed.
-#   The result is returned in a new buffer as a list of refernces.
-#   You mark the ones of interest.
-#   The bibtex for the marked ones can be fetched (appears to be broken).
-#   The work around is to past the title into the Google Scholar Bibtex extension for Chrome.
-#   The returned Bibtex can be pasted into the global.bib file.
-#   JabRef can generate a better cite key.
-#   The PDF of the current entry can be fetched and displayed in Emacs.
-#   The PDF can be saved with a the better cite key as the filename prefix.
-#   
-#   There are two commands for this page: M-x pubmed-search and M-x pubmed-advanced-search.
-#   The first returns the results in a buffer.
-#   There are also functions for sending the search to PubMed in the default buffer.
-#   
-#   https://gitlab.com/fvdbeek/emacs-pubmed
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package pubmed
-#     :ensure t
-#     :commands (pubmed-search pubmed-advanced-search))
-#   #+END_SRC
-#   
-#   There are the following keybindings:
-#   
-#   - <kbd>RET</kbd>: Show the summary of the current entry.
-#   - <kbd>f</kbd>: Try to fetch the fulltext PDF of the current entry.
-#   - <kbd>m</kbd>: Mark the current entry.
-#   - <kbd>M</kbd>: Mark all entries.
-#   - <kbd>n</kbd>: Show the summary of the next entry.
-#   - <kbd>p</kbd>: Show the summary of the previous entry.
-#   - <kbd>q</kbd>: Quit window.
-#   - <kbd>s</kbd>: Search PubMed.
-#   - <kbd>u</kbd>: Unmark the current entry.
-#   - <kbd>U</kbd>: Unmark all entries.
-#   - <kbd>w</kbd>: Write the BibTeX references of the marked entries or current
-#     entry to file.
-#   - <kbd>\<TAB\></kbd>: Show the BibTeX references of the marked entries or current
-#     entry.
-#   
-#   s lanuches a search query.
-#   m marked an entry.
-#   f tries to fetch the PDF and opens it in Emacs in a new buffer.
-#   The file can be saved to whatever filename.
-#   The whitespace function is interfering with entering file paths in the minibuffer
-#   
-#   Note that there is a also a  major pubmed-mode that can cause some confusion.
-#   
-#   You need to get a API key from NCBI to make up to 10 requests per second.
-#   Otherwise your access will be limited to 3 requests per second.
-#   Get the API key via your NCBI account .
-#   
-#   
-#   
+*** org-babel
+
+Org-babel is key to supporting literate programming in org-mode documents.
+This is where you activate and deactivate programming languages that can be run from source blocks in org documents.
+For example, this document uses source blocks that have elisp code.
+
+The jupyter language allows a second approach in that you can tap into a jupyter kernel for a specific language or a specific python environment.
+Note that jupyter has to come last in the list.
+Invoke jupyter as a language and then specify the kernel.
+For examples, use ~#+BEGIN_SRC jupyter :session jl :kernel julia-1.8.2 :output both~.
+You have to specify a session.
+You can include only emacs-lisp and jupyter as the languages.
+
+My selected languages are listed below.
+The accepted language names are listed [[https://orgmode.org/worg/org-contrib/babel/languages/index.html][here]].
+Note that shell includes bash.
+The
+The languages with ~t~ are acitvated.
+The languages with ~nil~ are inactivated.
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (shell . t)
+   (c . nil)
+   (cpp . nil)
+   (clojure . t)
+   (F90 . nil)
+   (gnuplot . t)
+   (js . nil)
+   (ditaa . nil)
+   (java . t)
+   (mathematica . nil)
+   (plantuml . nil)
+   (lisp . t)
+   (org . t)
+   (smiles . t)
+   (julia . t)
+   (python . t)
+   (R . t)
+   (jupyter . t)))
+#+END_SRC
+
+
+
+
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/org-mode/lisp")
+(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/emacs-jupyter")
+#+END_SRC
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# :after (ob-jupyter ob-python)
+# :config
+# (setq jupyter-api-authentication-method 'password)
+# (setq jupyter-eval-use-overlays nil)
+# (setq org-babel-default-header-args:jupyter-python '((:session . "/jpy:localhost#8888:py")
+#                                                      (:kernel . "conda-env-edge-py")
+#                                                      (:async . "yes")
+#                                (:pandoc t)))
+# (add-to-list 'savehist-additional-variables 'jupyter-server-kernel-names)
+# (setq ob-async-no-async-languages-alist '("jupyter-python"))
+# (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python")))
+# #+END_SRC
+#+END_COMMENT
+
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package jupyter
+  :ensure t)
+#+END_SRC
+#+END_COMMENT
+
+
+I add to add ~:results value scalar~ to get the appropriate output.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-babel-default-header-args:emacs-lisp
+             '(:results . "output"))
+#+END_SRC
+
+
+*** Turn off security confirmation for langs in list.
+
+#+BEGIN_SRC emacs-lisp
+;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+END_SRC
+
+
+*** consult-org-headings
+
+Eric Fraga's wrapper for the consult-org-heading function.
+Gives plain text headers listed in minibuffer.
+
+#+BEGIN_SRC emacs-lisp
+(defun esf/consult-org-heading ()
+  "Eric's wrapper about consult-org-heading."
+  (interactive)
+  (let ((org-level-faces nil))
+    (consult-org-heading)))
+(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
+#+END_SRC
+
+I like the default settings with color coding.
+I have mapped these to the ~C-c s~.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c s") 'consult-org-heading)
+;;(add-hook 'org-mode-hook
+;;          (lambda ()
+;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
+#+END_SRC
+
+
+*** org-drill for spaced repetition learning in org-mode
+
+You have to install org-drill from MELPA.
+
+This is a YouTube video about how to use org-drill[[https://www.youtube.com/watch?v=uraPXeLfWcM][to learn Chinese]].
+You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-table][flashcards]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-drill
+             :config (progn
+                          (add-to-list 'org-modules 'org-drill)
+                          (setq org-drill-add-random-noise-to-intervals-p t)
+                          (setq org-drill-hint-separator "||")
+                          (setq org-drill-left-cloze-delimiter "<[")
+                          (setq org-drill-right-cloze-delimiter "]>")
+                          (setq org-drill-learn-fraction 0.25)
+             )
+)
+#+END_SRC
+
+
+
+*** org-download
+
+To drag and drop images into org files, see the associate [[https://github.com/abo-abo/org-download][GitHub page]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-download)
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+#+END_SRC
+
+
+*** org gantt plots
+
+There is a number of ways to make these type of plots in Emacs.
+The ~elgantt.el~ project is promising due to its integration with org.
+The [[plantuml-mode][https://github.com/skuro/plantuml-mode]] can also be used to make a GANTT plot with the plantuml code in a code block and the output below.
+
+The simplist and most robust is the generate a table in an org document of the events, days of effort, their start date, and their end date.
+The latter two columns were columns three and four of the table that I used with the script below.
+Then use a gnuplot script to call this table and write out a plot.
+
+I obtained the inspiration for this plot from [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+I needed only the first four columns to generate the GANTT plot.
+The remaining columns were left for later work.
+
+Enter ~TAB, RET~ or ~C-c C-c~ to auto-adjust the Table as you enter values and to complete the dates.
+The numerical value of the date can be entered and the day of the week will be determined automatically after entering ~C-c C-c~.
+The date needs to be added in the YYYY-MM-DD format.
+Single-digit dates must be preceded by a 0.
+
+Enter ~S-M-down~ to add a row above.
+Enter ~M-up~ to move a row up.
+
+The column formula calculates the end date.
+I included shorten version of the table with the minimum configuration as a template.
+I deleted a number of rows of sensitive information under the manuscript and grant proposal preparation categories.
+
+
+#+tblname: gantt-table
+| Task                                  | Effort in Days | Start date       | End date         | Responsible | Spent | Progress | Projected Effort | Over/Under time |
+|---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
+| Service:                              |                |                  |                  |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2022-06-01 Wed> | <2022-06-28 Tue> |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2022-10-01 Sat> | [2022-10-31 Mon] |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2023-02-10 Thu> | <2023-03-08 Tue> |             |       |          |                  |                 |
+| Meetings:                             |                |                  |                  |             |       |          |                  |                 |
+| SciPy22 Mtg                           |              6 | <2022-07-11 Mon> | [2022-07-18 Sun] |             |       |          |                  |                 |
+| ACA abstract                          |             15 | <2022-04-03 Sun> | <2022-04-15 Fri> |             |       |          |                  |                 |
+| ACA Mtg                               |              5 | <2022-07-29 Fri> | <2022-08-02 Tue> |             |       |          |                  |                 |
+| GRC abstract                          |             15 | <2022-06-01 Wed> | <2022-06-15 Wed> |             |       |          |                  |                 |
+| GRC Mtg                               |              7 | <2022-07-24 Sun> | <2022-07-29 Fri> |             |       |          |                  |                 |
+| SSRL/LCLS Mtg                         |              6 | <2022-09-26 Mon> | <2022-09-30 Fri> |             |       |          |                  |                 |
+| JuptyerCon 2023 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
+| JupyterCon 2023                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
+| EmacsConf22 abstract                  |             15 | <2022-09-01 Thu> | <2022-09-15 Mon> |             |       |          |                  |                 |
+| EmacsConf22                           |              2 | <2022-11-26 Sat> | <2022-11-27 Sun> |             |       |          |                  |                 |
+| Grant reports:                        |                |                  |                  |             |       |          |                  |                 |
+| NIH/NCI R01 grant                     |              2 | <2022-03-21 Mon> | <2022-04-15 Fri> |             |       |          |                  |                 |
+| NIH/NGMS COBRE phase 2                |              5 | <2022-06-01 Wed> | <2022-07-31 Sun> |             |       |          |                  |                 |
+| PHF Year 2                            |              5 | <2022-07-01 Fri> | <2022-07-31 Sun> |             |       |          |                  |                 |
+| OCAST Year 2                          |              2 | <2022-07-25 Mon> | <2022-07-29 Fri> |             |       |          |                  |                 |
+| COBRE ECA mid-yr                      |              5 | <2022-05-21 Sat> | <2022-05-31 Tue> |             |       |          |                  |                 |
+| COBRE ECA CY2022                      |              5 | <2022-12-06 Tue> | <2022-12-10 Sat> |             |       |          |                  |                 |
+|---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
+#+TBLFM: $4=if("$-1"!="",date(<$-1>)+<$-2>,string(""));E
+
+The source of the Gnuplot code below is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+I modifed the code to accommodate a GANTT plot with 60 events and to write it out to a PDF.
+This plot takes up a full page (7 by 9 inches).
+I switched to using PNG for this demo because PDFs can be hard to display in some browsers.
+
+Enter ~C-c C-c~ in the code block to run it.
+Change the line width of the arrow sytle line to change the thickness of the bars.
+
+March 2022 appears on the x-axis.
+I have not figured out how to start from April.
+Maybe the x-range has to be set.
+
+#+BEGIN_SRC gnuplot :var DATA=gantt-table :file gantt-short.png
+OneMonth = strptime("%m","2")
+timeformat = "%Y-%m-%d"
+T(N) = timecolumn(N,timeformat)
+
+set term png size 700,900 enhanced font "Helvetica"
+#set term pdfcairo size 7in,9in
+set xtics font ",10"
+set ytics font ",10"
+set xdata time
+set format x "%b\n'%y"
+set xtics OneMonth nomirror
+set xtics scale 2, 0.5
+set mxtics 4
+
+
+skiptorow=3
+set yrange [(skiptorow-2):] reverse
+set ytics nomirror
+
+unset key
+set title "{/=10 GANTT Chart of Mooers Lab: April 2022 - March 2023\n {/=8 (minus teaching duties)}}"
+set grid x y
+set border 3
+set style arrow 1 nohead filled size screen 0.02, 15 fixed lt 3 lw 12
+
+plot DATA using (T(3)) : ($0) : (T(4)-T(3)) : (0.0) : yticlabel(1) with vector as 1
+#+END_SRC
+
+[[gantt-short.png][Click here to see the resulting Gantt plot]]
+
+SVG files are opened by Inkscape.
+PS files are not writing output.
+PNG files work ok.
+PDF works well, but it is opened by the system default PDF viewer.
+Close the prior version of the file to allow the new version to open.
+PNG files, once loaded, will update automatically.
+
+The source of this code is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+Enter ~C-c C-c~ in the code block to run it.
+Change the line width of the arrow style line to change the thickness of the bars.
+
+March 2022 appears on the x-axis.
+I have not figured out how to start from April.
+Maybe the x-range has to be set.
+
+This file can be added to the list of files in the init.el file that are opened on start-up of org.
+This may be a practice to facilitate the updating and tuning of the plot and to keep remind you to look at it from time-to-time.
+I tend to make annual plans and then forget about them until annual-review time a year later.
+
+This plot took several hours to figure out.
+I probably spent another 5-6 hours making and adjusting the entries.
+Maybe Monday.com or asana would be better for team planning on a shorter time horizon, but this is plot works for annual planning and is under my local control.
+
+I tried to deploy the column formula shown on the video, but I had a typo that held me back for a long time.
+I had to add the set term, set xtics, and set ytics to expand the size of the plot and to adjust the size of the labels to accommodate 55 entries.
+
+**** elgantt
+
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/elgantt") ;; Or wherever it is located
+(require 'elgantt)
+(setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org")
+
+(setq elgantt-user-set-color-priority-counter 0)
+(elgantt-create-display-rule draw-scheduled-to-deadline
+  :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
+                               (s-split " " colors)))))
+  :args (elgantt-scheduled elgantt-color elgantt-org-id)
+  :body ((when elgantt-scheduled
+           (let ((point1 (point))
+                 (point2 (save-excursion
+                           (elgantt--goto-date elgantt-scheduled)
+                           (point)))
+                 (color1 (or (car elgantt-color)
+                             "black"))
+                 (color2 (or (cadr elgantt-color)
+                             "red")))
+             (when (/= point1 point2)
+               (elgantt--draw-gradient
+                color1
+                color2
+                (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
+                (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
+                nil
+                `(priority ,(setq elgantt-user-set-color-priority-counter
+                                  (1- elgantt-user-set-color-priority-counter))
+                           ;; Decrease the priority so that earlier entries take
+                           ;; precedence over later ones (note: it doesn’t matter if the number is negative)
+                           :elgantt-user-overlay ,elgantt-org-id)))))))
+(setq elgantt-header-type 'outline
+      elgantt-insert-blank-line-between-top-level-header t
+      elgantt-startup-folded nil
+      elgantt-show-header-depth t
+      elgantt-draw-overarching-headers t)
+
+(setq elgantt-header-type 'hashtag
+      elgantt-insert-blank-line-between-top-level-header nil
+      elgantt-startup-folded t)
+#+END_SRC
+
+
+*** org-latex minted
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-minted-options
+     '(("frame" "lines") ("linenos=false") ("framerule=2pt") ("breaklines")))
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+
+*** org-latex-classes by document class
+
+From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
+For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~.
+Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "taken".
+
+I am stumped on the configuration.
+Did ox-latex get renamed to org-latex?
+No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
+
+To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
+
+
+[[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load "ox-latex"
+  (add-to-list 'org-latex-classes
+               '("koma-article" "\\documentclass{scrartcl}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("apa6" "\\documentclass{apa6}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("report" "\\documentclass{report}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("memoir" "\\documentclass{memoir}"
+                 ("\\book{%s}" . "\\book*{%s}")
+                 ("\\part{%s}" . "\\part*{%s}")
+                 ("\\chapter{%s} .\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("paper" "\\documentclass{paper}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+            '("Springer"
+               "\\documentclass[natbib]{svjour3}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+)
+#+END_SRC
+
+*** org-export-latex-no-toc
+
+#+BEGIN_SRC emacs-lisp
+(defun org-export-latex-no-toc (depth)
+  (when depth
+    (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+#+END_SRC
+
+
+
+
+*** org-gcal
+
+[[https://github.com/myuhe/org-gcal.el][See org-gcal]]'s GitHub repo.
+There are 13 steps required to set this up.
+It will take several hours.
+
+
+
+*** org-gtd
+
+This project is relatively new. See the [[https://github.com/Trevoke/org-gtd.el/blob/master/doc/org-gtd.org][documentation]] on the reop.
+Requires org-edna.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-gtd :after 'org)
+#+END_SRC
+
+
+
+*** org-mind-map
+
+This Emacs package creates graphs from the headings of an org file.
+The package depends on Grpahviz being installed.
+On the Mac, you can install graphviz with macports or home brew.
+
+The graphs can be directed.
+They can also have a radial layout.
+You control the layout of the graph with the settings below.
+
+This package looks like a very useful way to prepare small graphs to illustrate manuscripts and books by just using org to layout the graph.
+This spares you of the several hours required to relearn the dot language.
+
+To brainstorm a very large project, the IthoughtsX software may be more useful because you interact with the nodes in a GUI.
+They are easy to drag around and shift to different levels of the hierarchy.
+
+However, org can be used to quickly layout a graph by copying and pasting subtrees of nodes.
+The nodes are easy shuffle around by using the Meta and up and down arrow keys.
+The level of the node can be shifted with the Meta and right and left arrow keys.
+
+During the outline of a book, the org file can be used to initiate the outline.
+The outline could be imported into iThoughtsX and then filled out in one or multiple sessions of brainstorming.
+
+After the mindmap has matured, it can be exported to a markdown file.
+The markdown file can be converted to a LaTeX file via pandoc.
+Then outline can be used directly, although I like to parse the chapters into individual documents.
+
+Alternatively, the markdown file can be converted into an org file by using pandoc: ~pandoc --from=markdown --to=org -o testOutline.org xtallizationPlan.md~.
+Each node will acquire a properties drawer with a unique identifier.
+This exported org file needs a title line added.
+Otherwise, it is competent for exporting mindmap files via graphviz.
+
+The text that is added below a headline will appear in a box below the node.
+You can also include links to images.
+The links have to be indented to the same degree as the headline.
+
+Can an org file be imported into iThoughtsX?
+You can export an org file to markdown and then import the markdown into iThoughtsX.
+Perhaps a package for going from org to iThoughtsX is needed.
+
+I had to enable the markdown backend.
+Enter ~M-x customize-option~ and ~org-export-backends~.
+Check the markdown box.
+Then enter ~M-x org-md-export-to-markdown~, but you can get the markdown option after running ~C-c C-e~.
+
+A simple org file without much customization can be easily converted into a markdown file by manual editing.
+Delete the title line and do a search-and-replace to swamp the asterisks for pound signs.
+Then save the file with a ~md~ file extension.
+This file can be imported into ithoughtsX and then saved as a ~itmz~ file.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-mind-map
+  :init
+  (require 'ox-org)
+  :ensure t
+  ;; Uncomment the below if 'ensure-system-packages` is installed
+  ;;:ensure-system-package (gvgen . graphviz)
+  :config
+  (setq org-mind-map-engine "dot")       ; Default. Directed Graph
+  ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
+  ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
+  ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
+  ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
+  ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
+  ;; (setq org-mind-map-engine "circo")  ; Circular Layout
+  )
+#+END_SRC
+
+Then, run ~M-x org-mind-map-write~ within the org-mode file you would like to make a mind-map for.
+If the program works as expected, a PDF file will be generated in the same directory as the org file.
+You will be prompted for the file type for the exported graph, so you are not limited to PDFs.
+Other file types include png, jpeg, svg, eps, gif, and tiff.
+You can use tags for the nodes, and you can import images.
+See the [[https://github.com/the-ted/org-mind-map][GitHub page]] for this project for more information and examples.
+
+Note that the GitHub repo mentions a size limit of 100 x 100 pixels for the embedded images.
+I found that the images do not have to be square.
+Also note that the exape images is about 300 by 300 so this size limit is no longer present.
+
+**** Cautions with setting up the hierarchy of the outline to be mapped
+- It takes several seconds for the  ~M-x org-mind-map-write~ command to complete so wait for the message "Org mind map finished." to appear in the minibuffer.
+- The mother node should be the only one at the top heading level with a single asterisk.
+- The title of the org file will be used in the stem of the export image filename.
+- Child nodes of the same name under different parent nodes will be shared between parents with multiple sets of arrows. Solve this problem by renaming the child nodes to different names or by using unique tags.
+- Tags have no spaces or dashes. The tags are text between two colons.
+- Graphs with more than twenty nodes in a level will not fit on a page of the US letter size.
+- Large graphs need to be exported to vector graphics files to avoid pixelation.
+- You can overwrite prior graph files without being warned that you are about to do so.
+- You may be limited to three or four levels of nodes on an 8.5-inch wide page.
+- Links have to be indented to the same degree as the headline above it.
+- Text entered above or below a link to an image will always appear above the image. This text area can be used as a caption.
+- The org Caption keyword does not work as expected.
+
+
+*** org-notebook
+
+This is an intriguing project designed to ease note-taking in class.
+I do not have much use for this functionality but there as several clever features with regards to setting up an org-centered project.
+The package is not maintained nor is it well [[https://github.com/Rahi374/org-notebook][documented]], so you need to read the elisp code.
+
+
+*** org-pdftools and org-noter-pdftools integration
+
+This YouTube [[https://www.youtube.com/watch?v=lCc3UoQku-E][video]] by Alexander Fu demonstrates the integration of these two packages.
+Note that the video is not narrated, so be patient with it.
+
+You can generate a skeleton of an opened PDF in the current buffer by entering org-noter-skeleton-create.
+You can use the skeleton as an outline in an org document that has been opened in a parallel buffer.
+This facilitates taking notes in a separate document.
+After reading the article and taking the notes, I recommend writing a summary for the annote section of the corresponding BibTeX record for the article.
+
+You have to install pdf-tools first.
+Then you have to run ~M-x pdf-tools-install~.
+Then install org-pdftools and org-noter-pdftools.
+
+To link a specific page of a .pdf-file in an org-file, use the following syntax:  ~[[pdf:~/file.pdf::3][Link to page 3]]~.
+
+When browsing a pdftools-buffer, use org-store-link (by default ~C-c l~) to get a link to this location within the PDF.
+Then use org-insert-link (by default C-c C-l) to create a link to this page and this place on the page.
+
+This is the recommended configuration from this GitHub [[https://github.com/fuxialexander/org-pdftools][site]] for this project.
+
+I failed to get the outline generation to work in two hours of effort.
+I may have used the wrong PDFs.
+A PDF may have to have an outline stored in its Metadata.
+
+Anyways, see pdftools for an improved experience for navigating PDFs in Emacs with pdftools.
+
+*** org-noter
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :ensure t
+  :config
+  ;; Your org-noter config ........
+  :config
+  (setq
+    org_notes (concat (getenv "HOME") "/org-roam/")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+    org-directory org_notes
+    deft-directory org_notes
+    org-roam-directory org_notes
+    ;; keep an empty line between headings and content in Org file
+    org-noter-separate-notes-from-heading t))
+
+;;(use-package org-noter-pdf-tools)
+#+END_SRC
+
+
+**** Org-noter keybindings and commands @@html:<a name="keys">@@
+:PROPERTIES:
+:CUSTOM_ID: keys
+:END:
+| Key                                | Description                | Where?                    |
+| @@html:<kbd>@@i@@html:</kbd>@@     | Insert note                | Document buffer           |
+| @@html:<kbd>@@M-i@@html:</kbd>@@   | Insert precise note        | Document buffer           |
+| @@html:<kbd>@@q@@html:</kbd>@@     | Kill session               | Document buffer           |
+| @@html:<kbd>@@M-p@@html:</kbd>@@   | Sync previous page/chapter | Document and notes buffer |
+| @@html:<kbd>@@M-.@@html:</kbd>@@   | Sync current page/chapter  | Document and notes buffer |
+| @@html:<kbd>@@M-n@@html:</kbd>@@   | Sync next page/chapter     | Document and notes buffer |
+| @@html:<kbd>@@C-M-p@@html:</kbd>@@ | Sync previous notes        | Document and notes buffer |
+| @@html:<kbd>@@C-M-.@@html:</kbd>@@ | Sync selected notes        | Document and notes buffer |
+| @@html:<kbd>@@C-M-n@@html:</kbd>@@ | Sync next notes            | Document and notes buffer |
+
+You can use the usual keybindings to navigate the document
+(@@html:<kbd>@@n@@html:</kbd>@@, @@html:<kbd>@@p@@html:</kbd>@@,
+@@html:<kbd>@@SPC@@html:</kbd>@@, ...).
+
+
+
+
+
+*** helm-bibtex
+
+Source: https://github.com/tmalsburg/helm-bibtex
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-bibtex
+  :config
+  (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
+        bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
+        bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
+        bibtex-completion-pdf-field "file"
+        bibtex-completion-notes-template-multiple-files
+  (concat
+   "#+TITLE: ${title}\n"
+   "#+ROAM_KEY: cite:${=key=}\n"
+   "* TODO Notes\n"
+   ":PROPERTIES:\n"
+   ":Custom_ID: ${=key=}\n"
+   ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+   ":AUTHOR: ${author-abbrev}\n"
+   ":JOURNAL: ${journaltitle}\n"
+   ":DATE: ${date}\n"
+   ":YEAR: ${year}\n"
+   ":DOI: ${doi}\n"
+   ":URL: ${url}\n"
+   ":END:\n\n"
+   )
+  )
+  :bind
+      (("C-c n B" . helm-bibtex))
+)
+
+;;(setq helm-bibtex-bibliography '("~/Documents/global.bib"))
+;;(setq helm-bibtex-library-path '("~/0papersLabeled" "~/0booksLabeled"))
+#+END_SRC
+
+
+
+If the file field is not used but instead the naming scheme bibtex-key + .pdf.
+
+#+BEGIN_SRC emacs-lisp
+(setq bibtex-completion-find-additional-pdfs t)
+#+END_SRC
+
+All files whose name start with the BibTeX key will then be associated with an entry.
+Name your files accordingly. For example:
+
+- bibtex-key-annotated.pdf
+- bibtex-key-supplemental.pdf
+- bibtex-key-chapter1.pdf
+
+These additional files are only detected when triggering an action, such as “Open PDF file”.
+When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
+
+[[https://github.com/tmalsburg/helm-bibtex][Source]] on github.
+
+**** Set how to open PDFs linked to citation by mode
+
+#+BEGIN_SRC emacs-lisp
+(setq bibtex-completion-format-citation-functions
+  '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
+    (latex-mode    . bibtex-completion-format-citation-cite)
+    (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+    (default       . bibtex-completion-format-citation-default)))
+#+END_SRC
+
+**** Reading list for org
+
+To use the title of the PDF file in the link used in a reading list in org-mode:
+
+#+BEGIN_SRC emacs-lisp
+(setq bibtex-completion-format-citation-functions
+  '((org-mode      . bibtex-completion-format-citation-org-title-link-to-PDF)
+    (latex-mode    . bibtex-completion-format-citation-cite)
+    (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+    (default       . bibtex-completion-format-citation-default)))
+#+END_SRC
+
+
+
+*** deft
+
+This search engine can scan org-roam entries.
+
+#+BEGIN_SRC emacs-lisp
+(use-package deft
+  :commands deft
+  :init
+  (setq deft-default-extension "org"
+        ;; de-couples filename and note title:
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t
+        ;; disable auto-save
+        deft-auto-save-interval -1.0
+        ;; converts the filter string into a readable file-name using kebab-case:
+        deft-file-naming-rules
+        '((noslash . "-")
+          (nospace . "-")
+          (case-fn . downcase)))
+  :config
+  (add-to-list 'deft-extensions "tex")
+  )
+#+END_SRC
+
+
+
+
+*** org-noter-pdftools
+
+This package integrates org-noter and pdftools.
+
+The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :ensure t
+  :config
+  ;; Your org-noter config ........
+  :config
+  (setq
+    org_notes (concat (getenv "HOME") "/org-roam/")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+    org-directory org_notes
+    deft-directory org_notes
+    org-roam-directory org_notes
+    ;; keep an empty line between headings and content in Org file
+    org-noter-separate-notes-from-heading t)
+  (require 'org-noter-pdftools))
+
+(use-package org-pdftools
+  :hook (org-mode . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :after org-noter
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freepointer-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+END_SRC
+
+
+
+
+
+*** org-pomodoro
+
+Place the point (cursor) on the task you are to work on and then enter ~C-c o
+~ to start a 25-minute pomodoro.
+The time remaining on the pomodoro appears to the right of the clock on the modeline.
+To the right of this is the total time spent on the task and the name of the task.
+A :LOGBOOK: property will appear in tasks.org below the task.
+The logbook is closed by default.
+Open the logbook by placing the cursor on it and entering TAB.
+If that fails, enter ~M-x outline-show-entry RET~  or ~M-x ou-s-e~.
+
+A ding occurs at the end of a pomodoro.
+A second ding occurs at the end of a break.
+You have to enter ~C-c o~ to start the next pomodoro.
+
+The tickling timer sound is too erractic right now.
+This needs to be optimized.
+You might be better off using a stand-a-lone timer or timer app.
+I turn down the volume on to about 10% of maximum, and I can still hear the ding at the end of the pomodoro.
+
+
+There is a github gist of a org-pomodoro-plus.el file that has more configurations.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-pomodoro
+    :ensure t
+    :commands (org-pomodoro)
+    :config
+    (setq alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))))
+
+;; (use-package sound-wav)
+;; (setq org-pomodoro-ticking-sound-p nil)
+;; ; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
+;; (setq org-pomodoro-ticking-sound-states '(:pomodoro))
+;; (setq org-pomodoro-ticking-frequency 1)
+;; (setq org-pomodoro-audio-player "mplayer")
+;; (setq org-pomodoro-finished-sound-args "-volume 0.9")
+;; (setq org-pomodoro-long-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-short-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-ticking-sound-args "-volume 0.3")
+
+(global-set-key (kbd "C-c o") 'org-pomodoro)
+#+END_SRC
+
+
+**** org-ref
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :custom
+  (org-ref-default-bibliography "~/Documents/global.bib")
+  :config
+    (setq
+    bibtex-completion-bibliography '("~/Documents/global.bib")
+	bibtex-completion-library-path '("/Users/blaine/0papers/")
+	bibtex-completion-notes-path "~/bibliography/notes/"
+	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
+
+	bibtex-completion-additional-search-fields '(keywords)
+	bibtex-completion-display-formats
+	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+	bibtex-completion-pdf-open-function
+	(lambda (fpath)
+	  (call-process "open" nil 0 nil fpath)))
+)
+#+END_SRC
+
+
+
+*** org-ref-ivy
+
+Conflicts with another server.
+
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package bibtex
+  :config
+    (setq
+    bibtex-autokey-year-length 4
+	bibtex-autokey-name-year-separator "-"
+	bibtex-autokey-year-title-separator "-"
+	bibtex-autokey-titleword-separator "-"
+	bibtex-autokey-titlewords 2
+	bibtex-autokey-titlewords-stretch 1
+	bibtex-autokey-titleword-length 5
+	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
+
+(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+
+(use-pacakge org-ref-ivy
+  :ensure t)
+
+(define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
+#+END_SRC
+#+END_COMMENT
+
+*** function for opening the PDF linked to the citation under the point
+
+[[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my/org-ref-open-pdf-at-point ()
+  "Open the pdf for bibtex key under point if it exists."
+  (interactive)
+  (let* ((results (org-ref-get-bibtex-key-and-file))
+         (key (car results))
+         (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+    (if (file-exists-p pdf-file)
+        (find-file pdf-file)
+      (message "No PDF found for %s" key))))
+
+  (setq org-ref-completion-library 'org-ref-ivy-cite
+        org-export-latex-format-toc-function 'org-export-latex-no-toc
+        org-ref-get-pdf-filename-function
+        (lambda (key) (car (bibtex-completion-find-pdf key)))
+        ;; See the function I defined above.
+        org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point
+        ;; For pdf export engines.
+        org-latex-pdf-process (list "latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -f -output-directory=%o %f")
+        ;; I use orb to link org-ref, helm-bibtex and org-noter together (see below for more on org-noter and orb).
+        org-ref-notes-function 'orb-edit-notes)
+#+END_SRC
+
+
+
+*** org-ref, newer config
+
+#   #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-ref
+#   :after org
+#   :config
+#   (defun blaine/reformat-bib-library (&optional filename)
+#     "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
+#     (interactive "P")
+#     (or filename (setq filename blaine/main-bib-library))
+#     (let ((cmnd (concat
+#                  (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
+#                  (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
+#                 (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
+#                 (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
+#                 )))
+#     (async-shell-command cmnd)))
+# 
+# (defun blaine/reformat-bib-lib-hook ()
+#    "Reformat the main bib library whenever it is saved.."
+#    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
+#     (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
+#     (setq bibtex-dialect 'bibtex))
+# #+END_SRC
+#   #+END_COMMENT
+
+*** org-roam
+
+The configuration for org-roam, the most advanced zettlekasten system for Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/org-roam")
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup))
+#+END_SRC
+
+*** org-roam-bibtex (orb)
+
+This package provides an interface between helm and org-roam.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam-bibtex
+    :hook (org-roam-mode . org-roam-bibtex-mode))
+
+  (setq orb-preformat-keywords
+        '("citekey" "title" "url" "author-or-editor" "keywords" "file")
+        orb-process-file-keyword t
+        orb-file-field-extensions '("pdf"))
+
+  (setq orb-templates
+        '(("r" "ref" plain(function org-roam-capture--get-point)
+           ""
+           :file-name "${citekey}"
+           :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+- tags ::
+- keywords :: ${keywords}
+
+*Notes
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: ${file}
+:NOTER_PAGE:
+:END:")))
+#+END_SRC
+
+*** org-roam-ui
+
+This package displays the zettelkasten as a graph in your default browser.
+It only work with version 2 of org-roam.
+If installed from MELPA, no configuration is required.
+Start by entering ~M-x org-roam-ui-mode~.
+
+[[https://github.com/org-roam/org-roam-ui][source]]
+
+
+**** Visualize with igraph and R
+
+[[https://lucidmanager.org/data-science/visualise-org-roam/][See this post]] on how to visualize parts of your zettelkasten in igraph.
+
+
+*** org-roam ripgrep
+
+Function for ripgrep org-roam files.
+
+#+BEGIN_SRC emacs-lisp
+(defun bms/org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-roam-directory)))
+(global-set-key (kbd "C-c rr") 'bms/org-roam-rg-search)
+#+END_SRC
+
+
+
+# *** org-speed-keys
+# Cursor must be to the left of the first star in the headline.
+#
+#
+# #+BEGIN_SRC emacs-lisp
+# (setq org-use-speed-commands t)
+# #+END_SRC
+
+
+*** org-show-headings
+
+[[https://stackoverflow.com/questions/25161792/emacs-org-mode-how-can-i-fold-everything-but-the-current-headline][source]]
+
+
+#+BEGIN_SRC emacs-lisp
+(defun org-show-current-heading-tidily ()
+  (interactive)  ;Inteactive
+  "Show next entry, keeping other entries closed."
+  (if (save-excursion (end-of-line) (outline-invisible-p))
+      (progn (org-show-entry) (show-children))
+    (outline-back-to-heading)
+    (unless (and (bolp) (org-on-heading-p))
+      (org-up-heading-safe)
+      (hide-subtree)
+      (error "Boundary reached"))
+    (org-overview)
+    (let ((current-prefix-arg '(4))) (call-interactively 'org-reveal))
+    (org-show-entry)
+    (show-children)))
+(add-hook 'org-mode-hook (lambda () (local-set-key "\M-=" 'org-show-current-heading-tidily)))
+ #+END_SRC
+
+
+*** org, tables
+
+This is not a package.
+These are functions for tangling tables from org files.
+[[https://emacs.stackexchange.com/questions/53723/export-table-to-csv-file-without-prompt][Source]].
+
+
+
+ #+BEGIN_SRC emacs-lisp
+(defun org+-tangle-table-at-point ()
+  "Tangle Org table at point.
+The table is ignored if it is not preceeded by a line like:
+#+ATTR_TANGLE: DATAFILE
+or
+#+ATTR_TANGLE: (\"DATAFILE\" \"TYPE\")"
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Not at Org table"))
+  (let* (type
+     (data (org-element-context))
+     (parent (org-element-property :parent data))
+     file)
+    (while parent
+      (setq data parent)
+      (setq parent (org-element-property :parent data)))
+    (when (and (setq prop (org-element-property :attr_tangle data))
+           (setq file (read prop)))
+      (cond
+       ((symbolp file)
+    (setq file (symbol-name file)))
+       ((stringp file)) ;; keep it that way
+       ((consp file)
+    (setq type (nth 1 file)
+          file (car file)))
+       (t
+    (user-error "Unexpected format of table to be tangled")))
+      (org-table-export file (or type org-table-export-default-format))
+      t)))
+
+(defun org+-tangle-tables (fun &optional arg target-file lang)
+  "Tangle Org tables in current buffer.
+For around advice with `org-babel-tangle' as FUN.
+See `org-babel-tangle' for the args ARG, TARGET-FILE and LANG.
+
+Currently, only one table per file is possible."
+  (cond
+   ((equal arg '(4)) ;; at point
+    (if (org-at-table-p)
+    (org+-tangle-table-at-point)
+      (funcall fun arg target-file lang)))
+   ((equal arg '(16))
+    (funcall fun arg target-file lang))
+   (t
+    (funcall fun arg target-file lang)
+    (let ((table-count 0))
+      (org-with-wide-buffer
+       (goto-char (point-min))
+       (while (re-search-forward "^[ \t\r]*|" nil t)
+     (goto-char (match-beginning 0))
+     (when (org+-tangle-table-at-point)
+       (cl-incf table-count))
+     (goto-char (org-table-end)))
+       )
+      (message "Tangled %d tables from %s." table-count (buffer-name))))))
+
+(advice-add 'org-babel-tangle :around #'org+-tangle-tables)
+#+END_SRC
+
+The tables have to be preceded by the appropriate header.
+
+Another approach is to store the file path and file format in a properites drawer for the enclosing section.
+
+#+BEGIN_SRC emacs-lisp
+;; :Properties:
+;; :TABLE_EXPORT_FILE: observations2.csv
+;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
+;; :END:
+#+END_SRC
+
+Place cursor in table and enter "M-x org-table-export" to send to a csv file.
+
+
+*** org-wc
+Enable org-wc to work in org documents.
+Enter `wc` to get word count returned in org files.
+Enter `C-c w` to the samething.
+
+Similar to wc-mode which works in all documents.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-wc
+  :ensure t)
+(define-key org-mode-map [("\C-cw")] 'org-wc-display)
+#+END_SRC
+
+See [[https://github.com/tesujimath/org-wc/blob/master/org-wc.el][github repo]].
+
+
+
+*** org-count-words
+[[https://www.reddit.com/r/emacs/comments/8qm1lb/new_orgcountwords_command/][org-count-words]]
+
+
+#+BEGIN_SRC emacs-lisp
+(defun ap/org-forward-to-entry-content (&optional unsafe)
+    "Skip headline, planning line, and all drawers in current entry.
+If UNSAFE is non-nil, assume point is on headline."
+    (unless unsafe
+      ;; To improve performance in loops (e.g. with `org-map-entries')
+      (org-back-to-heading))
+    (cl-loop for element = (org-element-at-point)
+             for pos = (pcase element
+                         (`(headline . ,_) (org-element-property :contents-begin element))
+                         (`(,(or 'planning 'property-drawer 'drawer) . ,_) (org-element-property :end element)))
+             while pos
+             do (goto-char pos)))
+
+(defun ap/org-count-words ()
+    "If region is active, count words in it; otherwise count words in current subtree."
+    (interactive)
+    (if (use-region-p)
+        (funcall-interactively #'count-words-region (region-beginning) (region-end))
+      (org-with-wide-buffer
+       (cl-loop for (lines words characters)
+                in (org-map-entries
+                    (lambda ()
+                      (ap/org-forward-to-entry-content 'unsafe)
+                      (let ((end (org-entry-end-position)))
+                        (list (count-lines (point) end)
+                              (count-words (point) end)
+                              (- end (point)))))
+                    nil 'tree)
+                sum lines into total-lines
+                sum words into total-words
+                sum characters into total-characters
+                finally do (message "Subtree \"%s\" has %s lines, %s words, and %s characters."
+                                    (org-get-heading t t) total-lines total-words total-characters)))))
+#+END_SRC
+
+
+** P
+
+*** paredit
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package paredit
+  :ensure t)
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+#+END_SRC
+
+
+*** pdb-tools
+
+Marcin Magnus's updated fork of pdb-tools by Charlie Bond and David Love.
+[[https://github.com/mmagnus/emacs-pdb-mode][Gitub repo]]]
+
+#+BEGIN_SRC emacs-lisp
+;; pdb.el
+(load-file "~/.emacs.default/plugins/emacs-pdb-mode/pdb-mode.el")
+(setq pdb-rasmol-name "/Applications/PyMOL.app/Contents/bin/pymol")
+(setq auto-mode-alist
+     (cons (cons "pdb$" 'pdb-mode)
+           auto-mode-alist ) )
+(autoload 'pdb-mode "PDB")
+#+END_SRC
+
+
+
+*** pdf-tools
+
+This is an alternative to the built-in DocView package.
+
+
+The pdf-tools package runs on top of pdf-view package.
+This making capturing text from PDFs much easier.
+
+I followed a [[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools][blog post]].
+You enter highlights by selecting with the mouse and entering C-c C-a h.
+An annotation menu opens in the minibuffer.
+Enter ~C-c C-c~ to save the annotation.
+Enter ~C-c C-a t~ to enter text notes.
+Enter the note and enter ~C-c C-c~ to save.
+Right-click the mouse to get a menu of more options.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-tools
+  :pin manual ;; manually update
+  :config
+  ;; initialise
+  (pdf-tools-install)
+
+  ;; This means that pdfs are fitted to width by default when you open them
+  (setq-default pdf-view-display-size 'fit-width)
+  ;; open pdfs scaled to fit page
+  ;;  (setq-default pdf-view-display-size 'fit-page)
+   ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+  ;; Setting for sharper images with Macs with Retina displays
+  (setq pdf-view-use-scaling t)
+#+END_SRC
+
+
+**** Useful keybindings for viewing PDFs
+|------------------------------------------+-----------------|
+| Display                                  |                 |
+|------------------------------------------+-----------------|
+| Zoom in / Zoom out                       | ~+~ / ~-~       |
+| Fit height / Fit width / Fit page        | ~H~ / ~W~ / ~P~ |
+| Trim margins (set slice to bounding box) | ~s b~           |
+| Reset margins                            | ~s r~           |
+| Reset z oom                              | ~0~             |
+|------------------------------------------+-----------------|
+
+**** Useful keybindings for navigating PDFs
+
+|-----------------------------------------------+-----------------------|
+| Navigation                                    |                       |
+|-----------------------------------------------+-----------------------|
+| Scroll Up / Down by Page-full                 | ~space~ / ~backspace~ |
+| Scroll Up / Down by Line                      | ~C-n~ / ~C-p~         |
+| Scroll Right / Left                           | ~C-f~ / ~C-b~         |
+| First Page / Last Page                        | ~<~ / ~>~             |
+| Next Page / Previous Page                     | ~n~ / ~p~             |
+| First Page / Last Page                        | ~M-<~ / ~M->~         |
+| Incremental Search Forward / Backward         | ~C-s~ / ~C-r~         |
+| Occur (list all lines containing a phrase)    | ~M-s o~               |
+| Jump to Occur Line                            | ~RETURN~              |
+| Pick a Link and Jump                          | ~F~                   |
+| Incremental Search in Links                   | ~f~                   |
+| History Back / Forwards                       | ~l~ / ~r~             |
+| Display Outline                               | ~o~                   |
+| Jump to Section from Outline                  | ~RETURN~              |
+| Jump to Page                                  | ~M-g g~               |
+| Store position / Jump to position in register | ~m~ / ~'~             |
+|-----------------------------------------------+-----------------------|
+
+
+See org-noter section
+
+
+
+*** poly-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package poly-markdown
+  :ensure t)
+#+END_SRC
+
+*** poly-R
+
+#+BEGIN_SRC emacs-lisp
+(use-package poly-R
+  :ensure t)
+;; associate the new polymode to Rmd files:
+(add-to-list 'auto-mode-alist
+             '("\\.[rR]md\\'" . poly-gfm+r-mode))
+;; uses braces around code block language strings:
+(setq markdown-code-block-braces t)
+#+END_SRC
+
+
+*** projectile
+
+[[https://docs.projectile.mx][Documentation:]]
+
+A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
+A more in-depth introdction is provided by Dave Wilson of System Crafters fame starting at 1:40 [[https://www.youtube.com/watch?v=INTu30BHZGk][here]].
+
+Projectile is used to manage projects and for common functionality like project-wide searching, fuzzy file finding, etc.
+
+
+**** Features of projectile
+
+Projectile supports the following
+
+- finding a file in project
+- switching projects quickly
+- jump to a project buffer
+- jump to a test in project
+- jump to recently visited files in the project
+- kill (close) all project buffers
+- replace in project
+- grep (search) in project
+- run shell commands in a project (e.g. ~make~, ~lein~)
+- support for multiple minibuffer completion/selection libraries (~ido~, ~ivy~, ~helm~ and the default completion system)
+
+
+**** projects
+
+Projectile will use most existing version control systems like .git for the list of files in a project.
+Projectile will also use most project types for various programming languages; this includes Ruby projects with Gemfiles, Maven Java projects with pom.xml files, Clojure CLI  projects with deps.edn files, Leiningen projects with project.clj, make with Makefile, cmake with CMakeLists.txt, pip with requirements.txt, setuptools project with setup.py.
+For folders not under version control or not a project, add the empty file .projectile with the command `touch .projectile` to make the folder into a project.
+This folder will appear in the dashboard upon restart of Emacs.
+
+**** modes of operation
+
+Projectile has three modes of operation:
+
+- native: implemented in Emacs Lisp and known as the native indexing method
+- hybrid
+- alien (e.g., git, Maven, lein)
+
+
+**** Dependencies
+
+Projectile uses ag, fd, or rg (ripgrep) for searches.
+
+
+**** Some basic Commands
+
+|-----------------------------------------------------------------------+------------|
+| Description                                                           | keybinding |
+|-----------------------------------------------------------------------+------------|
+| Find file in current project                                          | s-p f      |
+| Switch project                                                        | s-p p      |
+| Switch between open projects with                                     | s-p q      |
+| Grep (search for text/regexp) in project                              | s-p s g    |
+| Replace in project                                                    | s-p r      |
+| Invoke any Projectile command via the Projectile Commander            | s-p m      |
+| Toggle between implementation and test                                | s-p t      |
+| Toggle between related files                                          | s-p a      |
+| Run a shell command in the root of the project                        | s-p !      |
+| For a sync command and for an async command                           | s-p &      |
+| Build/compile project                                                 | s-p c      |
+| Test project                                                          | s-p T      |
+|-----------------------------------------------------------------------+------------|
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :init
+  (projectile-mode t) ;; Enable this immediately
+  :config
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map) ; recommended for Mac OS
+  (setq projectile-enable-caching t ; Much better performance on large projects
+        projectile-completion-system 'ivy)) ; Ideally the minibuffer should aways look similar. Three options are helm, ido, and ivy. I like ido.
+#+END_SRC
+
+
+
+***** Turn on projectile on restart up of Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(projectile-mode +1)
+#+END_SRC
+
+***** Sort files by recently opened.
+
+#+BEGIN_SRC emacs-lisp
+(setq projectile-sort-order 'recentf)
+#+END_SRC
+
+**** counsel-projectile
+
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+#+END_SRC
+
+
+*** pubmed
+
+This package is very useful for most biomedical scientists who relie on PubMed.
+It allows you to submit searches from inside Emacs to Pubmed.
+The result is returned in a new buffer as a list of refernces.
+You mark the ones of interest.
+The bibtex for the marked ones can be fetched (appears to be broken).
+The work around is to past the title into the Google Scholar Bibtex extension for Chrome.
+The returned Bibtex can be pasted into the global.bib file.
+JabRef can generate a better cite key.
+The PDF of the current entry can be fetched and displayed in Emacs.
+The PDF can be saved with a the better cite key as the filename prefix.
+
+There are two commands for this page: M-x pubmed-search and M-x pubmed-advanced-search.
+The first returns the results in a buffer.
+There are also functions for sending the search to PubMed in the default buffer.
+
+https://gitlab.com/fvdbeek/emacs-pubmed
+
+#+BEGIN_SRC emacs-lisp
+(use-package pubmed
+  :ensure t
+  :commands (pubmed-search pubmed-advanced-search))
+#+END_SRC
+
+There are the following keybindings:
+
+- <kbd>RET</kbd>: Show the summary of the current entry.
+- <kbd>f</kbd>: Try to fetch the fulltext PDF of the current entry.
+- <kbd>m</kbd>: Mark the current entry.
+- <kbd>M</kbd>: Mark all entries.
+- <kbd>n</kbd>: Show the summary of the next entry.
+- <kbd>p</kbd>: Show the summary of the previous entry.
+- <kbd>q</kbd>: Quit window.
+- <kbd>s</kbd>: Search PubMed.
+- <kbd>u</kbd>: Unmark the current entry.
+- <kbd>U</kbd>: Unmark all entries.
+- <kbd>w</kbd>: Write the BibTeX references of the marked entries or current
+  entry to file.
+- <kbd>\<TAB\></kbd>: Show the BibTeX references of the marked entries or current
+  entry.
+
+s lanuches a search query.
+m marked an entry.
+f tries to fetch the PDF and opens it in Emacs in a new buffer.
+The file can be saved to whatever filename.
+The whitespace function is interfering with entering file paths in the minibuffer
+
+Note that there is a also a  major pubmed-mode that can cause some confusion.
+
+You need to get a API key from NCBI to make up to 10 requests per second.
+Otherwise your access will be limited to 3 requests per second.
+Get the API key via your NCBI account .
+
+
+
 #   
 *** Python
 
