@@ -3872,123 +3872,123 @@ Single digit months and days must be accompanied by a zero in the left position.
    ("/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/ManuscriptReviews.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Private.org" :maxlevel . 1)
-   ("mate/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
+   ("/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
 #+END_SRC
-#    
-#    
-#    
-#    **** customized agenda views
-#    
-#    These are my customized agenda views by project.
-#    The letter is the last parameter.
-#    For example, enter C-c a b to list all active 401 tasks.
-#    
-#    I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
-#    
-#    
+
+
+
+**** customized agenda views
+
+These are my customized agenda views by project.
+The letter is the last parameter.
+For example, enter C-c a b to list all active 401 tasks.
+
+I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
+
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-custom-commands
+      '(
+	("b"
+             "List of all active 401literateprogramning tasks."
+             tags-todo
+             "CATEGORY=\"401\"/TODO|INITIATED|WAITING")
+	("c"
+             "List of all active 416scipy2022 tasks."
+             tags-todo
+             "CATEGORY=\"416\"/TODO|INITIATED|WAITING")
+	("d"
+             "List of all active 485PyMOLscGUI tasks."
+             tags-todo
+             "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
+	("e"
+             "List of all active 523 RNA-drug crystallization review paper"
+             tags-todo
+             "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
+	("g"
+             "List of all active 2104 Emacs"
+             tags-todo
+             "CATEGORY=\"2104\"/TODO|INITIATED|WAITING")
+	("P"
+         "List of all projects"
+         tags
+         "LEVEL=2/PROJ")))
+#+END_SRC
+
+
+**** calendar-insert-date
+
+We need a function to insert a date by clicking on the date in the calendar and hiting RET.
+Do we really have to exit the calendar after each selection?
+
+#+BEGIN_SRC emacs-lisp
+(defun calendar-insert-date ()
+  "Capture the date at point, exit the Calendar, insert the date."
+  (interactive)
+  (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
+    (calendar-exit)
+    (insert (format "%d-%02d-%02d" year month day))))
+(define-key calendar-mode-map (kbd "RET") 'calendar-insert-date)
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/blaine/")
+#+END_SRC
+
+**** Prioritization 
+
+#+BEGIN_COMMENT
 #    #+BEGIN_SRC emacs-lisp
 #    (setq org-agenda-custom-commands
-#          '(
-#    	("b"
-#                 "List of all active 401literateprogramning tasks."
-#                 tags-todo
-#                 "CATEGORY=\"401\"/TODO|INITIATED|WAITING")
-#    	("c"
-#                 "List of all active 416scipy2022 tasks."
-#                 tags-todo
-#                 "CATEGORY=\"416\"/TODO|INITIATED|WAITING")
-#    	("d"
-#                 "List of all active 485PyMOLscGUI tasks."
-#                 tags-todo
-#                 "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
-#    	("e"
-#                 "List of all active 523 RNA-drug crystallization review paper"
-#                 tags-todo
-#                 "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
-#    	("g"
-#                 "List of all active 2104 Emacs"
-#                 tags-todo
-#                 "CATEGORY=\"2104\"/TODO|INITIATED|WAITING")
-#    	("P"
-#             "List of all projects"
-#             tags
-#             "LEVEL=2/PROJ")))
+#           `(("A" "Daily agenda and top priority tasks"
+#              ((tags-todo "*"
+#                          ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
+#                           (org-agenda-skip-function
+#                            `(org-agenda-skip-entry-if
+#                              'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-overriding-header "Important tasks without a date\n")))
+#               (agenda "" ((org-agenda-span 1)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-scheduled-past-days 0)
+#                           ;; We don't need the `org-agenda-date-today'
+#                           ;; highlight because that only has a practical
+#                           ;; utility in multi-day views.
+#                           (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+#                           (org-agenda-format-date "%A %-e %B %Y")
+#                           (org-agenda-overriding-header "\nToday's agenda\n")))
+#               (agenda "" ((org-agenda-start-on-weekday nil)
+#                           (org-agenda-start-day "+1d")
+#                           (org-agenda-span 3)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+#                           (org-agenda-overriding-header "\nNext three days\n")))
+#               (agenda "" (
+#                           (org-agenda-start-on-weekday nil)
+#                           ;; We don't want to replicate the previous section's
+#                           ;; three days, so we start counting from the day after.
+#                           (org-agenda-start-day "+4d")
+#                           (org-agenda-span 14)
+#                           (org-agenda-show-all-dates nil)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-entry-types '(:deadline))
+#                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+#                           (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
+#              (
+#               (org-agenda-prefix-format "%t %s")
+#               (org-agenda-fontify-priorities nil)
+#               (org-agenda-remove-tags t))
+#              ("agenda.txt")))
 #    #+END_SRC
-#    
-#    
-#    **** calendar-insert-date
-#    
-#    We need a function to insert a date by clicking on the date in the calendar and hiting RET.
-#    Do we really have to exit the calendar after each selection?
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (defun calendar-insert-date ()
-#      "Capture the date at point, exit the Calendar, insert the date."
-#      (interactive)
-#      (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
-#        (calendar-exit)
-#        (insert (format "%d-%02d-%02d" year month day))))
-#    (define-key calendar-mode-map (kbd "RET") 'calendar-insert-date)
-#    #+END_SRC
-#    
-#    
-#    #+BEGIN_SRC emacs-lisp
-#    (add-to-list 'load-path "/Users/blaine/")
-#    #+END_SRC
-#    
-#    **** Prioritization 
-#    
-#    #+BEGIN_COMMENT
-#    #    #+BEGIN_SRC emacs-lisp
-#    #    (setq org-agenda-custom-commands
-#    #           `(("A" "Daily agenda and top priority tasks"
-#    #              ((tags-todo "*"
-#    #                          ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-#    #                           (org-agenda-skip-function
-#    #                            `(org-agenda-skip-entry-if
-#    #                              'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-#    #                           (org-agenda-block-separator nil)
-#    #                           (org-agenda-overriding-header "Important tasks without a date\n")))
-#    #               (agenda "" ((org-agenda-span 1)
-#    #                           (org-deadline-warning-days 0)
-#    #                           (org-agenda-block-separator nil)
-#    #                           (org-scheduled-past-days 0)
-#    #                           ;; We don't need the `org-agenda-date-today'
-#    #                           ;; highlight because that only has a practical
-#    #                           ;; utility in multi-day views.
-#    #                           (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-#    #                           (org-agenda-format-date "%A %-e %B %Y")
-#    #                           (org-agenda-overriding-header "\nToday's agenda\n")))
-#    #               (agenda "" ((org-agenda-start-on-weekday nil)
-#    #                           (org-agenda-start-day "+1d")
-#    #                           (org-agenda-span 3)
-#    #                           (org-deadline-warning-days 0)
-#    #                           (org-agenda-block-separator nil)
-#    #                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#    #                           (org-agenda-overriding-header "\nNext three days\n")))
-#    #               (agenda "" (
-#    #                           (org-agenda-start-on-weekday nil)
-#    #                           ;; We don't want to replicate the previous section's
-#    #                           ;; three days, so we start counting from the day after.
-#    #                           (org-agenda-start-day "+4d")
-#    #                           (org-agenda-span 14)
-#    #                           (org-agenda-show-all-dates nil)
-#    #                           (org-deadline-warning-days 0)
-#    #                           (org-agenda-block-separator nil)
-#    #                           (org-agenda-entry-types '(:deadline))
-#    #                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-#    #                           (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
-#    #              (
-#    #               (org-agenda-prefix-format "%t %s")
-#    #               (org-agenda-fontify-priorities nil)
-#    #               (org-agenda-remove-tags t))
-#    #              ("agenda.txt")))
-#    #    #+END_SRC
-#    #+END_COMMENT
-#    
+#+END_COMMENT
+
 #    *** org-babel
 #    
 #    Org-babel is key to supporting literate programming in org-mode documents.
@@ -5471,810 +5471,810 @@ Single digit months and days must be accompanied by a zero in the left position.
 #   
 #   
 #   
-#   *** Python
-#   
-#   See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
-#   Also see the section abbove under org-babel for the use of ~emacs-jupyter~.
-#   
-#   Emacs has the built-in python-mode.
-#   Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-#   
-#   Alternatively, the conda package can be used to set the conda env.
-#   The command ~M-x conda-env-list~ will list the available conda envs.
-#   
-#   
-#   The package elpy used to be popular.
-#   This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documented]].
-#   I am not sure where it stands now and if it is really needed.
-#   It is big on creating and using pyenvs.
-#   
-#   Run the following command \mintinline{bash}{pip install jedi rope flake8 yapf importmagic autopep8} oo the terminal.
-#   
-#   The config below is from [[https://github.com/kpurdon/.emacs.d/blob/main/development.el][here]]
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package elpy
-#     :init
-#     (elpy-enable)
-#     :config
-#     ;; disable flymake and enable flycheck
-#     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-#     ;; set the elpy rpc virtualenv path the current path
-#     (setq elpy-rpc-virtualenv-path 'current))
-#   
-#   (use-package py-autopep8
-#     :config
-#     (setq py-autopep8-options '("--ignore=E501,W293,W391,W690"))
-#     (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
-#   
-#   (use-package py-isort
-#     :config
-#     (add-hook 'before-save-hook 'py-isort-before-save))
-#   #+END_SRC
-#   
-#   
-#   The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
-#   Python-mode should be built-in but lets upgrade to the latest version.
-#   You may need to install debugpy from PyPi.
-#   You may aslo need to install a python lsp.
-#   You may need to install dap-mode from MELPA.
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
-#   (use-package python-mode
-#     :ensure t
-#     :hook (python-mode . lsp-deferred)
-#     :custom
-#     ;; NOTE: Set these if Python 3 is called "python3" on your system!
-#     (python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
-#     )
-#   (eval-after-load "company"
-#    '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
-#   
-#   (add-hook 'python-mode-hook 'anaconda-mode)
-#   (add-hook 'python-mode-hook 'electric-spacing-mode)
-#   (add-hook 'python-mode-hook 'blacken-mode)
-#   #+END_SRC
-#   
-#   C-c C-p will open a Python REPL in a buffer.
-#   C-c C-c will send run the code in the buffer to the REPL and return the output in the REPL.
-#   
-#   
-#   **** Use IPython for REPL
-#   #+BEGIN_SRC emacs-lisp
-#   (setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
-#         python-shell-interpreter-args "console --simple-prompt"
-#         python-shell-prompt-detect-failure-warning nil)
-#   (add-to-list 'python-shell-completion-native-disabled-interpreters
-#                "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter")
-#   #+END_SRC
-#   
-#   
-#   **** Enable Flycheck
-#   #+BEGIN_SRC emacs-lisp
-#   (when (require 'flycheck nil t)
-#     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-#     (add-hook 'elpy-mode-hook 'flycheck-mode))
-#   #+END_SRC
-#   
-#   
-#   **** Enable Autopep8
-#   #+BEGIN_SRC emacs-lisp
-#   (require 'py-autopep8)
-#   (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-#   #+END_SRC
-#   
-#   
-#   # **** Enable debugger for Python
-#   # #+BEGIN_SRC emacs-lisp
-#   # (dap-python-executable "python3")
-#   # (dap-python-debugger 'debugpy)
-#   # :config
-#   # (require 'dap-python)
-#   # #+END_SRC
-#   
-#   
-#   **** pyenv
-#   
-#   The pyenv pacakge support the use of pyenv environments.
-#   See the conda configuration under C.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package pyvenv
-#     :config
-#     (pyvenv-mode 1))
-#   #+END_SRC
-#   
-#   
-#   **** python-x
-#   
-#   This package enhances the Python REPL experience.
-#   Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
-#   You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
-#   The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package python-x
-#       :ensure t)
-#   (python-x-setup)
-#   (setq python-section-delimiter "##")
-#   #+END_SRC
-#   
-#   
-#   **** Running Python in LaTeX and Markdown documents
-#   
-#   The package [[emacs-ipython][https://github.com/burakbayramli/emacs-jupyter]] allows execution of Python code inside a LaTeX or MarkDown buffer.
-#   It displays the results as text or graphic in the section below.
-#   The packages uses [[https://github.com/pinard/Pymacs][Pymacs]] to connect to an ipython kernel to execute the code.
-#   Four additional Python packages are required.
-#   It is recommended that ~Pymacs~ be installed in a ~python_env~ and then the following bash script be run before using ~Pymacs~.
-#   Obtain PyMacs [[https://github.com/dgentry/Pymacs][here]].
-#   
-#   #+BEGIN_SRC bash
-#   #!/bin/bash
-#   source /some/dir/yourenv/bin/activate
-#   /usr/bin/emacs29
-#   #+END_SRC
-#   
-#   
-#   Add the following Emacs function to the ~config.org~ file.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun reload-pymacs()
-#     (interactive)
-#     (if (buffer-live-p (get-buffer "*Pymacs*" ))
-#         (kill-buffer (get-buffer "*Pymacs*")))
-#     (message (buffer-file-name (current-buffer)))
-#     ;;
-#     ;; load tex or md mode based on the extension
-#     (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
-#         (progn
-#       (pymacs-load "[INSTALL DIR]/ipython-tex")
-#       (global-set-key "\M-," 'ipython-tex-run-py-code)
-#       (global-set-key [f5] 'ipython-tex-complete-py)
-#       (tempo-define-template
-#        "tex-listings-python"
-#        '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
-#          (s)
-#          "\n\\end{minted}\n"
-#          )
-#        "")
-#       ))
-#     (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
-#         (progn
-#       (pymacs-load "[INSTALL DIR]/ipython-md")
-#       (global-set-key "\M-," 'ipython-md-run-py-code)
-#       (global-set-key [f5] 'ipython-md-complete-py)
-#       (tempo-define-template
-#        "tex-listings-python"
-#        '("```python\n"
-#          (s)
-#          "\n```\n"
-#          )
-#        "")
-#       ))
-#   
-#     )
-#   
-#   (global-set-key [f1] 'tempo-template-tex-listings-python)
-#   (global-set-key [f11] 'reload-pymacs)
-#   #+END_SRC
-#   
-#   
-#   ** Q
-#   
-#   *** quarto-mode
-#   
-#   
-#   Source: \url{https://github.com/quarto-dev/quarto-emacs}
-#   #    #+BEGIN_COMMENT
-#   #+BEGIN_SRC emacs-lisp
-#   (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-quarto-mode))
-#   (use-package quarto-mode
-#     :ensure t
-#     :mode (("\\.Rmd" . poly-quarto-mode))
-#     )
-#   #+END_SRC
-#   #    #+END_COMMENT
-#   
-#   
-#   ** R
-#   
-#   *** ess-r-mode
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package ess
-#     :ensure t)
-#   #+END_SRC
-#   
-#   
-#   *** r-autoyas
-#   
-#   Enter C-g to delete the unused arguments in a R function call.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package r-autoyas
-#       :ensure t)
-#   (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
-#   #+END_SRC
-#   
-#   *** R config by Federic Santoas
-#   
-#   [[See github repo][https://github.com/ess-intro/presentation-ess-customization/blob/main/tutorial/ess-init.el]] for a detailed tutorial.
-#   #+BEGIN_SRC emacs-lisp
-#   ;; Code visibility:
-#   (setq ess-eval-visibly 'nowait)
-#   
-#   ;; Font lock keywords for syntactic highlighting:
-#   (setq ess-R-font-lock-keywords
-#         '((ess-R-fl-keyword:keywords . t)
-#   	(ess-R-fl-keyword:constants . t)
-#   	(ess-R-fl-keyword:modifiers . t)
-#   	(ess-R-fl-keyword:fun-defs . t)
-#   	(ess-R-fl-keyword:assign-ops . t)
-#   	(ess-R-fl-keyword:%op% . t)
-#   	(ess-fl-keyword:fun-calls . t)
-#   	(ess-fl-keyword:numbers . t)
-#   	(ess-fl-keyword:operators . t)
-#   	(ess-fl-keyword:delimiters . t)
-#   	(ess-fl-keyword:= . t)
-#   	(ess-R-fl-keyword:F&T . t)))
-#   
-#   ;; Activate global mode for parenthesis matching:
-#   (show-paren-mode)
-#   
-#   ;; Remove Flymake support:
-#   (setq ess-use-flymake nil)
-#   ;; Replace it (globally) by Flycheck:
-#   (use-package flycheck
-#     :ensure t
-#     :init
-#     (global-flycheck-mode t))
-#   
-#   ;; Open Rdired buffer with F9:
-#   (add-hook 'ess-r-mode-hook
-#   	  '(lambda ()
-#   	     (local-set-key (kbd "<f9>") #'ess-rdired)))
-#   ;; Close Rdired buffer with F9 as well:
-#   (add-hook 'ess-rdired-mode-hook
-#   	  '(lambda ()
-#   	     (local-set-key (kbd "<f9>") #'kill-buffer-and-window)))
-#   
-#   ;; An example of window configuration:
-#   (setq display-buffer-alist
-#         '(("*R Dired"
-#   	 (display-buffer-reuse-window display-buffer-at-bottom)
-#   	 (window-width . 0.5)
-#   	 (window-height . 0.25)
-#   	 (reusable-frames . nil))
-#   	("*R"
-#   	 (display-buffer-reuse-window display-buffer-in-side-window)
-#   	 (side . right)
-#   	 (slot . -1)
-#   	 (window-width . 0.5)
-#   	 (reusable-frames . nil))
-#   	("*Help"
-#   	 (display-buffer-reuse-window display-buffer-in-side-window)
-#   	 (side . right)
-#   	 (slot . 1)
-#   	 (window-width . 0.5)
-#   	 (reusable-frames . nil))))
-#   #+END_SRC
-#   y
-#   
-#   ** S
-#   
-#   *** scala
-#   
-#   scala is a functional programming language that runs on the JVM.
-#   I installed scala using homebrew and cursive.
-#   Scala was installed in ~/Users/blaine/Library/Application\ Support/Coursier/bin/scala~.
-#   I installed scala3 and made an alias to it called ~scala3~ to avoid invoking ~scala~ from CCP4.
-#   [[https://github.com/hvesalai/emacs-scala-mode][source]]
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package scala-mode
-#     :interpreter
-#       ("scala" . scala-mode))
-#   #+END_SRC
-#   
-#   sbt is a progam that manages the installation of scala.
-#   sbt can be installed with macports.
-#   I could not figure out where sbt installed scala.
-#   [[https://github.com/hvesalai/emacs-sbt-mode][source]]
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package sbt-mode
-#     :commands sbt-start sbt-command
-#     :config
-#     ;; WORKAROUND: allows using SPACE when in the minibuffer
-#     (substitute-key-definition
-#      'minibuffer-complete-word
-#      'self-insert-command
-#      minibuffer-local-completion-map))
-#   #+END_SRC
-#   
-#   
-#   *** scholar-import
-#   
-#   [[Source][https://github.com/teeann/scholar-import]]
-#   
-#   You must install the Scholar to Emacs Chrome extension first.
-#   You must have the paths to the global.bib file and the PDF folder defined elsewhere.
-#   They are defined in the helm-bibtex configuration in my case.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package scholar-import
-#     :after helm-bibtex
-#     :config
-#     ;; change accordingly if these bibtex variables are lists
-#     (setq scholar-import-bibliography bibtex-completion-bibliography
-#           scholar-import-library-path bibtex-completion-library-path))
-#   #+END_SRC
-#   
-#   
-#   *** search
-#   
-#   Harry Schwartz wrote engine-mode to send selections to the browsers.
-#   He presented this at the [[https://www.youtube.com/watch?v=MBhJBMYfWUo][NYC-Emacs Meetup]] in 2015.
-#   He installed the package in MELPA.
-#   He has an informative README.md page [[https://github.com/hrs/engine-mode][on github]].
-#   The prefix is ~C-x \~.
-#   
-#   |-----+--------------------|
-#   | kdb | browser or webiste |
-#   |-----+--------------------|
-#   | d   | duckduckgo         |
-#   | m   | emdb               |
-#   | p   | epdb               |
-#   | h   | github             |
-#   | g   | google             |
-#   | s   | googlescholar      |
-#   | i   | iucr               |
-#   | l   | pymolmailinglist   |
-#   | w   | pymolwiki          |
-#   | r   | rcsb               |
-#   | g   | researchgate       |
-#   | o   | stackoverlfow      |
-#   | k   | wikipeadia         |
-#   | y   | wiktionary         |
-#   | u   | youtube            |
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package engine-mode)
-#   (require 'engine-mode)
-#   
-#   (defengine duckduckgo
-#     "https://duckduckgo.com/?q=%s"
-#     :keybinding "d")
-#   
-#   (defengine emdb
-#     "https://www.ebi.ac.uk/pdbe/emdb/=%s"
-#     :keybinding "m")
-#   
-#   (defengine epdb
-#     "https://www.ebi.ac.uk/pdbe/=%s"
-#     :keybinding "e")
-#   
-#   (defengine github
-#     "https://github.com/search?ref=simplesearch&q=%s"
-#     :keybinding "h")
-#   
-#   (defengine google
-#     "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-#     :keybinding "g")
-#   
-#   (defengine googlescholar
-#     "https://scholar.google.se/scholar?hl=en&q=%s"
-#     :keybinding "s")
-#   
-#   (defengine iucr
-#     "https://scripts.iucr.org/cgi-bin/full_search=%s"
-#     :keybinding "i")
-#   
-#   (defengine pymolmailinglist
-#     "https://sourceforge.net/p/pymol/mailman/search/?q=%s"
-#     :keybinding "l")
-#   
-#   (defengine pymolwiki
-#     "https://pymolwiki.org/index.php/=%s"
-#     :keybinding "w")
-#   
-#   (defengine rcsb
-#     "https://www.rcsb.org/structure/=%s"
-#     :keybinding "r")
-#   
-#   (defengine researchgate
-#     "https://www.researchgate.net/search.Search.html?type=researcher&query=%s"
-#     :keybinding "g")
-#   
-#   (defengine stack-overflow
-#     "https://stackoverflow.com/search?q=%s"
-#     :keybinding "o")
-#   
-#   (defengine wikipedia
-#     "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-#     :keybinding "k")
-#   
-#   (defengine wiktionary
-#     "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s"
-#     :keybinding "y")
-#   
-#   (defengine youtube
-#     "https://www.youtube.com/results?search_query=%s"
-#     :keybinding "u")
-#   
-#   (engine-mode t)
-#   #+END_SRC
-#   
-#   
-#   
-#   *** sentence trailing whitespace
-#   
-#   Emacs expects two whitespaces at the end of each sentence.
-#   This is an archaic practice from the typewriter days before the 1980s.
-#   To enforce the use of one whitespace, enter the following:
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq sentence-end-double-space nil)
-#   
-#   ;; always delete trailing whitespace on save
-#   (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#   
-#   ;; make the default movement within words (e.g. someThing, some_thing, some-thing)
-#   ;; http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html
-#   (add-hook 'prog-mode-hook 'subword-mode)
-#   
-#   ;; only highlight mispelling for strings and comments
-#   (add-hook `prog-mode-hook 'flyspell-prog-mode)
-#   #+END_SRC
-#   
-#   
-#   *** SLIME
-#   
-#   slime stands for Superior Lisp Interaction Mode for Emacs.
-#   I already had sbcl installed.
-#   It provides a repl for Commn Lisp.
-#   There are about a dozen lisp systems.
-#   I use sbcl.
-#   I had installed it with macports.
-#   
-#   I had installed earlier the quicklisp package in sbcl.
-#   However, I had to install a slime helper.
-#   I entered sbcl and issued the following command.
-#   
-#   
-#   #+BEGIN_SRC common-lisp
-#   (ql:quickload "quicklisp-slime-helper")
-#   #+END_SRC
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   ;;(load (expand-file-name "~/quicklisp/slime-helper.el"))
-#   (setq inferior-lisp-program "/opt/local/bin/sbcl")
-#   #+END_SRC
-#   
-#   
-#   
-#   *** Spelling
-#   
-#   **** Set the spelling binary
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (setq ispell-program-name "/opt/local/bin/aspell")
-#   #+END_SRC
-#   
-#   
-#   *** super-agenda-org
-#   
-#   Enable by entering ~M-x super-agenda-org-mode~.
-#   [[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package org-super-agenda
-#     :ensure t)
-#   (let ((org-super-agenda-groups
-#          '(;; Each group has an implicit boolean OR operator between its selectors.
-#            (:name "Today"  ; Optionally specify section name
-#                   :time-grid t  ; Items that appear on the time grid
-#                   :todo "TODAY")  ; Items that have this TODO keyword
-#            (:name "Important"
-#                   ;; Single arguments given alone
-#                   :tag "bills"
-#                   :priority "A")
-#            ;; Set order of multiple groups at once
-#            (:order-multi (2 (:name "Shopping in town"
-#                                    ;; Boolean AND group matches items that match all subgroups
-#                                    :and (:tag "shopping" :tag "@town"))
-#                             (:name "Food-related"
-#                                    ;; Multiple args given in list with implicit OR
-#                                    :tag ("food" "dinner"))
-#                             (:name "Personal"
-#                                    :habit t
-#                                    :tag "personal")
-#                             (:name "Space-related (non-moon-or-planet-related)"
-#                                    ;; Regexps match case-insensitively on the entire entry
-#                                    :and (:regexp ("space" "NASA")
-#                                                  ;; Boolean NOT also has implicit OR between selectors
-#                                                  :not (:regexp "moon" :tag "planet")))))
-#            ;; Groups supply their own section names when none are given
-#            (:todo "WAITING" :order 8)  ; Set order of this section
-#            (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
-#                   ;; Show this group at the end of the agenda (since it has the
-#                   ;; highest number). If you specified this group last, items
-#                   ;; with these todo keywords that e.g. have priority A would be
-#                   ;; displayed in that group instead, because items are grouped
-#                   ;; out in the order the groups are listed.
-#                   :order 9)
-#            (:priority<= "B"
-#                         ;; Show this section after "Today" and "Important", because
-#                         ;; their order is unspecified, defaulting to 0. Sections
-#                         ;; are displayed lowest-number-first.
-#                         :order 1)
-#            ;; After the last group, the agenda will display items that didn't
-#            ;; match any of these groups, with the default order position of 99
-#            )))
-#   	 (org-agenda nil "a"))
-#   #+END_SRC
-#   
-#   
-#   
-#   *** stan
-#   
-#   Five stan-related packages.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   ;;; stan-mode.el
-#   (use-package stan-mode
-#     :ensure t
-#     :mode ("\\.stan\\'" . stan-mode)
-#     :hook (stan-mode . stan-mode-setup)
-#     ;;
-#     :config
-#     ;; The officially recommended offset is 2.
-#     (setq stan-indentation-offset 2))
-#   
-#   ;;; company-stan.el
-#   (use-package company-stan
-#     :ensure t
-#     :hook (stan-mode . company-stan-setup)
-#     ;;
-#     :config
-#     ;; Whether to use fuzzy matching in `company-stan'
-#     (setq company-stan-fuzzy nil))
-#   
-#   ;;; eldoc-stan.el
-#   (use-package eldoc-stan
-#     :ensure t
-#     :hook (stan-mode . eldoc-stan-setup)
-#     ;;
-#     :config
-#     ;; No configuration options as of now.
-#     )
-#   
-#   ;;; flycheck-stan.el
-#   (use-package flycheck-stan
-#     :ensure t
-#     ;; Add a hook to setup `flycheck-stan' upon `stan-mode' entry
-#     :hook ((stan-mode . flycheck-stan-stanc2-setup)
-#            (stan-mode . flycheck-stan-stanc3-setup))
-#     :config
-#     ;; A string containing the name or the path of the stanc2 executable
-#     ;; If nil, defaults to `stanc2'
-#     (setq flycheck-stanc-executable nil)
-#     ;; A string containing the name or the path of the stanc2 executable
-#     ;; If nil, defaults to `stanc3'
-#     (setq flycheck-stanc3-executable nil))
-#   
-#   ;;; stan-snippets.el
-#   (use-package stan-snippets
-#     :ensure t
-#     :hook (stan-mode . stan-snippets-initialize)
-#     ;;
-#     :config
-#     ;; No configuration options as of now.
-#     )
-#   
-#   ;;; ac-stan.el (Not on MELPA; Need manual installation)
-#   (use-package ac-stan
-#     :ensure t
-#     :load-path "path-to-your-directory/ac-stan/"
-#     ;; Delete the line below if using.
-#     :disabled t
-#     :hook (stan-mode . stan-ac-mode-setup)
-#     ;;
-#     :config
-#     ;; No configuration options as of now.
-#     )
-#   #+END_SRC
-#   
-#   
-#   
-#   ** T
-#   
-#   *** tab-bar-mode
-#   
-#   [[https://mmk2410.org/2022/02/11/using-emacs-tab-bar-mode/][tab-bar-mode]] looks cool.
-#   I will follow-up later.
-#   
-#   *** terminals
-#   
-#   There are four options: term-mode, vterm-mode, eshell-mode, and shell-mode.
-#   
-#   
-#   **** term-mode
-#   *term-mode* gives a nearly native experience in an Emacs buffer.
-#   It has two modes: line-mode versus char-mode.
-#   line-mode enables normal Emacs keybindings while moving around in the terminal buffer.
-#   char-mode sends most  keypresses to the underlying terminal.
-#   Use char-mode for any terminal applications that have their own keybindings.
-#   line-mode is sufficient when just using the terminal.
-#   
-#   Invoke with ~M-x term!~
-#   
-#   **** Useful keybindings:
-#   
-#   - ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
-#   - ~C-c C-k~ - Enter char-mode
-#   - ~C-c C-j~ - Return to line-mode
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package term
-#     :config
-#     (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
-#     (setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
-#   
-#     ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-#     (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
-#   #+END_SRC
-#   
-#   Use 256 colors when in the term-mode.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package eterm-256color
-#     :hook (term-mode . eterm-256color-mode))
-#   #+END_SRC
-#   
-#   
-#   
-#   
-#   
-#   *** vterm
-#   
-#   *vterm* is an improved terminal emulator package that is faster than term-mode.
-#   It uses a compiled native module to interact with the underlying terminal applications.
-#   It provides a more complete terminal emulation experience.
-#   On the MacOS, I was able to install it in Emacs29 from MELPA.
-#   I ran ~M-x vterm-compile~ and it was compiled with Apple's clang.
-#   Then I was able to invoke ~vterm~.
-#   There is a julia-vterm.
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package vterm
-#     :commands vterm
-#     :config
-#     (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-#     (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-#     (setq vterm-max-scrollback 10000))
-#   #+END_SRC
-#   
-#   
-#   *** eshell
-#   
-#   *eshell* doubles as a Lisp interpreter.
-#   You get what looks like a terminal prompt but you can enter ~(* 400 4000)~ and get 1600000 returned to the minibuffer.
-#   Very cool!
-#   Eshell can be harder to configure than other packages due to where you need to set some options for them to go into effect, the shell completions for some commands are lacking by default, and REPL programs sometimes fail to work.
-#   
-#   There is an eshell-julia package.
-#   
-#   **** Useful keybindings
-#   
-#   - ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
-#   - ~M-p / M-n~ - go back and forward in the input history
-#   - ~C-c C-u~ - delete the current input string backwards to the cursor
-#   - ~counsel-shell-history~ - A searchable history of commands typed into the shell
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (defun efs/configure-eshell ()
-#     ;; Save command history when commands are entered
-#     (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-#   
-#     ;; Truncate buffer for performance
-#     (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-#   
-#     ;; Bind some useful keys for evil-mode
-#     (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-#     (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-#     (evil-normalize-keymaps)
-#   
-#     (setq eshell-history-size         10000
-#           eshell-buffer-maximum-lines 10000
-#           eshell-hist-ignoredups t
-#           eshell-scroll-to-bottom-on-input t))
-#   
-#   (use-package eshell-git-prompt)
-#   
-#   (use-package eshell
-#     :hook (eshell-first-time-mode . efs/configure-eshell)
-#     :config
-#   
-#     (with-eval-after-load 'esh-opt
-#       (setq eshell-destroy-buffer-when-process-dies t)
-#       (setq eshell-visual-commands '("htop" "zsh" "vim")))
-#   
-#     (eshell-git-prompt-use-theme 'powerline))
-#   #+END_SRC
-#   
-#   
-#   *** shell
-#   
-#   *shell-mode* is between term-mode and Eshell in its nature.
-#   It is not a terminal emulator;  complex terminal programs will not run in it.
-#   However, *shell-mode* has much better integration with Emacs because all command input in this mode is handled by Emacs.
-#   Emacs sends the commands to the underlying shell once you press Enter.
-#   As a result, you can use evil-mode’s editing motions on the command line, unlike term-mode and vterm.
-#   *shell-mode* is the only way to run on Windows cmd.exe, PowerShell, Git, Bash, etc from within Emacs.
-#   
-#   **** Useful keybindings
-#   
-#   - ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
-#   - ~M-p / M-n~ - go back and forward in the input history
-#   - ~C-c C-u~ - delete the current input string backward up to the cursor
-#   - ~counsel-shell-history~ - A searchable history of commands typed into the shell
-#   
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (when (eq system-type 'windows-nt)
-#     (setq explicit-shell-file-name "powershell.exe")
-#     (setq explicit-powershell.exe-args '()))
-#   #+END_SRC
-#   
-#   
-#   **** iterm extensions
-#   
-#   There is an iterm.el package.
-#   
-#   
-#   *** String infleciton (snake_case -> UPCASE -> )
-#   
-#   Place cursor at the compound word and enter C-q C-u repeatedly to cycle
-#   through the alternatives.
-#   
-#   [[https://github.com/akicho8/string-inflection][Source]]
-#   
-#   #+BEGIN_SRC emacs-lisp
-#   (use-package string-inflection
-#     :ensure t
-#   )
-#   
-#   (global-unset-key (kbd "C-q"))
-#   (global-set-key (kbd "C-q C-u") 'my-string-inflection-cycle-auto)
-#   
-#   (defun my-string-inflection-cycle-auto ()
-#     "switching by major-mode"
-#     (interactive)
-#     (cond
-#      ;; for emacs-lisp-mode
-#      ((eq major-mode 'emacs-lisp-mode)
-#       (string-inflection-all-cycle))
-#      ;; for python
-#      ((eq major-mode 'python-mode)
-#       (string-inflection-python-style-cycle))
-#      ;; for java
-#      ((eq major-mode 'java-mode)
-#       (string-inflection-java-style-cycle))
-#      ;; for elixir
-#      ((eq major-mode 'elixir-mode)
-#       (string-inflection-elixir-style-cycle))
-#      (t
-#       ;; default
-#       (string-inflection-java-style-cycle))))
-#   #+END_SRC
+*** Python
+
+See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
+Also see the section abbove under org-babel for the use of ~emacs-jupyter~.
+
+Emacs has the built-in python-mode.
+Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+
+Alternatively, the conda package can be used to set the conda env.
+The command ~M-x conda-env-list~ will list the available conda envs.
+
+
+The package elpy used to be popular.
+This is well  [[https://elpy.readthedocs.io/en/latest/introduction.html][documented]].
+I am not sure where it stands now and if it is really needed.
+It is big on creating and using pyenvs.
+
+Run the following command \mintinline{bash}{pip install jedi rope flake8 yapf importmagic autopep8} oo the terminal.
+
+The config below is from [[https://github.com/kpurdon/.emacs.d/blob/main/development.el][here]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :init
+  (elpy-enable)
+  :config
+  ;; disable flymake and enable flycheck
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  ;; set the elpy rpc virtualenv path the current path
+  (setq elpy-rpc-virtualenv-path 'current))
+
+(use-package py-autopep8
+  :config
+  (setq py-autopep8-options '("--ignore=E501,W293,W391,W690"))
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+
+(use-package py-isort
+  :config
+  (add-hook 'before-save-hook 'py-isort-before-save))
+#+END_SRC
+
+
+The following is Dave Wilson's configuration for [[https://github.com/daviwil/emacs-from-scratch/blob/dd9320769f3041ac1edca139496f14abe147d010/Emacs.org#python][Python]].
+Python-mode should be built-in but lets upgrade to the latest version.
+You may need to install debugpy from PyPi.
+You may aslo need to install a python lsp.
+You may need to install dap-mode from MELPA.
+
+
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  ;; NOTE: Set these if Python 3 is called "python3" on your system!
+  (python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/python")
+  )
+(eval-after-load "company"
+ '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
+
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'electric-spacing-mode)
+(add-hook 'python-mode-hook 'blacken-mode)
+#+END_SRC
+
+C-c C-p will open a Python REPL in a buffer.
+C-c C-c will send run the code in the buffer to the REPL and return the output in the REPL.
+
+
+**** Use IPython for REPL
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "/Users/blaine/opt/anaconda3/envs/cctbx39/bin/jupyter")
+#+END_SRC
+
+
+**** Enable Flycheck
+#+BEGIN_SRC emacs-lisp
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+#+END_SRC
+
+
+**** Enable Autopep8
+#+BEGIN_SRC emacs-lisp
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+#+END_SRC
+
+
+# **** Enable debugger for Python
+# #+BEGIN_SRC emacs-lisp
+# (dap-python-executable "python3")
+# (dap-python-debugger 'debugpy)
+# :config
+# (require 'dap-python)
+# #+END_SRC
+
+
+**** pyenv
+
+The pyenv pacakge support the use of pyenv environments.
+See the conda configuration under C.
+
+#+BEGIN_SRC emacs-lisp
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
+#+END_SRC
+
+
+**** python-x
+
+This package enhances the Python REPL experience.
+Open a Python file in a buffer and enter ~C-c C-p~ to open a Python REPL with the default or set python interpreter.
+You mark sections of your script file with ~## ---~ and then send one section to the REPL to run it by entering .
+The default section delimiter is ~## ---~ but can be changed via python-section-delimiter.
+
+#+BEGIN_SRC emacs-lisp
+(use-package python-x
+    :ensure t)
+(python-x-setup)
+(setq python-section-delimiter "##")
+#+END_SRC
+
+
+**** Running Python in LaTeX and Markdown documents
+
+The package [[emacs-ipython][https://github.com/burakbayramli/emacs-jupyter]] allows execution of Python code inside a LaTeX or MarkDown buffer.
+It displays the results as text or graphic in the section below.
+The packages uses [[https://github.com/pinard/Pymacs][Pymacs]] to connect to an ipython kernel to execute the code.
+Four additional Python packages are required.
+It is recommended that ~Pymacs~ be installed in a ~python_env~ and then the following bash script be run before using ~Pymacs~.
+Obtain PyMacs [[https://github.com/dgentry/Pymacs][here]].
+
+#+BEGIN_SRC bash
+#!/bin/bash
+source /some/dir/yourenv/bin/activate
+/usr/bin/emacs29
+#+END_SRC
+
+
+Add the following Emacs function to the ~config.org~ file.
+
+#+BEGIN_SRC emacs-lisp
+(defun reload-pymacs()
+  (interactive)
+  (if (buffer-live-p (get-buffer "*Pymacs*" ))
+      (kill-buffer (get-buffer "*Pymacs*")))
+  (message (buffer-file-name (current-buffer)))
+  ;;
+  ;; load tex or md mode based on the extension
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
+      (progn
+    (pymacs-load "[INSTALL DIR]/ipython-tex")
+    (global-set-key "\M-," 'ipython-tex-run-py-code)
+    (global-set-key [f5] 'ipython-tex-complete-py)
+    (tempo-define-template
+     "tex-listings-python"
+     '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
+       (s)
+       "\n\\end{minted}\n"
+       )
+     "")
+    ))
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
+      (progn
+    (pymacs-load "[INSTALL DIR]/ipython-md")
+    (global-set-key "\M-," 'ipython-md-run-py-code)
+    (global-set-key [f5] 'ipython-md-complete-py)
+    (tempo-define-template
+     "tex-listings-python"
+     '("```python\n"
+       (s)
+       "\n```\n"
+       )
+     "")
+    ))
+
+  )
+
+(global-set-key [f1] 'tempo-template-tex-listings-python)
+(global-set-key [f11] 'reload-pymacs)
+#+END_SRC
+
+
+** Q
+
+*** quarto-mode
+
+
+Source: \url{https://github.com/quarto-dev/quarto-emacs}
+#    #+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-quarto-mode))
+(use-package quarto-mode
+  :ensure t
+  :mode (("\\.Rmd" . poly-quarto-mode))
+  )
+#+END_SRC
+#    #+END_COMMENT
+
+
+** R
+
+*** ess-r-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package ess
+  :ensure t)
+#+END_SRC
+
+
+*** r-autoyas
+
+Enter C-g to delete the unused arguments in a R function call.
+
+#+BEGIN_SRC emacs-lisp
+(use-package r-autoyas
+    :ensure t)
+(add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
+#+END_SRC
+
+*** R config by Federic Santoas
+
+[[See github repo][https://github.com/ess-intro/presentation-ess-customization/blob/main/tutorial/ess-init.el]] for a detailed tutorial.
+#+BEGIN_SRC emacs-lisp
+;; Code visibility:
+(setq ess-eval-visibly 'nowait)
+
+;; Font lock keywords for syntactic highlighting:
+(setq ess-R-font-lock-keywords
+      '((ess-R-fl-keyword:keywords . t)
+	(ess-R-fl-keyword:constants . t)
+	(ess-R-fl-keyword:modifiers . t)
+	(ess-R-fl-keyword:fun-defs . t)
+	(ess-R-fl-keyword:assign-ops . t)
+	(ess-R-fl-keyword:%op% . t)
+	(ess-fl-keyword:fun-calls . t)
+	(ess-fl-keyword:numbers . t)
+	(ess-fl-keyword:operators . t)
+	(ess-fl-keyword:delimiters . t)
+	(ess-fl-keyword:= . t)
+	(ess-R-fl-keyword:F&T . t)))
+
+;; Activate global mode for parenthesis matching:
+(show-paren-mode)
+
+;; Remove Flymake support:
+(setq ess-use-flymake nil)
+;; Replace it (globally) by Flycheck:
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+
+;; Open Rdired buffer with F9:
+(add-hook 'ess-r-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "<f9>") #'ess-rdired)))
+;; Close Rdired buffer with F9 as well:
+(add-hook 'ess-rdired-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "<f9>") #'kill-buffer-and-window)))
+
+;; An example of window configuration:
+(setq display-buffer-alist
+      '(("*R Dired"
+	 (display-buffer-reuse-window display-buffer-at-bottom)
+	 (window-width . 0.5)
+	 (window-height . 0.25)
+	 (reusable-frames . nil))
+	("*R"
+	 (display-buffer-reuse-window display-buffer-in-side-window)
+	 (side . right)
+	 (slot . -1)
+	 (window-width . 0.5)
+	 (reusable-frames . nil))
+	("*Help"
+	 (display-buffer-reuse-window display-buffer-in-side-window)
+	 (side . right)
+	 (slot . 1)
+	 (window-width . 0.5)
+	 (reusable-frames . nil))))
+#+END_SRC
+
+
+** S
+
+*** scala
+
+scala is a functional programming language that runs on the JVM.
+I installed scala using homebrew and cursive.
+Scala was installed in ~/Users/blaine/Library/Application\ Support/Coursier/bin/scala~.
+I installed scala3 and made an alias to it called ~scala3~ to avoid invoking ~scala~ from CCP4.
+[[https://github.com/hvesalai/emacs-scala-mode][source]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
+#+END_SRC
+
+sbt is a progam that manages the installation of scala.
+sbt can be installed with macports.
+I could not figure out where sbt installed scala.
+[[https://github.com/hvesalai/emacs-sbt-mode][source]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map))
+#+END_SRC
+
+
+*** scholar-import
+
+[[Source][https://github.com/teeann/scholar-import]]
+
+You must install the Scholar to Emacs Chrome extension first.
+You must have the paths to the global.bib file and the PDF folder defined elsewhere.
+They are defined in the helm-bibtex configuration in my case.
+
+#+BEGIN_SRC emacs-lisp
+(use-package scholar-import
+  :after helm-bibtex
+  :config
+  ;; change accordingly if these bibtex variables are lists
+  (setq scholar-import-bibliography bibtex-completion-bibliography
+        scholar-import-library-path bibtex-completion-library-path))
+#+END_SRC
+
+
+*** search
+
+Harry Schwartz wrote engine-mode to send selections to the browsers.
+He presented this at the [[https://www.youtube.com/watch?v=MBhJBMYfWUo][NYC-Emacs Meetup]] in 2015.
+He installed the package in MELPA.
+He has an informative README.md page [[https://github.com/hrs/engine-mode][on github]].
+The prefix is ~C-x \~.
+
+|-----+--------------------|
+| kdb | browser or webiste |
+|-----+--------------------|
+| d   | duckduckgo         |
+| m   | emdb               |
+| p   | epdb               |
+| h   | github             |
+| g   | google             |
+| s   | googlescholar      |
+| i   | iucr               |
+| l   | pymolmailinglist   |
+| w   | pymolwiki          |
+| r   | rcsb               |
+| g   | researchgate       |
+| o   | stackoverlfow      |
+| k   | wikipeadia         |
+| y   | wiktionary         |
+| u   | youtube            |
+
+#+BEGIN_SRC emacs-lisp
+(use-package engine-mode)
+(require 'engine-mode)
+
+(defengine duckduckgo
+  "https://duckduckgo.com/?q=%s"
+  :keybinding "d")
+
+(defengine emdb
+  "https://www.ebi.ac.uk/pdbe/emdb/=%s"
+  :keybinding "m")
+
+(defengine epdb
+  "https://www.ebi.ac.uk/pdbe/=%s"
+  :keybinding "e")
+
+(defengine github
+  "https://github.com/search?ref=simplesearch&q=%s"
+  :keybinding "h")
+
+(defengine google
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  :keybinding "g")
+
+(defengine googlescholar
+  "https://scholar.google.se/scholar?hl=en&q=%s"
+  :keybinding "s")
+
+(defengine iucr
+  "https://scripts.iucr.org/cgi-bin/full_search=%s"
+  :keybinding "i")
+
+(defengine pymolmailinglist
+  "https://sourceforge.net/p/pymol/mailman/search/?q=%s"
+  :keybinding "l")
+
+(defengine pymolwiki
+  "https://pymolwiki.org/index.php/=%s"
+  :keybinding "w")
+
+(defengine rcsb
+  "https://www.rcsb.org/structure/=%s"
+  :keybinding "r")
+
+(defengine researchgate
+  "https://www.researchgate.net/search.Search.html?type=researcher&query=%s"
+  :keybinding "g")
+
+(defengine stack-overflow
+  "https://stackoverflow.com/search?q=%s"
+  :keybinding "o")
+
+(defengine wikipedia
+  "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+  :keybinding "k")
+
+(defengine wiktionary
+  "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s"
+  :keybinding "y")
+
+(defengine youtube
+  "https://www.youtube.com/results?search_query=%s"
+  :keybinding "u")
+
+(engine-mode t)
+#+END_SRC
+
+
+
+*** sentence trailing whitespace
+
+Emacs expects two whitespaces at the end of each sentence.
+This is an archaic practice from the typewriter days before the 1980s.
+To enforce the use of one whitespace, enter the following:
+
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+
+;; always delete trailing whitespace on save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; make the default movement within words (e.g. someThing, some_thing, some-thing)
+;; http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html
+(add-hook 'prog-mode-hook 'subword-mode)
+
+;; only highlight mispelling for strings and comments
+(add-hook `prog-mode-hook 'flyspell-prog-mode)
+#+END_SRC
+
+
+*** SLIME
+
+slime stands for Superior Lisp Interaction Mode for Emacs.
+I already had sbcl installed.
+It provides a repl for Commn Lisp.
+There are about a dozen lisp systems.
+I use sbcl.
+I had installed it with macports.
+
+I had installed earlier the quicklisp package in sbcl.
+However, I had to install a slime helper.
+I entered sbcl and issued the following command.
+
+
+#+BEGIN_SRC common-lisp
+(ql:quickload "quicklisp-slime-helper")
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+;;(load (expand-file-name "~/quicklisp/slime-helper.el"))
+(setq inferior-lisp-program "/opt/local/bin/sbcl")
+#+END_SRC
+
+
+
+*** Spelling
+
+**** Set the spelling binary
+
+#+BEGIN_SRC emacs-lisp
+(setq ispell-program-name "/opt/local/bin/aspell")
+#+END_SRC
+
+
+*** super-agenda-org
+
+Enable by entering ~M-x super-agenda-org-mode~.
+[[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-super-agenda
+  :ensure t)
+(let ((org-super-agenda-groups
+       '(;; Each group has an implicit boolean OR operator between its selectors.
+         (:name "Today"  ; Optionally specify section name
+                :time-grid t  ; Items that appear on the time grid
+                :todo "TODAY")  ; Items that have this TODO keyword
+         (:name "Important"
+                ;; Single arguments given alone
+                :tag "bills"
+                :priority "A")
+         ;; Set order of multiple groups at once
+         (:order-multi (2 (:name "Shopping in town"
+                                 ;; Boolean AND group matches items that match all subgroups
+                                 :and (:tag "shopping" :tag "@town"))
+                          (:name "Food-related"
+                                 ;; Multiple args given in list with implicit OR
+                                 :tag ("food" "dinner"))
+                          (:name "Personal"
+                                 :habit t
+                                 :tag "personal")
+                          (:name "Space-related (non-moon-or-planet-related)"
+                                 ;; Regexps match case-insensitively on the entire entry
+                                 :and (:regexp ("space" "NASA")
+                                               ;; Boolean NOT also has implicit OR between selectors
+                                               :not (:regexp "moon" :tag "planet")))))
+         ;; Groups supply their own section names when none are given
+         (:todo "WAITING" :order 8)  ; Set order of this section
+         (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+                ;; Show this group at the end of the agenda (since it has the
+                ;; highest number). If you specified this group last, items
+                ;; with these todo keywords that e.g. have priority A would be
+                ;; displayed in that group instead, because items are grouped
+                ;; out in the order the groups are listed.
+                :order 9)
+         (:priority<= "B"
+                      ;; Show this section after "Today" and "Important", because
+                      ;; their order is unspecified, defaulting to 0. Sections
+                      ;; are displayed lowest-number-first.
+                      :order 1)
+         ;; After the last group, the agenda will display items that didn't
+         ;; match any of these groups, with the default order position of 99
+         )))
+	 (org-agenda nil "a"))
+#+END_SRC
+
+
+
+*** stan
+
+Five stan-related packages.
+
+#+BEGIN_SRC emacs-lisp
+;;; stan-mode.el
+(use-package stan-mode
+  :ensure t
+  :mode ("\\.stan\\'" . stan-mode)
+  :hook (stan-mode . stan-mode-setup)
+  ;;
+  :config
+  ;; The officially recommended offset is 2.
+  (setq stan-indentation-offset 2))
+
+;;; company-stan.el
+(use-package company-stan
+  :ensure t
+  :hook (stan-mode . company-stan-setup)
+  ;;
+  :config
+  ;; Whether to use fuzzy matching in `company-stan'
+  (setq company-stan-fuzzy nil))
+
+;;; eldoc-stan.el
+(use-package eldoc-stan
+  :ensure t
+  :hook (stan-mode . eldoc-stan-setup)
+  ;;
+  :config
+  ;; No configuration options as of now.
+  )
+
+;;; flycheck-stan.el
+(use-package flycheck-stan
+  :ensure t
+  ;; Add a hook to setup `flycheck-stan' upon `stan-mode' entry
+  :hook ((stan-mode . flycheck-stan-stanc2-setup)
+         (stan-mode . flycheck-stan-stanc3-setup))
+  :config
+  ;; A string containing the name or the path of the stanc2 executable
+  ;; If nil, defaults to `stanc2'
+  (setq flycheck-stanc-executable nil)
+  ;; A string containing the name or the path of the stanc2 executable
+  ;; If nil, defaults to `stanc3'
+  (setq flycheck-stanc3-executable nil))
+
+;;; stan-snippets.el
+(use-package stan-snippets
+  :ensure t
+  :hook (stan-mode . stan-snippets-initialize)
+  ;;
+  :config
+  ;; No configuration options as of now.
+  )
+
+;;; ac-stan.el (Not on MELPA; Need manual installation)
+(use-package ac-stan
+  :ensure t
+  :load-path "path-to-your-directory/ac-stan/"
+  ;; Delete the line below if using.
+  :disabled t
+  :hook (stan-mode . stan-ac-mode-setup)
+  ;;
+  :config
+  ;; No configuration options as of now.
+  )
+#+END_SRC
+
+
+
+** T
+
+*** tab-bar-mode
+
+[[https://mmk2410.org/2022/02/11/using-emacs-tab-bar-mode/][tab-bar-mode]] looks cool.
+I will follow-up later.
+
+*** terminals
+
+There are four options: term-mode, vterm-mode, eshell-mode, and shell-mode.
+
+
+**** term-mode
+*term-mode* gives a nearly native experience in an Emacs buffer.
+It has two modes: line-mode versus char-mode.
+line-mode enables normal Emacs keybindings while moving around in the terminal buffer.
+char-mode sends most  keypresses to the underlying terminal.
+Use char-mode for any terminal applications that have their own keybindings.
+line-mode is sufficient when just using the terminal.
+
+Invoke with ~M-x term!~
+
+**** Useful keybindings:
+
+- ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
+- ~C-c C-k~ - Enter char-mode
+- ~C-c C-j~ - Return to line-mode
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package term
+  :config
+  (setq explicit-shell-file-name "zsh") ;; Change this to zsh, etc
+  (setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
+
+  ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
+#+END_SRC
+
+Use 256 colors when in the term-mode.
+
+#+BEGIN_SRC emacs-lisp
+(use-package eterm-256color
+  :hook (term-mode . eterm-256color-mode))
+#+END_SRC
+
+
+
+
+
+*** vterm
+
+*vterm* is an improved terminal emulator package that is faster than term-mode.
+It uses a compiled native module to interact with the underlying terminal applications.
+It provides a more complete terminal emulation experience.
+On the MacOS, I was able to install it in Emacs29 from MELPA.
+I ran ~M-x vterm-compile~ and it was compiled with Apple's clang.
+Then I was able to invoke ~vterm~.
+There is a julia-vterm.
+
+#+BEGIN_SRC emacs-lisp
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  (setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
+#+END_SRC
+
+
+*** eshell
+
+*eshell* doubles as a Lisp interpreter.
+You get what looks like a terminal prompt but you can enter ~(* 400 4000)~ and get 1600000 returned to the minibuffer.
+Very cool!
+Eshell can be harder to configure than other packages due to where you need to set some options for them to go into effect, the shell completions for some commands are lacking by default, and REPL programs sometimes fail to work.
+
+There is an eshell-julia package.
+
+**** Useful keybindings
+
+- ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
+- ~M-p / M-n~ - go back and forward in the input history
+- ~C-c C-u~ - delete the current input string backwards to the cursor
+- ~counsel-shell-history~ - A searchable history of commands typed into the shell
+
+
+#+BEGIN_SRC emacs-lisp
+(defun efs/configure-eshell ()
+  ;; Save command history when commands are entered
+  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+  ;; Truncate buffer for performance
+  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+  ;; Bind some useful keys for evil-mode
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+  (evil-normalize-keymaps)
+
+  (setq eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t))
+
+(use-package eshell-git-prompt)
+
+(use-package eshell
+  :hook (eshell-first-time-mode . efs/configure-eshell)
+  :config
+
+  (with-eval-after-load 'esh-opt
+    (setq eshell-destroy-buffer-when-process-dies t)
+    (setq eshell-visual-commands '("htop" "zsh" "vim")))
+
+  (eshell-git-prompt-use-theme 'powerline))
+#+END_SRC
+
+
+*** shell
+
+*shell-mode* is between term-mode and Eshell in its nature.
+It is not a terminal emulator;  complex terminal programs will not run in it.
+However, *shell-mode* has much better integration with Emacs because all command input in this mode is handled by Emacs.
+Emacs sends the commands to the underlying shell once you press Enter.
+As a result, you can use evil-mode’s editing motions on the command line, unlike term-mode and vterm.
+*shell-mode* is the only way to run on Windows cmd.exe, PowerShell, Git, Bash, etc from within Emacs.
+
+**** Useful keybindings
+
+- ~C-c C-p / C-c C-n~ - go back and forward in the buffer’s prompts (also [[ and ]] with evil-mode)
+- ~M-p / M-n~ - go back and forward in the input history
+- ~C-c C-u~ - delete the current input string backward up to the cursor
+- ~counsel-shell-history~ - A searchable history of commands typed into the shell
+
+
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'windows-nt)
+  (setq explicit-shell-file-name "powershell.exe")
+  (setq explicit-powershell.exe-args '()))
+#+END_SRC
+
+
+**** iterm extensions
+
+There is an iterm.el package.
+
+
+*** String infleciton (snake_case -> UPCASE -> )
+
+Place cursor at the compound word and enter C-q C-u repeatedly to cycle
+through the alternatives.
+
+[[https://github.com/akicho8/string-inflection][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package string-inflection
+  :ensure t
+)
+
+(global-unset-key (kbd "C-q"))
+(global-set-key (kbd "C-q C-u") 'my-string-inflection-cycle-auto)
+
+(defun my-string-inflection-cycle-auto ()
+  "switching by major-mode"
+  (interactive)
+  (cond
+   ;; for emacs-lisp-mode
+   ((eq major-mode 'emacs-lisp-mode)
+    (string-inflection-all-cycle))
+   ;; for python
+   ((eq major-mode 'python-mode)
+    (string-inflection-python-style-cycle))
+   ;; for java
+   ((eq major-mode 'java-mode)
+    (string-inflection-java-style-cycle))
+   ;; for elixir
+   ((eq major-mode 'elixir-mode)
+    (string-inflection-elixir-style-cycle))
+   (t
+    ;; default
+    (string-inflection-java-style-cycle))))
+#+END_SRC
 
 ** T
 
