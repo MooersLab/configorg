@@ -3832,7 +3832,16 @@ Single digit months and days must be accompanied by a zero in the left position.
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\C-cl" 'org-store-link)
 
-(setq org-agenda-files '("~/gtd/tasks/tasks.org"))
+(setq org-agenda-files '("/Users/blaine/gtd/tasks/JournalArticles.org"
+   "/Users/blaine/gtd/tasks/Proposals.org"
+   "/Users/blaine/gtd/tasks/Books.org"
+   "/Users/blaine/gtd/tasks/Talks.org"
+   "/Users/blaine/gtd/tasks/Posters.org"
+   "/Users/blaine/gtd/tasks/ManuscritReviews.org"
+   "/Users/blaine/gtd/tasks/Private.org"
+   "/Users/blaine/gtd/tasks/Service.org"
+   "/Users/blaine/gtd/tasks/Teaching.org"
+   "/Users/blaine/gtd/tasks/Workshops.org"))
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
 (setq org-capture-templates
@@ -3854,8 +3863,16 @@ Single digit months and days must be accompanied by a zero in the left position.
 (add-to-list 'org-capture-templates
              '("e" "email" entry (file+headline org-default-notes-file "emails")
                "* TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))"))
-(setq org-refile-targets '(("~/gtd/tasks/tasks.org" :maxlevel . 1)
-                           ("~/gtd/someday.org" :maxlevel . 1)))
+(setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Books.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Talks.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/ManuscritReviews.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Private.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 1)
+   "/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
 #+END_SRC
 
