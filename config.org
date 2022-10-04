@@ -3870,7 +3870,7 @@ Single digit months and days must be accompanied by a zero in the left position.
    ("/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/ManuscritReviews.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Private.org" :maxlevel . 1)
-   ("/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
+   ("mate/Users/blaine/gtd/tasks/Service.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 1)
    ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
