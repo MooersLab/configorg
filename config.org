@@ -1857,6 +1857,7 @@ You can add hooks to major modes.
 
 Enter M-x elfeed to fire up a session.
 Enter S-g to update the feeds.
+ew
 
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed
@@ -3748,13 +3749,6 @@ This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the bas
 
 #+BEGIN_SRC emacs-lisp
 (use-package org)
-
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
-;; org-capture
-(define-key global-map "\C-cc" 'org-capture)
-(global-set-key (kbd "<f6>") 'org-capture)
-(define-key global-map "\C-cl" 'org-store-link)
 ;; Open a fileset in separate windows.
 (define-key global-map "\C-cfo" 'filesets-open)
 ;; Open a fileset in separate windows.
@@ -3832,10 +3826,13 @@ Single digit months and days must be accompanied by a zero in the left position.
 
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+;; org-capture
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cl" 'org-store-link)
+
 (setq org-agenda-files '("~/gtd/tasks/tasks.org"))
-(setq org-tag-alist '(("meeting" . ?m) ("talk" . ?t) ("seminar" . ?s)))
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
 (setq org-capture-templates
@@ -3867,6 +3864,9 @@ Single digit months and days must be accompanied by a zero in the left position.
 **** customized agenda views
 
 These are my customized agenda views by project.
+The letter is the last parameter.
+For example, enter C-c a b to list all active 401 tasks.
+
 I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
 
 
@@ -3882,29 +3882,17 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
              tags-todo
              "CATEGORY=\"416\"/TODO|INITIATED|WAITING")
 	("d"
-             "List of all active 485PyMOLscGUI."
+             "List of all active 485PyMOLscGUI tasks."
              tags-todo
              "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
 	("e"
              "List of all active 523 RNA-drug crystallization review paper"
              tags-todo
              "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
-	("f"
-             "List of all active 1601 XSEDE proposal"
-             tags-todo
-             "CATEGORY=\"1601\"/TODO|INITIATED|WAITING")
 	("g"
              "List of all active 2104 Emacs"
              tags-todo
              "CATEGORY=\"2104\"/TODO|INITIATED|WAITING")
-	("h"
-             "List of all active 3237 elispF tasks"
-             tags-todo
-             "CATEGORY=\"3237\"/TODO|INITIATED|WAITING")
-	("i"
-             "List of all active 3239 CoreLab Talk"
-             tags-todo
-             "CATEGORY=\"3239\"/TODO|INITIATED|WAITING")
 	("P"
          "List of all projects"
          tags
@@ -3932,52 +3920,55 @@ Do we really have to exit the calendar after each selection?
 (add-to-list 'load-path "/Users/blaine/")
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(setq org-agenda-custom-commands
-       `(("A" "Daily agenda and top priority tasks"
-          ((tags-todo "*"
-                      ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-                       (org-agenda-skip-function
-                        `(org-agenda-skip-entry-if
-                          'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-                       (org-agenda-block-separator nil)
-                       (org-agenda-overriding-header "Important tasks without a date\n")))
-           (agenda "" ((org-agenda-span 1)
-                       (org-deadline-warning-days 0)
-                       (org-agenda-block-separator nil)
-                       (org-scheduled-past-days 0)
-                       ;; We don't need the `org-agenda-date-today'
-                       ;; highlight because that only has a practical
-                       ;; utility in multi-day views.
-                       (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-                       (org-agenda-format-date "%A %-e %B %Y")
-                       (org-agenda-overriding-header "\nToday's agenda\n")))
-           (agenda "" ((org-agenda-start-on-weekday nil)
-                       (org-agenda-start-day "+1d")
-                       (org-agenda-span 3)
-                       (org-deadline-warning-days 0)
-                       (org-agenda-block-separator nil)
-                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                       (org-agenda-overriding-header "\nNext three days\n")))
-           (agenda "" (
-                       (org-agenda-start-on-weekday nil)
-                       ;; We don't want to replicate the previous section's
-                       ;; three days, so we start counting from the day after.
-                       (org-agenda-start-day "+4d")
-                       (org-agenda-span 14)
-                       (org-agenda-show-all-dates nil)
-                       (org-deadline-warning-days 0)
-                       (org-agenda-block-separator nil)
-                       (org-agenda-entry-types '(:deadline))
-                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                       (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
-          (
-           (org-agenda-prefix-format "%t %s")
-           (org-agenda-fontify-priorities nil)
-           (org-agenda-remove-tags t))
-          ("agenda.txt")))
-#+END_SRC
+**** Prioritization 
 
+#+BEGIN_COMMENT
+#    #+BEGIN_SRC emacs-lisp
+#    (setq org-agenda-custom-commands
+#           `(("A" "Daily agenda and top priority tasks"
+#              ((tags-todo "*"
+#                          ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
+#                           (org-agenda-skip-function
+#                            `(org-agenda-skip-entry-if
+#                              'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-overriding-header "Important tasks without a date\n")))
+#               (agenda "" ((org-agenda-span 1)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-scheduled-past-days 0)
+#                           ;; We don't need the `org-agenda-date-today'
+#                           ;; highlight because that only has a practical
+#                           ;; utility in multi-day views.
+#                           (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+#                           (org-agenda-format-date "%A %-e %B %Y")
+#                           (org-agenda-overriding-header "\nToday's agenda\n")))
+#               (agenda "" ((org-agenda-start-on-weekday nil)
+#                           (org-agenda-start-day "+1d")
+#                           (org-agenda-span 3)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+#                           (org-agenda-overriding-header "\nNext three days\n")))
+#               (agenda "" (
+#                           (org-agenda-start-on-weekday nil)
+#                           ;; We don't want to replicate the previous section's
+#                           ;; three days, so we start counting from the day after.
+#                           (org-agenda-start-day "+4d")
+#                           (org-agenda-span 14)
+#                           (org-agenda-show-all-dates nil)
+#                           (org-deadline-warning-days 0)
+#                           (org-agenda-block-separator nil)
+#                           (org-agenda-entry-types '(:deadline))
+#                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+#                           (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")))))
+#              (
+#               (org-agenda-prefix-format "%t %s")
+#               (org-agenda-fontify-priorities nil)
+#               (org-agenda-remove-tags t))
+#              ("agenda.txt")))
+#    #+END_SRC
+#+END_COMMENT
 
 *** org-babel
 
@@ -4899,28 +4890,28 @@ Conflicts with another server.
 *** org-ref, newer config
 
 #   #+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package org-ref
-  :after org
-  :config
-  (defun blaine/reformat-bib-library (&optional filename)
-    "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
-    (interactive "P")
-    (or filename (setq filename blaine/main-bib-library))
-    (let ((cmnd (concat
-                 (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
-                 (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
-                (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
-                (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
-                )))
-    (async-shell-command cmnd)))
-
-(defun blaine/reformat-bib-lib-hook ()
-   "Reformat the main bib library whenever it is saved.."
-   (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
-    (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
-    (setq bibtex-dialect 'bibtex))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-ref
+#   :after org
+#   :config
+#   (defun blaine/reformat-bib-library (&optional filename)
+#     "Formats the bibliography using biber & rebiber and updates the PDF -metadata."
+#     (interactive "P")
+#     (or filename (setq filename blaine/main-bib-library))
+#     (let ((cmnd (concat
+#                  (format "rebiber -i %s &&" filename) ; Get converence versions of arXiv papers
+#                  (format "biber --tool --output_align --output_indent=2 --output_fieldcase=lower --configfile=~/bib-lib/biber-myconf.conf --output_file=%s %s && " filename filename) ; Properly format the bibliography
+#                 (format "sed -i -e 's/arxiv/arXiv/gI' -e 's/journaltitle/journal     /' -e 's/date      /year      /' %s &&" filename) ; Some replacements
+#                 (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
+#                 )))
+#     (async-shell-command cmnd)))
+# 
+# (defun blaine/reformat-bib-lib-hook ()
+#    "Reformat the main bib library whenever it is saved.."
+#    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
+#     (add-hook 'after-save-hook 'blaine/reformat-bib-lib-hook)
+#     (setq bibtex-dialect 'bibtex))
+# #+END_SRC
 #   #+END_COMMENT
 
 *** org-roam
