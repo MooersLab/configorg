@@ -3989,6 +3989,7 @@ Do we really have to exit the calendar after each selection?
 #    #+END_SRC
 #+END_COMMENT
 
+
 *** org-babel
 
 Org-babel is key to supporting literate programming in org-mode documents.
@@ -4771,9 +4772,6 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 #+END_SRC
-
-
-
 
 
 *** org-pomodoro
