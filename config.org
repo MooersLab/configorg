@@ -3915,7 +3915,7 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
 	("q"
              "List of all active 561 charge density review"
              tags
-             "LEVEL=3/561")
+             "+561")
 	("r"
              "List of all active 211 rcl/dnph tasks"
              tags-todo
@@ -5122,14 +5122,62 @@ The tables have to be preceded by the appropriate header.
 
 Another approach is to store the file path and file format in a properites drawer for the enclosing section.
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 ;; :Properties:
 ;; :TABLE_EXPORT_FILE: observations2.csv
 ;; :TABLE_EXPORT_FORMAT: orgtbl-to-csv
 ;; :END:
 #+END_SRC
+#+END_COMMENT
+
+
+*** org-sidebasr
 
 Place cursor in table and enter "M-x org-table-export" to send to a csv file.
+[[https://github.com/alphapapa/org-sidebar][org-sidebar]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-sidebar
+  :ensure t)
+#+END_SRC
+
+*** org-tree-to-indirect-buffer
+
+This function address the shortcoming of org-tree-to-indirect-buffer which is that there can only be one such indirect buffer per Org mode file. 
+[[https://www.reddit.com/r/orgmode/comments/dbsngi/comment/f26qpzr/][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(defun ap/org-tree-to-indirect-buffer (&optional arg)
+  "Create indirect buffer and narrow it to current subtree.
+The buffer is named after the subtree heading, with the filename
+appended.  If a buffer by that name already exists, it is
+selected instead of creating a new buffer."
+  (interactive "P")
+  (let* ((new-buffer-p)
+         (pos (point))
+         (buffer-name (let* ((heading (org-get-heading t t))
+                             (level (org-outline-level))
+                             (face (intern (concat "outline-" (number-to-string level))))
+                             (heading-string (propertize (org-link-display-format heading)
+                                                         'face face)))
+                        (concat heading-string "::" (buffer-name))))
+         (new-buffer (or (get-buffer buffer-name)
+                         (prog1 (condition-case nil
+                                    (make-indirect-buffer (current-buffer) buffer-name 'clone)
+                                  (error (make-indirect-buffer (current-buffer) buffer-name)))
+                           (setq new-buffer-p t)))))
+    (switch-to-buffer new-buffer)
+    (when new-buffer-p
+      ;; I don't understand why setting the point again is necessary, but it is.
+      (goto-char pos)
+      (rename-buffer buffer-name)
+      (org-narrow-to-subtree))))
+
+(advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
+#+END_SRC
+
+Note: a similar effect is had using a tag vai (e.g., C-c \ m and enter tag at the prompt in the minibuffer).
 
 
 *** org-wc
