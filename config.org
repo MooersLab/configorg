@@ -5145,10 +5145,14 @@ Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 *** org-tree-to-indirect-buffer
 
 This function address the shortcoming of org-tree-to-indirect-buffer which is that there can only be one such indirect buffer per Org mode file. 
-[[https://www.reddit.com/r/orgmode/comments/dbsngi/comment/f26qpzr/][Source]]
+[[https://www.reddit.com/r/orgmode/comments/dbsngi/comment/f26qpzr/][Source]].
+Its purpose is to provide more than one indirect buffer when using org-tree-to-indirect-buffer() (via C-c C-x b).
+This latter function is built-in.
+Repeating C-c C-x b will drill down to the lowest headline level.
+
 
 #+BEGIN_SRC emacs-lisp
-(defun ap/org-tree-to-indirect-buffer (&optional arg)
+(defun my-org-tree-to-indirect-buffer (&optional arg)
   "Create indirect buffer and narrow it to current subtree.
 The buffer is named after the subtree heading, with the filename
 appended.  If a buffer by that name already exists, it is
@@ -5174,7 +5178,8 @@ selected instead of creating a new buffer."
       (rename-buffer buffer-name)
       (org-narrow-to-subtree))))
 
-(advice-add 'org-tree-to-indirect-buffer :override 'ap/org-tree-to-indirect-buffer)
+(advice-add 'org-tree-to-indirect-buffer :override 'my-org-tree-to-indirect-buffer)
+(global-set-key (kbd "C-c \ \") 'my-org-tree-to-indirect-buffer)
 #+END_SRC
 
 Note: a similar effect is had using a tag vai (e.g., C-c \ m and enter tag at the prompt in the minibuffer).
