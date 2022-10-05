@@ -3915,7 +3915,7 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
 	("q"
              "List of all active 561 charge density review"
              tags-todo
-             "561+CATEGORY=\"561\"/NEXT|TODO|INITIATED|WAITING")
+             "561/NEXT|TODO|INITIATED|WAITING")
 	("r"
              "List of all active 211 rcl/dnph tasks"
              tags-todo
