@@ -3884,7 +3884,7 @@ Single digit months and days must be accompanied by a zero in the left position.
 
 These are my customized agenda views by project.
 The letter is the last parameter.
-For example, enter C-c a b to list all active 401 tasks.
+For example, enter C-c a b and then enter 401 at the prompt to list all active 401 tasks.
 
 I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
 
@@ -3914,8 +3914,8 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
              "651+CATEGORY=\"651\"/NEXT|TODO|INITIATED|WAITING")
 	("q"
              "List of all active 561 charge density review"
-             tags-todo
-             "561/NEXT|TODO|INITIATED|WAITING")
+             tags
+             "LEVEL=3/561")
 	("r"
              "List of all active 211 rcl/dnph tasks"
              tags-todo
