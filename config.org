@@ -3897,21 +3897,21 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
              tags-todo
              "CATEGORY=\"401\"/TODO|INITIATED|WAITING")
 	("c"
-             "List of all active 416scipy2022 tasks."
+             "List of all active 523 RNA-drug crystallization review paper"
              tags-todo
-             "CATEGORY=\"416\"/TODO|INITIATED|WAITING")
+             "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
 	("d"
              "List of all active 485PyMOLscGUI tasks."
              tags-todo
              "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
 	("e"
-             "List of all active 523 RNA-drug crystallization review paper"
-             tags-todo
-             "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
-	("g"
              "List of all active 2104 Emacs"
              tags-todo
-             "CATEGORY=\"2104\"/TODO|INITIATED|WAITING")
+             "2104+CATEGORY=\"2104\"/NEXT|TODO|INITIATED|WAITING")
+	("q"
+             "List of all active 561 charge density review"
+             tags-todo
+             "561+CATEGORY=\"561\"/NEXT|TODO|INITIATED|WAITING")
 	("P"
          "List of all projects"
          tags
