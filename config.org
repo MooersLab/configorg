@@ -3897,7 +3897,7 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
              tags-todo
              "CATEGORY=\"401\"/TODO|INITIATED|WAITING")
 	("c"
-             "List of all active 523 RNA-drug crystallization review paper"
+             "List of all active 523 RNA-drug crystallization review paper tasks."
              tags-todo
              "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
 	("d"
@@ -3905,13 +3905,23 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
              tags-todo
              "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
 	("e"
-             "List of all active 2104 Emacs"
+             "List of all active 2104 Emacs tasks"
              tags-todo
              "2104+CATEGORY=\"2104\"/NEXT|TODO|INITIATED|WAITING")
+	("n"
+             "List of all active 651 ENAX2 tasks"
+             tags-todo
+             "651+CATEGORY=\"651\"/NEXT|TODO|INITIATED|WAITING")
 	("q"
              "List of all active 561 charge density review"
              tags-todo
              "561+CATEGORY=\"561\"/NEXT|TODO|INITIATED|WAITING")
+	("r"
+             "List of all active 211 rcl/dnph tasks"
+             tags-todo
+             "561+CATEGORY=\"561\"/NEXT|TODO|INITIATED|WAITING")
+
+
 	("P"
          "List of all projects"
          tags
