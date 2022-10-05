@@ -5179,7 +5179,7 @@ selected instead of creating a new buffer."
       (org-narrow-to-subtree))))
 
 (advice-add 'org-tree-to-indirect-buffer :override 'my-org-tree-to-indirect-buffer)
-(global-set-key (kbd "C-c \ b") 'my-org-tree-to-indirect-buffer)
+(global-set-key (kbd "C-c i b") 'my-org-tree-to-indirect-buffer)
 #+END_SRC
 
 Note: a similar effect is had using a tag vai (e.g., C-c \ m and enter tag at the prompt in the minibuffer).
