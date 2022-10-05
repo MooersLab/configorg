@@ -3919,9 +3919,7 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
 	("r"
              "List of all active 211 rcl/dnph tasks"
              tags-todo
-             "561+CATEGORY=\"561\"/NEXT|TODO|INITIATED|WAITING")
-
-
+             "211+CATEGORY=\"211\"/NEXT|TODO|INITIATED|WAITING")
 	("P"
          "List of all projects"
          tags
