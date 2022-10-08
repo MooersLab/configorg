@@ -2,22 +2,22 @@
 
 ## What is this?
 
-This repo contains my defualt Emacs cofiguration file, ~config.org~, that is written in org-mode.
+This repo contains my defualt Emacs cofiguration file, `config.org`, that is written in org-mode.
 GitHub can render org-mode in the web browser.
 Click in the config.org file above to render it like GitHub markdown.
 
-~config.org~ is a literate programming document with code blocks of elisp code flanked by prose.
-The code is stripped out of ~config.org~ on startup and is written to ~config.el~, which is then read by Emacs to configure it.
+`config.org` is a literate programming document with code blocks of elisp code flanked by prose.
+The code is stripped out of `config.org` on startup and is written to `config.org`, which is then read by Emacs to configure it.
 
 ## Introduction to Emacs
 
 Emacs is a text editor that is used primarily to write document files and to write, edit, and debug computer code source files.
 Eamcs can also do many other tasks like read e-mail and browse the web.
 The org-mode package also supports project planning via it strong support for making lists and outlines.
-The org-agenda package supports the scheduling of tasks and has been widely used to deploy the 'Getting Things Done" (GTD) approach to time management.
-You can also read e-mail, rss feeds, and browse the web.
+The org-agenda package supports the scheduling of tasks and has been widely used to deploy the *Getting Things Done* (GTD) approach to time management.
+You can also read e-mail, RSS feeds, and browse the web.
 Some people spend all day working in Emacs.
-There is so much that you can do in Emacs that it has been likended to an operating system.
+There is so much that you can do in Emacs that it has been likened to an operating system.
 
 ## Emacs is highly configurable
 
