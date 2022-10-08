@@ -15,7 +15,9 @@ Emacs is a text editor that is used primarily to write document files and to wri
 Eamcs can also do many other tasks like read e-mail and browse the web.
 The org-mode package also supports project planning via it strong support for making lists and outlines.
 The org-agenda package supports the scheduling of tasks and has been widely used to deploy the *Getting Things Done* (GTD) approach to time management.
-You can also read e-mail, RSS feeds, and browse the web.
+The org-roam package is popular for knowledge management using the zettelkasten method of note taking.
+
+You can also read e-mail, RSS feeds, and browse the web from Emacs.
 Some people spend all day working in Emacs.
 There is so much that you can do in Emacs that it has been likened to an operating system.
 
@@ -101,10 +103,11 @@ You can replicate your Emacs configuration on Windows, Mac, Linux, and BSD to ma
 I use the pre-release version of Emacs for Macs avaialble from [here]().
 Since January 2022, it has the startup flag `--init-directory` that enables easy switching between start-up profiles.
 This has displaced my use of chemacs, which is described in the section below.
+If you use an earlier version of Emacs, you can use this `config.org` file with *chemacs2*.
 
 I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
-For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from the config.org file).
-These are defined in a ~.bashAppAliases~ file that I source from my ~.zshenv~ file which is  in turn sourced from my ~.zshrc~ startup file.
+For example, I eneter `eid` to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from the config.org file).
+These are defined in a `.bashAppAliases` file that I source from my `.zshenv` file which is  in turn sourced from my `.zshrc` startup file.
 
 ```bash
 alias eib='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave'
@@ -136,10 +139,10 @@ alias eisd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory 
 I changed my setup in January 2022.
 I switched to using the *chemacs.el* package to swap emacs configurations on the fly.
 I set up aliases to commands to use alternate configurations.
-For example, I enter the alias *e29r* to fire up emacs29 with the rational-emacs configuration by Dave Wilson.
-The *e29b* alias is used to fire up emacs29 with the brave-emacs configuration from the GitHub site of the Emacs configuration for recommended by [[https://github.com/flyingmachine/emacs-for-clojure/][Daniel Higginbotham]], the author of [[https://www.braveclojure.com/][*Clojure for the Brave and True*]].
-The *e29m* alias is used to fire up emacs29 with the mar30-emacs configuraton, which is a rebuild of my default configuration using the files pulled from GitHub.
-The mar30-emacs configuration is starting without errors and is working better than before.
+For example, I enter the alias *e29r* to fire up Emacs 29 with the rational-emacs configuration by Dave Wilson.
+The `e29b` alias is used to fire up Emacs 29 with the brave-emacs configuration from the GitHub site of the Emacs configuration for recommended by [[https://github.com/flyingmachine/emacs-for-clojure/][Daniel Higginbotham]], the author of [[https://www.braveclojure.com/][*Clojure for the Brave and True*]].
+The `e29m` alias is used to fire up Emacs29 with the `mar30-emacs` configuraton, which is a rebuild of my default configuration using the files pulled from GitHub.
+The `mar30-emacs` configuration is starting without errors and is working better than before.
 Some of the prior package configurations have been commented out.
 I will fix them when time permits.
 
@@ -158,7 +161,7 @@ alias e29r='/Applications/Emacs.app/Contents/MacOS/Emacs --with-profile rational
 ```
 
 I surrended the */Users/blaine/.emacs.d* directory to */chemacs.el/*. 
-I now store my default configuration in */Users/blaine/.emacs.default* directory, which was starting up with a error at the end of March 2022 that I could not debug.
+
 
 I store the profiles for the alternate Emacs configurations in *~/.emacs-profiles.el*, which has the following elisp content:
 
@@ -169,7 +172,7 @@ I store the profiles for the alternate Emacs configurations in *~/.emacs-profile
  ("rational" . ((user-emacs-directory . "~/.rational-emacs")))) 
 ```
 
-I store of my copy of this repository in */Users/blaine/.emacs.default/ghconfig*.
+I store of my copy of this repository in */Users/blaine/.emacs.default/configorg*.
 I then made an bash alias called *gitpull* that pulls from the GitHub repo and copies the new version to the directory above.
 This copy is the file that Emacs reads.
 
@@ -204,11 +207,12 @@ I no longer need proj.org.
 
 I am trying to limit my use Emacs to do the following activities:
 
-- read epub and PDF documents and capturing notes as I read
 - editing LaTeX, markdown, and org files with Grammarly running
+- read epub and PDF documents and capturing notes as I read
+- time-management with org-agenda
 - literate programming in org
 - exploring Clojure with using cider or the simpler *M-x inf-clojure* 
-- using Emacs as an IDE to develop code:
+- using Emacs as an IDE to develop code for the following languages:
     - C++
     - C
     - Clojure
@@ -225,17 +229,13 @@ I am trying to limit my use Emacs to do the following activities:
 - using ido-mode and dired for directory navigation 
 - using Org-ref version 3 to insert citations and to manage BibTeX file 
 - access remote computers with tramp
-- use org-agenda inbox.org to maintain my TODO list of scheduled and unscheduled items
 - use *term* package to run macport updates 
-- use org-agenda's task.org file to prioritize and schedule my tasks
-- use org-agenda's tickler.org file to remind me of upcoming events
-- use org-pomodoro to track the pomodoros finished in the tasks.org file.
-
+- use of elfeed to do literature searches
+- 
 Once I have mastered Emacs for the above the activities, I will consider expanding my use to do the following:
 
 - advance my use of org-agenda
 - expand my use of other features of org
-- use of elfeed to do literature searches
 - reading e-mail inside Emacs
 - use the time tracking feature with org capture
 - intergrate org capture with manual effort tracking
@@ -554,7 +554,7 @@ Enter *C-h ?* to see a list of all of the options in the '*Metahelp buffer*'.
 You can waste an enormous amount of time by avoiding the built-in documentation.
 After years of using Google to look almost everything, it takes some effort to develop the habit of using the built-in documentation.
 
-**Tip:** Enter `C-h k' and then select a pull-down menu option to open the corresponding documentation in a new buffer.
+**Tip:** Enter *C-h k* and then select a pull-down menu option to open the corresponding documentation in a new buffer.
 
 ### elfeed
 
@@ -575,9 +575,10 @@ There is a beginners channel.
 RSE == Research Software Engineer. 
 A Research Software Engineer is anyone who writes code in research labs. 
 There is an international society.
-I joined the British branch before being aware of the US-RSE, which I subsequently jointed.
+I joined the British branch before being aware of the US-RSE, which I subsequently joined.
 The M-x research group in the RSE slack channel meets on the first and third Tuesday of every month.
 Past presentations are posted [here](https://m-x-research.github.io/).
+In the past year, Jen Jensen has been giving a series of lectures on functional programming in Emacs and Common Lisp.
 
 ### Discord System Crafters Server
 
@@ -655,7 +656,7 @@ While traveling up the Emacs learning spiral, I would read these books in the fo
 #### [Harley Hahn's Emacs Field Guide](http://www.harley.com/emacs/) 
 
 The author recommends reading his book before taking the in-line Emacs tutorial. 
-Emacs greybeards differ in opinion on this matter.
+Emacs greybeards may differ in opinion on this matter.
 
 Nonetheless, Hahn wrote this book for people with no experience with computing. 
 Most graduate students in the biological sciences (outside of bioinformatics and computational biology) would benefit from reading the first several chapters to understand their computers better.
@@ -764,7 +765,7 @@ The book has three chapters.
 
 #### [GNU Emacs Lisp Reference Manual by Bill Lewis et al.](https://www.gnu.org/software/emacs/manual/eintr.html) 
 
-This book is a reference manual, so it is a slow read. 
+This book is this reference manual, but it is remarkably well-written. 
 It is an excellent supplemental source while reading the book by Chassell. 
 Competent users who want to become proficient users need to read this book.
 
