@@ -1339,6 +1339,18 @@ Customize the keywords
 #+END_COMMENT
 
 
+*** direx
+
+~direx.el~ is a simple directory explorer and a generic tree explorer.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package direx
+  :ensure t)
+(global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
+#+END_SRC
+
+
 *** Doom mode-line
 
 The doom mode-line can be used without the Doom configuration.
@@ -6557,6 +6569,25 @@ Only works in LaTeX documents.
   (interactive)
   (shell-command (concat "/usr/local/bin/texcount.pl"))
   (buffer-file-name))
+#+END_SRC
+
+
+*** Which-key-mode
+
+~which-key~ is a minor mode for Emacs.
+It displays the key bindings after your currently entered incomplete command (a prefix) in a popup. 
+If you enter C-x and wait for the default of 1 second, the minibuffer will expand with all of the available key bindings that follow ~C-x~. 
+This includes prefixes like ~C-x 8~, which is shown in a different face. ~which-key~ started as a rewrite of g~uide-key-mode~ but has diveged. 
+It is still under [development](https://github.com/justbur/emacs-which-key#introduction).
+
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode))
+(which-key-setup-side-window-right-bottom)
 #+END_SRC
 
 
