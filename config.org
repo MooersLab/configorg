@@ -265,12 +265,18 @@ A faked full screen.
 ** Hyper and Super key bindings
 
 See this [[http://ergoemacs.org/emacs/emacs_hyper_super_keys.html][ for more information.]]
+I tried option for the super key.
+The s-c keybinding is used for copying.
+Then I switched to caplocks for a while.
+This did not work well.
+I am back to using the option key as the super key.
+
 
 #+BEGIN_SRC emacs-lisp
 ;; set keys for Apple keyboard, for emacs in OS X
 ;; Source http://xahlee.info/emacs/emacs/emacs_hyper_super_keys.html
 (setq mac-command-modifier 'meta) ; make cmd key do Meta
-(setq mac-caplocks-modifier 'super) ; make alt or opt key do Super.
+(setq mac-option-modifier 'super) ; make alt or opt key do Super.
 (setq mac-control-modifier 'control) ; make Control key do Control
 (setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
 #+END_SRC
