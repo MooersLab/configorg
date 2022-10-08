@@ -99,8 +99,35 @@ You can replicate your Emacs configuration on Windows, Mac, Linux, and BSD to ma
 ## Emacs 29.0.5
 
 I use the pre-release version of Emacs for Macs avaialble from [here]().
-It has the keyword `--init-directory` that enables easy switching between start-up profiles.
+Since January 2022, it has the startup flag `--init-directory` that enables easy switching between start-up profiles.
+This has displaced my use of chemacs, which is described in the section below.
 
+I use bash aliases to start up emacs with specifc profiles and with or without the /--init-debug/ flag.
+For example, I eneter ~eid~ to launch Emacs version 29.0.5 with the default profile (i.e., the profile tangled from the config.org file).
+These are defined in a ~.bashAppAliases~ file that I source from my ~.zshenv~ file which is  in turn sourced from my ~.zshrc~ startup file.
+
+```bash
+alias eib='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave'
+alias eibd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/emacs-brave --debug-init'
+
+alias eic='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/crafted-emacs'
+alias eicd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/crafted-emac --debug-init'
+
+alias eid='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/.emacs.default'
+alias eidd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/.emacs.default --debug-init'
+
+alias eidm='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/doom-emacs'
+alias eidmd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/doom-emac --debug-init'
+
+alias eie='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/ess-emacs'
+alias eied='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/ess-emacs --debug-init'
+
+alias eil='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/latex-emacs'
+alias eild='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/latex-emacs --debug-init'
+
+alias eis='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax'
+alias eisd='/Applications/Emacs29.0.5.app/Contents/MacOS/Emacs --init-directory ~/scimax --debug-init'
+```
 
 
 
