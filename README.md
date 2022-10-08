@@ -1,20 +1,70 @@
 # Blaine's initialization file for Emacs
 
+## What is this?
+
+This repo contains my defualt Emacs cofiguration file, ~config.org~, that is written in org-mode.
+GitHub can render org-mode in the web browser.
+Click in the config.org file above to render it like GitHub markdown.
+
+~config.org~ is a literate programming document with code blocks of elisp code flanked by prose.
+The code is stripped out of ~config.org~ on startup and is written to ~config.el~, which is then read by Emacs to configure it.
+
 ## Introduction to Emacs
 
-Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that turns into a black hole).
-Emacs has highly developed support for editing plain text, LaTeX, asciidoc, markdown, rtf, html, org-mode, and other kinds of text files.
+Emacs is a text editor that is used primarily to write document files and to write, edit, and debug computer code source files.
+Eamcs can also do many other tasks like read e-mail and browse the web.
+The org-mode package also supports project planning via it strong support for making lists and outlines.
+The org-agenda package supports the scheduling of tasks and has been widely used to deploy the 'Getting Things Done" (GTD) approach to time management.
+You can also read e-mail, rss feeds, and browse the web.
+Some people spend all day working in Emacs.
+There is so much that you can do in Emacs that it has been likended to an operating system.
+
+## Emacs is highly configurable
+
+Emacs is the ultimate configurable text editor.
+The Emacs Lisp (elisp)language allows users to develop highly customized editors.
+The customization is in the form of settings and functions.
+Often, related settings and functions are bundled into packages.
+
+The configuring process can be an infinitely deep rabbit hole.
+The process of configuring Emacs is never finished, only momentarily paused.
+
+Emacs was designed to be a software toolkit for building extensions to the base text editor.
+These applications are written in elisp and are shared as packages. 
+ELisp is a variant of LISP, which stands for list processing.
+LISP was the second major programming language developed shortly after the first version of FORTRAN in the 1950s.
+Elisp descended from MacLisp (no relation to Mac computers) in the 1970s and emerged at about the same time as common lisp.
+
+Elisp has been costumized for programming text editors like Emacs.
+Most of the the Emacs code base is written in elisp with a small percentage written in C for speed.
+The elisp compiler cannot handle parallel processing, so elisp is not suitable as a moden multipurpose programming language.
+However, the core Emacs developer and package developers have extensively optimized the performance of elisp.
+Although you can run small programs written in elisp outside of Emacs, you may be better off using Clojure, Coommon Lisp, Racket, or Scheme for general programming.
+Learning LISP is a common way to become a better programmer in general.
+
+
+## Text editing
+
+Emacs has highly developed support for editing plain text, LaTeX, asciidoc, markdown, RestructuredText, html, org-mode, and other kinds of text files.
 This support includes autocompletion, access to Grammarly for several document types, snippets, and access to several [Language Server Protocols, LSPs](https://microsoft.github.io/language-server-protocol/).
-Text editing can be divided into two Eras: before LSPs and after LSPs.
-It is central feature of modern Integrated Development Environments (IDEs).
+
+Text file editing can be divided into two eras: before LSPs and after LSPs.
+LSPs are a central feature of modern Integrated Development Environments (IDEs).
 There is also support for managing citations via BibTex and reading PDFs and ebooks inside of Emacs.
 
-Unfortunately, pre-mature configuration of Emacs is a common source of frustration for beginners.
-It is best to use the GUI version of Emacs first and uses the pull-down menus to do productive writing in Emacs.
-Once you are comfortable doing basic writing and editing tasks, slowly start to configure your Emacs profile. 
+## Advice for Beginners
 
-The edit-sever package enables you to edit text areas in webpages using Emacs.
-Likewise, the atomic-chrome enables doing so via the GhostText plugin for Chrome.
+Unfortunately, premature configuration of Emacs is a common source of premature frustration for beginning users of Emacs.
+It is best to use the GUI version of Emacs first and use the pull-down menus to do productive writing in Emacs as soon as possible in order to avoid getting frustrated.
+The value of the pull-down menus are underemphasized with new users prematurely directed to using the keyboard shortcuts.
+However, the pull-down meunus have many of the capabilities found in the pulldowns of other text editors.
+After you are comfortable doing basic writing and editing tasks, start to learn the keyboard shortcuts or key bindings. 
+Then start to configure your Emacs profile file. 
+
+## Editing Textbox on webpages inside Emacs
+
+The edit-server package enables you to edit text areas in webpages using Emacs.
+Likewise, the atomic-chrome enables you doing so via the GhostText plugin for Chrome.
 You click on the ghost icon in your browser's toolbar to send the text to Emacs.
 You can then edit the text with the full power of Emac's editing features.
 The changed text is updated immediately in the text area in the webpage.
@@ -22,6 +72,9 @@ This capability works with Overleaf, the website for editing LaTeX documents on 
 It also works in the code cells of Jupyter notebooks.
 I gave a talk about this [topic](https://github.com/MooersLab/DSW22ghosttext) in July 2022.
 Atomic-chrome can be configured to enter the latex-mode whenever invoked from Overleaf.
+
+
+## Programming in Emacs
 
 Emacs is also a software integrated development environment (IDE).
 It supports syntax highlighting, code snippets, and autocompletion for many programming languages.
@@ -35,15 +88,6 @@ Similar capabilities are available from org-babel via ob-jupyter.
 Just list `jupyter` last in the list of org-babel languages.
 Use `jupyter` for the language in the code block header and then select the appropriate Jupyter kernel to select the language that you want to use.
 
-Emacs was designed to be a software toolkit for building extensions to the base text editor.
-These applications are written in with Emacs Lisp or elisp. 
-ELisp is a variant of LISP, which stands for list processing.
-Elips descended from MacLisp (no relation to Mac computers) in the 1970s and emerged at about the same time as common lisp.
-Elisp has been costumized for programming text editors like Emacs.
-Most of the the Emacs code base is written in elisp with a small percentage written in C for speed.
-The elisp compiler cannot handle parallel processing, so elisp is not suitable as a moden multipurpose programming language.
-However, the core Emacs developer and package developers have extensively optimized the performance of elisp.
-Although you can run small programs written in elisp outside of Emacs, you may be better off using Common Lisp or Clojure for general programming.
 
 ![Figure 1](https://github.com/MooersLab/configorg/blob/main/emacs-learning-curve.jpg)
 
@@ -52,6 +96,10 @@ You can do most of your computing tasks inside of Emacs.
 Emacs is almost an operating system.
 You can replicate your Emacs configuration on Windows, Mac, Linux, and BSD to maintain a uniform working environment regardless of the underlying operating system.
 
+## Emacs 29.0.5
+
+I use the pre-release version of Emacs for Macs avaialble from [here]().
+It has the keyword `--init-directory` that enables easy switching between start-up profiles.
 
 
 
