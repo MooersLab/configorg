@@ -1342,12 +1342,12 @@ Customize the keywords
 *** direx
 
 ~direx.el~ is a simple directory explorer and a generic tree explorer.
-
+The source is in MELPA and on [GitHub](https://github.com/emacsorphanage/direx).
 
 #+BEGIN_SRC emacs-lisp
-(use-package direx
-  :ensure t)
-(global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
+;; (use-package direx
+;;  :ensure t)
+;; (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
 #+END_SRC
 
 
