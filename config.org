@@ -5754,6 +5754,19 @@ C-c C-c will send run the code in the buffer to the REPL and return the output i
 # #+END_SRC
 
 
+
+**** jedi
+
+Jedi.el is a Python auto-completion package.
+It helps you to find information about Python objects, such as docstring, function arguments, and code location.
+Source on GitHub [Jedi](http://tkf.github.io/emacs-jedi/latest/)
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)                 ; optional
+#+END_SRC
+
+
 **** pyenv
 
 The pyenv pacakge support the use of pyenv environments.
