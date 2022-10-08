@@ -1140,13 +1140,14 @@ The same goes for the other CUA keys.
 
 [[Source][https://www.emacswiki.org/emacs/CuaMode]]
 
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (cua-mode t)
     (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
     (transient-mark-mode 1) ;; No region when it is not highlighted
     (setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
 #+END_SRC
-
+#+END_COMMENT
 
 ** D
 
@@ -3835,15 +3836,15 @@ Single digit months and days must be accompanied by a zero in the left position.
 (define-key global-map "\C-cl" 'org-store-link)
 
 (setq org-agenda-files '("/Users/blaine/gtd/tasks/JournalArticles.org"
-   "/Users/blaine/gtd/tasks/Proposals.org"
-   "/Users/blaine/gtd/tasks/Books.org"
-   "/Users/blaine/gtd/tasks/Talks.org"
-   "/Users/blaine/gtd/tasks/Posters.org"
-   "/Users/blaine/gtd/tasks/ManuscriptReviews.org"
-   "/Users/blaine/gtd/tasks/Private.org"
-   "/Users/blaine/gtd/tasks/Service.org"
-   "/Users/blaine/gtd/tasks/Teaching.org"
-   "/Users/blaine/gtd/tasks/Workshops.org"))
+ "/Users/blaine/gtd/tasks/Proposals.org"
+ "/Users/blaine/gtd/tasks/Books.org"
+ "/Users/blaine/gtd/tasks/Talks.org"
+ "/Users/blaine/gtd/tasks/Posters.org"
+ "/Users/blaine/gtd/tasks/ManuscriptReviews.org"
+ "/Users/blaine/gtd/tasks/Private.org"
+ "/Users/blaine/gtd/tasks/Service.org"
+ "/Users/blaine/gtd/tasks/Teaching.org"
+ "/Users/blaine/gtd/tasks/Workshops.org"))
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
 (setq org-capture-templates
@@ -3924,6 +3925,107 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
          "List of all projects"
          tags
          "LEVEL=2/PROJ")))
+#+END_SRC
+
+
+*** Customized org-captures with prompt for project headline
+
+I usually know the project to which I want to assign a task.
+I loathe having to come back latter to refile my tasks.
+I want to do the filing at the time of capture.
+I found a solution [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][here]].
+
+
+A project has two or more tasks.
+I believe that the 10,000 projects is the upper limit for a 30 year academic career.
+There are about 10,000 workdays in a 30 year career if you work six days a week.
+Of course, most academics work seven a week and many work longer than 30 years, some even reach 60 years.
+
+I have my projects split into ten org files.
+Each org file has a limit of 1000 projects for ease of scrolling.
+
+It is best to let Emacs insert new task because it is easy to accidently delete sectons in an org file, especially when sections are folded.
+(I know that many love folded sections.
+There is a strong appeal to being able to collapse secitons of text.
+However, folded section are not for me; I have experienced too many catastrophes. 
+I open all of my org files with all sections fully open.
+I can use swiper to navigate if I do not want to scroll.)
+Enter ~C-c c~ to start the capture menu.
+The settings below show a single letter option for selecting the appropriate org-file.
+After entering the single-letter code, you are prompted for the headline name.
+You do not have to include the TODO keyword.
+However, I changed "Headline" to "Tag" because I have the project ID was one of the tags on the same line as the project headline.
+I am now prompted for the tag.
+After entering the tag, I fill out the task entry.
+I then enter ~C-c C-c~ to save the capture.
+
+This protocol can be executed from inside the target org file or from a different buffer. 
+
+I learned about the following function, which I modified by changing "Headline " to "Tag", from
+[[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture] [Lionel Henry]] with the modification by Phil on July 1, 2018.
+
+#+BEGIN_SRC emacs-lisp
+(defun org-ask-location ()
+  (let* ((org-refile-targets '((nil :maxlevel . 9)))
+         (hd (condition-case nil
+                 (car (org-refile-get-location "Tag" nil t))
+               (error (car org-refile-history)))))
+    (goto-char (point-min))
+    (outline-next-heading)
+    (if (re-search-forward
+         (format org-complex-heading-regexp-format (regexp-quote hd))
+         nil t)
+        (goto-char (point-at-bol))
+      (goto-char (point-max))
+      (or (bolp) (insert "\n"))
+      (insert "* " hd "\n")))
+  (end-of-line))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+ '(
+   ("j" "JournalArticles" entry
+    (file+function "/Users/blaine/gtd/tasks/JournalArticles.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("g" "GrantProposals" entry
+    (file+function "/Users/blaine/gtd/tasks/Proposals.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)        
+    ("b" "Books" entry
+    (file+function "/Users/blaine/gtd/tasks/Books.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("t" "Talks" entry
+    (file+function "/Users/blaine/gtd/tasks/Talks.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("p" "Posters" entry
+    (file+function "/Users/blaine/gtd/tasks/Posters.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("r" "ManuscriptReviews" entry
+    (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)    
+    ("v" "Private" entry
+    (file+function "/Users/blaine/gtd/tasks/Private.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("s" "Service" entry
+    (file+function "/Users/blaine/gtd/tasks/Service.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("T" "Teaching" entry
+    (file+function "/Users/blaine/gtd/tasks/Teaching.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ("w" "Workshop" entry
+    (file+function "/Users/blaine/gtd/tasks/Workshops.org" org-ask-location)
+    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    :empty-lines 1)
+    ))
 #+END_SRC
 
 
