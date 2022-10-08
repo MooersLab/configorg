@@ -3968,7 +3968,7 @@ I then enter ~C-c C-c~ to save the capture.
 This protocol can be executed from inside the target org file or from a different buffer. 
 
 I learned about the following function, which I modified by changing "Headline " to "Tag", from
-[[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture] [Lionel Henry]] with the modification by Phil on July 1, 2018.
+[[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
 
 #+BEGIN_SRC emacs-lisp
 (defun org-ask-location ()
