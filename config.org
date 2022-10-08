@@ -2740,7 +2740,7 @@ For a better imenu, use.
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 #+END_SRC
 
-* COMMENT Stop
+
 #    Add these two packages to enhance the use of ~js2-mode~.
 #
 #    #+BEGIN_SRC emacs-lisp
