@@ -2,27 +2,40 @@
 
 ## Introduction to Emacs
 
-Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that leads to a black hole).
+Emacs is the ultimate configurable text editor (beware: the configuring process can be a rabbit hole that turns into a black hole).
 Emacs has highly developed support for editing plain text, LaTeX, asciidoc, markdown, rtf, html, org-mode, and other kinds of text files.
-This support includes autocompletion, access to grammarly for several document types, snippets, and access to several LSPs.
+This support includes autocompletion, access to Grammarly for several document types, snippets, and access to several [Language Server Protocols, LSPs](https://microsoft.github.io/language-server-protocol/).
+Text editing can be divided into two Eras: before LSPs and after LSPs.
+It is central feature of modern Integrated Development Environments (IDEs).
 There is also support for managing citations via BibTex and reading PDFs and ebooks inside of Emacs.
+
+Unfortunately, pre-mature configuration of Emacs is a common source of frustration for beginners.
+It is best to use the GUI version of Emacs first and uses the pull-down menus to do productive writing in Emacs.
+Once you are comfortable doing basic writing and editing tasks, slowly start to configure your Emacs profile. 
 
 The edit-sever package enables you to edit text areas in webpages using Emacs.
 Likewise, the atomic-chrome enables doing so via the GhostText plugin for Chrome.
-You click on the ghost icon in your browser;s toolbar to send the text to Emacs.
+You click on the ghost icon in your browser's toolbar to send the text to Emacs.
 You can then edit the text with the full power of Emac's editing features.
 The changed text is updated immediately in the text area in the webpage.
 This capability works with Overleaf, the website for editing LaTeX documents on the web.
+It also works in the code cells of Jupyter notebooks.
+I gave a talk about this [topic](https://github.com/MooersLab/DSW22ghosttext) in July 2022.
 Atomic-chrome can be configured to enter the latex-mode whenever invoked from Overleaf.
 
 Emacs is also a software integrated development environment (IDE).
 It supports syntax highlighting, code snippets, and autocompletion for many programming languages.
 
 Emacs also supports several approaches to literate programming.
-One of the most developed approaches is found in org-mode where the emac-jupyter package enables you to tap into your Jupyter Notebook kernels to access scores of programming languages.
+One of the most developed approaches is found in org-mode where the `emacs-jupyter` package enables you to tap into your Jupyter Notebook kernels to access scores of programming languages.
 You can switch kernels between code blocks inside one org document and thereby do polyglot literate programming.
 
-Emacs was designed to be a software toolkit for building extensions to base text editor.
+The package emacs-jupyter package can be hard to configure and use correctly.
+Similar capabilities are available from org-babel via ob-jupyter.
+Just list `jupyter` last in the list of org-babel languages.
+Use `jupyter` for the language in the code block header and then select the appropriate Jupyter kernel to select the language that you want to use.
+
+Emacs was designed to be a software toolkit for building extensions to the base text editor.
 These applications are written in with Emacs Lisp or elisp. 
 ELisp is a variant of LISP, which stands for list processing.
 Elips descended from MacLisp (no relation to Mac computers) in the 1970s and emerged at about the same time as common lisp.
