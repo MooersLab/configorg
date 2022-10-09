@@ -4055,39 +4055,39 @@ I learned about the following function, which I modified by changing "Headline "
     :empty-lines 1)
     ("g" "GrantProposals" entry
     (file+function "/Users/blaine/gtd/tasks/Proposals.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)        
     ("b" "Books" entry
     (file+function "/Users/blaine/gtd/tasks/Books.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("t" "Talks" entry
     (file+function "/Users/blaine/gtd/tasks/Talks.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("p" "Posters" entry
     (file+function "/Users/blaine/gtd/tasks/Posters.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("r" "ManuscriptReviews" entry
     (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)    
     ("v" "Private" entry
     (file+function "/Users/blaine/gtd/tasks/Private.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("s" "Service" entry
     (file+function "/Users/blaine/gtd/tasks/Service.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("T" "Teaching" entry
     (file+function "/Users/blaine/gtd/tasks/Teaching.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ("w" "Workshop" entry
     (file+function "/Users/blaine/gtd/tasks/Workshops.org" org-ask-location)
-    "\n\n** %?\n<%<%Y-%m-%d %a %T>>"
+    "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ))
 #+END_SRC
