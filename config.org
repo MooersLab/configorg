@@ -915,7 +915,7 @@ See [[https://ddavis.io/posts/eglot-cpp-ide/] this blog]] post for more informat
 
 (defun dd/projectile-proj-find-function (dir)
   (let ((root (projectile-project-root dir)))
-    (and root (cons 'transient root))))\
+    (and root (cons 'transient root))))
 
 (use-package eglot
   :ensure t)
@@ -932,10 +932,6 @@ See [[https://ddavis.io/posts/eglot-cpp-ide/] this blog]] post for more informat
   (add-to-list 'eglot-server-programs
                `((c++-mode) ,mooers-clangd-exe))
   (add-hook 'c++-mode-hook 'eglot-ensure))
-(use-package eglot)
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-('c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
 
 (defun dd/cpp-eglot-disable ()
   "disable hook for eglot"
