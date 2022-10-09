@@ -3831,6 +3831,20 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 
 ** O
 
+
+*** One sentence per line.
+
+
+
+
+#+BEGIN_SRC emacs-lisp
+(load-file "~/.emacs.default/manual-packages/ospl/ospl-mode.el")
+(use-package ospl-mode
+  :hook (TeX-mode . ospl-mode))
+
+;;(define-key global-map "\C-cfc" 'filesets-close)
+#+END_SRC
+
 *** Org configuration
 
 This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the basics of org-mode in five minutes.
