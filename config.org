@@ -116,12 +116,14 @@ If you are tweaking you config.org file frequently, it is not worth the trouble 
 Long-time Emacs users just reload the init.el after editing thier configuration rather than restart Emacs.
 
 
-** What most people do
+** eval-buffer
 
 Yes, you can load the init.el file into a buffer to trigger reloading the config.org file.
 Then you can run ~M-x eval-buffer~ to trigger the reloading of config.org.
 You might even what to configure Emacs to load init.el on startup.
 However, sometimes a clean restart is required when you are beginner.
+
+** Evaluating code chunks
 
 The elisp code in the scratch buffer can be run by placing the cursor right after the leftmost parenthesis and entering ~C-x C-e~ or by placing the cursor inside of the parenthesis and entering ~C-M-x~.
 You can use these commands to test bits of configuration in your ~<*scratch*>~ buffer before committing to adding the code chunks to your config.org file.
@@ -364,7 +366,7 @@ Combined with emacs-mac, this gives good PDF quality for [[https://www.aidanscan
 
 *** Provide matching parentheses
 
-[[https://ianyepan.github.io/posts/setting-up-use-package/][Source for matching parentheses.]]
+[[https://ianyepan.github.io/posts/setting-up-use-package/][Source]] for matching parentheses.
 
 Set delay in the matching parenthesis to zero.
 We are modifying the behavior of a built-in package.
