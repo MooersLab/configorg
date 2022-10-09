@@ -886,6 +886,23 @@ To enable the use of the minted package.
 *** clangd
 
 Configure eglot to work with clangd.
+It was installed with ~brew install llvm~.
+
+To use the bundled libc++ please add the following LDFLAGS:
+  LDFLAGS="-L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt/llvm/lib/c++"
+
+llvm is keg-only, which means it was not symlinked into /usr/local,
+because macOS already provides this software and installing another version in
+parallel can cause all kinds of trouble.
+
+If you need to have llvm first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find llvm you may need to set:
+  export LDFLAGS="-L/usr/local/opt/llvm/lib"
+  export CPPFLAGS="-I/usr/local/opt/llvm/include"
+  
+  
 
 See [[https://ddavis.io/posts/eglot-cpp-ide/] this blog]] post for more information.
 
@@ -893,8 +910,8 @@ See [[https://ddavis.io/posts/eglot-cpp-ide/] this blog]] post for more informat
 (defvar ddavis-clangd-exe (executable-find "clangd")
   "clangd executable path")
   
-(when (string= (system-name) "pion")
-  (setq ddavis-clangd-exe "~/software/llvm/releases/master/bin/clangd"))
+(when (string= (system-name) "blaine2018mbp.local")
+  (setq mooers-clangd-exe "/usr/local/opt/llvm/bin/clangd"))
 
 (defun dd/projectile-proj-find-function (dir)
   (let ((root (projectile-project-root dir)))
