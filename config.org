@@ -3832,18 +3832,6 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 ** O
 
 
-*** One sentence per line.
-
-
-
-
-#+BEGIN_SRC emacs-lisp
-(load-file "~/.emacs.default/manual-packages/ospl/ospl-mode.el")
-(use-package ospl-mode
-  :hook (TeX-mode . ospl-mode))
-
-;;(define-key global-map "\C-cfc" 'filesets-close)
-#+END_SRC
 
 *** Org configuration
 
@@ -5467,6 +5455,23 @@ If UNSAFE is non-nil, assume point is on headline."
                 finally do (message "Subtree \"%s\" has %s lines, %s words, and %s characters."
                                     (org-get-heading t t) total-lines total-words total-characters)))))
 #+END_SRC
+
+
+*** One sentence per line, ospl-mode
+
+Writing one sentence per line (OSPL) in LaTeX files eases resolving conflict resolution when using version control.
+The use of ospl also eases shuffling lines around in Emacs using ~M-up~ or ~M-down~.
+This package provides this as an Emacs minor mode, where M-q fills the current paragraph to OSPL.
+The source of this code is located [[https://github.com/stettberger/ospl-mode][here]].
+
+#+BEGIN_SRC emacs-lisp
+;; (load-file "~/.emacs.default/manual-packages/ospl/ospl-mode.el")
+;; (use-package ospl-mode
+;;   :hook (TeX-mode . ospl-mode))
+;; (define-key global-map "\C-cfc" 'filesets-close)
+#+END_SRC
+
+
 
 
 ** P
