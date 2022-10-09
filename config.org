@@ -890,7 +890,7 @@ Configure eglot to work with clangd.
 #+BEGIN_SRC emacs-lisp
 (use-package eglot)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-(add-hook 'c-mode-hook 'eglot-ensure)
+('c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 #+END_SRC
 
@@ -3519,7 +3519,7 @@ have to be added after running the function.
 
 #+BEGIN_SRC emacs-lisp
 (defun description (beg end)
- "wrap the active region in an 'itemize' environment,
+ "wrap the active region in an 'description' environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
   (save-restriction
@@ -3541,7 +3541,7 @@ The elements of the list must begin with a dash.
 
 #+BEGIN_SRC emacs-lisp
 (defun enumerate (beg end)
- "wrap the active region in an 'itemize' environment,
+ "wrap the active region in an 'enumerate' environment,
   converting hyphens at the beginning of a line to \item"
   (interactive "r")
   (save-restriction
@@ -3580,7 +3580,8 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
     (insert "\\end{itemize}\n")))
 #+END_SRC
 
-
+Now I need map the above three functions to keybindings.
+I also need to make functions to convert list in LaTeX to lists in Org-mode or markdown.
 
 
 ** M
