@@ -2,8 +2,9 @@
 #+AUTHOR: Blaine Mooers
 #+DATE: 30 September 2022
 #+EMAIL: blaine-mooers at ouhsc.edu
-#+STARTUP: overview
-#+Startup: nohideblocks
+#+STARTUP:  showall
+
+
 
 * Introduction
 I followed an alternate approach to managing my /init.el/ file that was inspired by [[https://gitlab.com/dwt1/dotfiles][Derek Taylor]].
@@ -901,15 +902,15 @@ If you need to have llvm first in your PATH, run:
 For compilers to find llvm you may need to set:
   export LDFLAGS="-L/usr/local/opt/llvm/lib"
   export CPPFLAGS="-I/usr/local/opt/llvm/include"
-  
-  
+
+
 
 See [[https://ddavis.io/posts/eglot-cpp-ide/] this blog]] post for more information.
 
 #+BEGIN_SRC emacs-lisp
 (defvar mooers-clangd-exe (executable-find "clangd")
   "clangd executable path")
-  
+
 (when (string= (system-name) "blaine2018mbp.local")
   (setq mooers-clangd-exe "/usr/local/opt/llvm/bin/clangd"))
 
@@ -2062,7 +2063,7 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 #        (if (> (length authors-list) 1)
 #            (format "%s et al." (plist-get (nth 0 authors-list) :name))
 #          (plist-get (nth 0 authors-list) :name)))
-#    
+#
 #    (defun my-search-print-fn (entry)
 #        "Print ENTRY to the buffer."
 #        (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
@@ -2079,19 +2080,19 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 #            (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
 #            (authors-column (elfeed-format-column entry-authors 40 :left)))
 #        (insert (propertize date 'face 'elfeed-search-date-face) " ")
-#    
+#
 #        (insert (propertize title-column
 #                            'face title-faces 'kbd-help title) " ")
 #        (insert (propertize authors-column
 #                            'kbd-help entry-authors) " ")
 #        (insert entry-score " ")))
-#    
+#
 #    (setq elfeed-search-print-entry-function #'my-search-print-fn)
 #    (setq elfeed-search-date-format '("%y-%m-%d" 10 :left))
 #    (setq elfeed-search-title-max-width 110)
 #    (setq elfeed-search-filter "@2-week-ago +unread")
 #    #+END_SRC
-#    
+#
 #    #+BEGIN_COMMENT
 #    (use-package elfeed-score
 #      :after elfeed
@@ -2103,8 +2104,8 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 #    (setq arxiv_bib "~/Downloads/global.bib")
 #    (setq arxiv_pdf_loc "~/0papersLabeled/")
 #    #+END_COMMENT
-#    
-#    
+#
+#
 #    #+BEGIN_SRC emacs-lisp
 #    (defun my/elfeed-entry-to-arxiv ()
 #        "Fetch an arXiv paper into the local library from the current elfeed entry."
@@ -2116,12 +2117,12 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 #            (message "Going to arXiv: %s" matched-arxiv-number)
 #            (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number arxiv_bib arxiv_pdf_loc))
 #    #+END_SRC
-#    
+#
 #    #+BEGIN_COMMENT
 #    ;; (map! :leader
 #    ;;       :desc "arXiv paper to library" "n a" #'my/elfeed-entry-to-arxiv
 #    ;;       :desc "Elfeed" "n e" #'elfeed)
-#    
+#
 #    (defun my/elfeed-entry-to-arxiv ()
 #        "Fetch an arXiv paper into the local library from the current elfeed entry.
 #    - Update the bib entry with the pdf file location"
@@ -2154,10 +2155,10 @@ The elfeed configuration below follows this [[https://www.cs.mcgill.ca/~ksinha4/
 #    )
 #    (setq org-ref-pdf-directory arxiv_pdf_loc)
 #    #+END_COMMENT
-#    
-#    
+#
+#
 #    - [[https://www.maketecheasier.com/use-emacs-for-rss-with-elfeed/][Tutorial on elfeed.]]
-#    
+#
 
 
 *** Emacs lisp REPL
@@ -2365,14 +2366,14 @@ There is a ob-fsharp package. Install it from MELPA.
 ;; (setq inferior-fsharp-program "path/to/fsharpi --readline-")
 #+END_SRC
 
-#     *** COMMENT flycheck 
-#     
+#     *** COMMENT flycheck
+#
 #     The npm package textlint is fouling things up.
-#     
+#
 #     **** add prose-linter
-#     
+#
 #     Install with ~pip install proselint~.
-#     
+#
 #     #+BEGIN_SRC emacs-lisp
 #     (flycheck-define-checker proselint
 #       "A linter for prose."
@@ -2382,16 +2383,16 @@ There is a ob-fsharp package. Install it from MELPA.
 #             (id (one-or-more (not (any " "))))
 #             (message) line-end))
 #       :modes (latex-mode text-mode markdown-mode gfm-mode))
-#     
+#
 #     (add-to-list 'flycheck-checkers 'proselint)
 #     #+END_SRC
-#     
+#
 #     Enter ~M-x proselint~ on a text or LaTeX file.
-#     
+#
 #     **** Add textlint
-#     
+#
 #     Install via ~npm install -g textlint~.
-#     
+#
 #     #+BEGIN_SRC emacs-lisp
 #     (autoload 'flycheck "flycheck" "" t)
 #     (flycheck-define-checker textlint
@@ -2425,24 +2426,24 @@ There is a ob-fsharp package. Install it from MELPA.
 #       )
 #     (add-to-list 'flycheck-checkers 'textlint)
 #     #+END_SRC
-#     
+#
 #     There are linters for other [[https://www.flycheck.org/en/latest/languages.html#flycheck-languages][languages]] that run with flycheck.
 #     Some linters are built into Emacs like the linter called ~lintr~.
 #     Check by opening an R file and enter ~M-x flycheck-list-errors~.
-#     
+#
 #     **** Enable flycheck everywhere
-#     
+#
 #     #+BEGIN_SRC emacs-lisp
 #     (add-hook 'after-init-hook #'global-flycheck-mode)
 #     #+END_SRC
-#     
+#
 #     Enter ~C-c ! v~.
-#     
+#
 #     Enter ~M-x list-flycheck-errors ~ ~C-c ! l~ to list the errors in a separate buffer.
-#     
-#     
+#
+#
 #     **** Configure the buffer with the list of flycheck errors
-#     
+#
 #     #+BEGIN_SRC emacs-lisp
 #     (add-to-list 'display-buffer-alist
 #                  `(,(rx bos "*Flycheck errors*" eos)
@@ -2452,18 +2453,18 @@ There is a ob-fsharp package. Install it from MELPA.
 #                   (reusable-frames . visible)
 #                   (window-height   . 0.33)))
 #     #+END_SRC
-#     
+#
 #     *** COMMENT flyspell
-#     
+#
 #     Spell checker settings from [[https://github.com/novoid/dot-emacs/blob/master/config.org][Karl Voit]]
-#     
+#
 #     #+BEGIN_SRC emacs-lisp
 #     (when (my-eval-if-binary-or-warn "aspell")
-#     
-#     
+#
+#
 #     (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
 #     (setq flyspell-issue-welcome-flag nil)
-#     
+#
 #     (when (my-system-type-is-windows)
 #       (setq flyspell-default-dictionary "american")
 #     )
@@ -2471,7 +2472,7 @@ There is a ob-fsharp package. Install it from MELPA.
 #       (setq flyspell-default-dictionary "american")
 #       (setq default-dictionary "american")
 #     )
-#     
+#
 #     ;; Check spelling only in the comments of these source codes.
 #     (add-hook          'c-mode-hook 'flyspell-prog-mode)
 #     (add-hook         'sh-mode-hook 'flyspell-prog-mode)
@@ -2483,7 +2484,7 @@ There is a ob-fsharp package. Install it from MELPA.
 #     (add-hook   'autotest-mode-hook 'flyspell-prog-mode)
 #     (add-hook   'makefile-mode-hook 'flyspell-prog-mode)
 #     (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mo
-#     
+#
 #     ;; For quick spell checking
 #     (define-key global-map [(f5)] 'flyspell-mode)
 #     (define-key global-map [(f7)] 'flyspell-goto-next-error)
@@ -3909,7 +3910,7 @@ Use ~C-c C-s~ to set timestamps with the scheduled keyword.
 This is for events that are not to be started until the scheduled time.
 
 Use ~C-s C-d~ to set timestamps with the deadline keyword.
-The format of the data must by YYYY-MM-DD. 
+The format of the data must by YYYY-MM-DD.
 Single digit months and days must be accompanied by a zero in the left position.
 
 
@@ -3923,10 +3924,9 @@ Most will probably have 2000 to 3000 projects.
 In analogy to the Dewy Decimal system, I have divided projects into ten categories.
 I use only a numeric codes for the indices, and I use 10,000 top level categories rather than 1000.
 The first category are journal articles.
-Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for estalishing credibility in grant applications. 
+Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for estalishing credibility in grant applications.
 Each category has been assigned a range of 1000 numeric indices.
 
-I addpate
 
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-ca" 'org-agenda)
@@ -3945,28 +3945,24 @@ I addpate
  "/Users/blaine/gtd/tasks/Service.org"
  "/Users/blaine/gtd/tasks/Teaching.org"
  "/Users/blaine/gtd/tasks/Workshops.org"))
- 
-;; Cycle through these keywords with shift right or left arrows. 
+
+;; Cycle through these keywords with shift right or left arrows.
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
 
-(setq org-capture-templates
-          '(("t" "Default capture" entry (file "~/gtd/inbox.org")
-             "* %?\n%u\n%a\n")))
+;; (setq org-capture-templates
+;;           '(("t" "Default capture" entry (file "~/gtd/inbox.org")
+;;              "*** TODO %?\n%u\n%a\n")))
 
 ;; Prompt user for a description, displaying the string "Description"
 ;; Also prompt for a set of tags (%^g) and a inactive timestamp,
 ;; displaying "Date and time",
-(add-to-list 'org-capture-templates
-             '("c"
-               "Calendar entry"
-               entry
-               (file org-default-notes-file)
-               "* CAL %^{Description} %^g\n%^{Date and time}T "))
-;; Insert a new TODO item under the "emails" headline in org-default-notes-file
-;; Add a link to the current location (likely the email itself) and a deadline
-;; to the next day, by evaluating the elisp s-expression
-;; "(org-insert-time-stamp (org-read-date nil t \"+1d\"))"
+;;(add-to-list 'org-capture-templates
+;;             '("c"
+;;              "Calendar entry"
+;;               entry
+;;               (file org-default-notes-file)
+;;               "* CAL %^{Description} %^g\n%^{Date and time}T "))
 
 (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 2)
@@ -4059,7 +4055,7 @@ Each org file has a limit of 1000 projects for ease of scrolling.
 It is best to let Emacs insert new task because it is easy to accidently delete sectons in an org file, especially when sections are folded.
 (I know that many love folded sections.
 There is a strong appeal to being able to collapse secitons of text.
-However, folded section are not for me; I have experienced too many catastrophes. 
+However, folded section are not for me; I have experienced too many catastrophes.
 I open all of my org files with all sections fully open.
 I can use swiper to navigate if I do not want to scroll.)
 Enter ~C-c c~ to start the capture menu.
@@ -4071,7 +4067,7 @@ I am now prompted for the tag.
 After entering the tag, I fill out the task entry.
 I then enter ~C-c C-c~ to save the capture.
 
-This protocol can be executed from inside the target org file or from a different buffer. 
+This protocol can be executed from inside the target org file or from a different buffer.
 
 I learned about the following function, which I modified by changing "Headline " to "Tag", from
 [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
@@ -4104,7 +4100,7 @@ I learned about the following function, which I modified by changing "Headline "
     ("g" "GrantProposals" entry
     (file+function "/Users/blaine/gtd/tasks/Proposals.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
-    :empty-lines 1)        
+    :empty-lines 1)
     ("b" "Books" entry
     (file+function "/Users/blaine/gtd/tasks/Books.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
@@ -4120,7 +4116,7 @@ I learned about the following function, which I modified by changing "Headline "
     ("r" "ManuscriptReviews" entry
     (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
-    :empty-lines 1)    
+    :empty-lines 1)
     ("v" "Private" entry
     (file+function "/Users/blaine/gtd/tasks/Private.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
@@ -4161,7 +4157,7 @@ Do we really have to exit the calendar after each selection?
 (add-to-list 'load-path "/Users/blaine/")
 #+END_SRC
 
-**** Prioritization 
+**** Prioritization
 
 #+BEGIN_COMMENT
 #    #+BEGIN_SRC emacs-lisp
@@ -5144,7 +5140,7 @@ Conflicts with another server.
 #                 (format "git commit -m \"Updating bibliography..\" %s && git push" filename) ; Commit and push the updated bib
 #                 )))
 #     (async-shell-command cmnd)))
-# 
+#
 # (defun blaine/reformat-bib-lib-hook ()
 #    "Reformat the main bib library whenever it is saved.."
 #    (when (equal (buffer-file-name) blaine/main-bib-library) (blaine/reformat-bib-library)))
@@ -5358,7 +5354,7 @@ Place cursor in table and enter "M-x org-table-export" to send to a csv file.
 
 *** org-tree-to-indirect-buffer
 
-This function address the shortcoming of org-tree-to-indirect-buffer which is that there can only be one such indirect buffer per Org mode file. 
+This function address the shortcoming of org-tree-to-indirect-buffer which is that there can only be one such indirect buffer per Org mode file.
 [[https://www.reddit.com/r/orgmode/comments/dbsngi/comment/f26qpzr/][Source]].
 Its purpose is to provide more than one indirect buffer when using org-tree-to-indirect-buffer() (via C-c C-x b).
 This latter function is built-in.
@@ -5760,7 +5756,7 @@ Get the API key via your NCBI account .
 
 
 
-#   
+#
 *** Python
 
 See the [[https://www.emacswiki.org/emacs/PythonProgrammingInEmacs][Emacs Wiki]] from more options.
@@ -6699,9 +6695,9 @@ Only works in LaTeX documents.
 *** Which-key-mode
 
 ~which-key~ is a minor mode for Emacs.
-It displays the key bindings after your currently entered incomplete command (a prefix) in a popup. 
-If you enter C-x and wait for the default of 1 second, the minibuffer will expand with all of the available key bindings that follow ~C-x~. 
-This includes prefixes like ~C-x 8~, which is shown in a different face. ~which-key~ started as a rewrite of g~uide-key-mode~ but has diveged. 
+It displays the key bindings after your currently entered incomplete command (a prefix) in a popup.
+If you enter C-x and wait for the default of 1 second, the minibuffer will expand with all of the available key bindings that follow ~C-x~.
+This includes prefixes like ~C-x 8~, which is shown in a different face. ~which-key~ started as a rewrite of g~uide-key-mode~ but has diveged.
 It is still under [development](https://github.com/justbur/emacs-which-key#introduction).
 
 
