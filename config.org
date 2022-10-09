@@ -91,7 +91,7 @@ I used a function to do so.
 I obtained this function from [[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][[[https://raw.githubusercontent.com/novoid/dot-emacs/master/init.el][Karl Voigt]].
 This function is supposed to load the code chunks more rapidly.
 
-
+** emacsclient
 Alternatively, you can start an emacsclient daemon that is always up.
 This approach can eliminate the start-up lag.
 See the README.md file for template code for the ~gnu.emacs.daemon.plist~.
@@ -113,6 +113,10 @@ This command starts the server if it is not already running.
 
 In general, the emacsclient is great when your configuration is stable.
 If you are tweaking you config.org file frequently, it is not worth the trouble because you have to kill and restart the server frequently.
+Long-time Emacs users just reload the init.el after editing thier configuration rather than restart Emacs.
+
+
+** What most people do
 
 Yes, you can load the init.el file into a buffer to trigger reloading the config.org file.
 Then you can run ~M-x eval-buffer~ to trigger the reloading of config.org.
@@ -254,11 +258,10 @@ A faked full screen.
 #+END_SRC
 
 
-
-
-** Define a region to evaluate with C-x E
+** Evaluate a region or the full buffer with C-x E
 [[https://stackoverflow.com/questions/2518647/is-it-possible-to-evaluate-entire-buffer-in-emacs][Source]]
 
+If a region has more than one symbolic expression, it can be evaluated by entering ~C-x E~.
 
 #+BEGIN_SRC emacs-lisp
 (defun eval-region-or-buffer ()
@@ -276,8 +279,6 @@ A faked full screen.
           (lambda ()
             (local-set-key (kbd "C-x E") 'eval-region-or-buffer)))
 #+END_SRC
-
-
 
 
 ** Hyper and Super key bindings
