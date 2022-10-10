@@ -3967,7 +3967,7 @@ Each category has been assigned a range of 1000 numeric indices.
 #+END_SRC
 
 Set the target files for refiling. 
-The Projects are at headline level 2.
+The Projects are at headline level 2 while the TODOs are at headline level 3.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 2)
@@ -3985,7 +3985,7 @@ The Projects are at headline level 2.
 
 
 
-***** customized agenda views
+***** Customized agenda views
 
 These are my customized agenda views by project.
 The letter is the last parameter.
@@ -4067,28 +4067,27 @@ I can use swiper to navigate if I do not want to scroll.)
 
 Enter ~C-c c~ to start the capture menu.
 The settings below show a single letter option for selecting the appropriate destination org-file.
-After entering the single-letter code, you are prompted for the headline name.
+After entering the single-letter code, you are prompted for the PROJ headline.
 You do not have to include the PROJ keyword.
-You should probably enter the full headline name the first time that you add a TODO.
+You should probably enter the full headline name the first time that you capture a TODO.
 Then on the second submission, the headline name will be auto suggested after you start to type it.
-You just hit tab to autocomplete its entry into the capture fomr. 
+You just hit tab to autocomplete its entry into the capture form. 
 You might start the headline with the project ID number to ease prompting the autocompletion.
 
-I tried changing the "Headline" variable to "Tag", but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
+I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
 It would be great if this function could search on the tag, but its is hardwired for headlines.
 
 If the headline is not matched, a new entry at the bottom of the file will be started.
 You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
 If it is going to the wrong place, enter ~C-c C-k~ to kill the process.
-Then start over with ~C-c C-c~.
+Then start over with ~C-c C-c~ with the correct headline.
 
 This protocol can be executed from inside the target org file or from a different buffer.
 
 I learned about the following function from
 [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
-I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" Headline 
-I modified the ~org-capture-templates~ to write out ~*** TODO~.
-
+I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" <headline>. 
+I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
 
 
 #+BEGIN_SRC emacs-lisp
