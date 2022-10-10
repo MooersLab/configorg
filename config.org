@@ -3922,9 +3922,10 @@ That is about one new project per working day in a 30 year career.
 Most will probably have 2000 to 3000 projects.
 
 In analogy to the Dewy Decimal system, I have divided projects into ten categories.
-I use only a numeric codes for the indices, and I use 10,000 top level categories rather than 1000.
+I use only a numeric codes for the indices.
+I also use 10,000 top level categories rather than 1000.
 The first category are journal articles.
-Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for estalishing credibility in grant applications.
+Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for establishing credibility in grant applications.
 Each category has been assigned a range of 1000 numeric indices.
 
 
@@ -3994,15 +3995,15 @@ I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of
 
 The CATEGORY keyword resides inside of a Properties drawer.
 The drawers are usually closed.
-I am having trouble opening my drawers in may org files.
+I am having trouble opening my drawers in my org files.
 In addition, I do not want to have to add a drawer to each TODO.
 
-I am loving Tags now.
+I am now loving Tags.
 I may switch to using Tags because they are visible in org files.
 I tried and they are not leading to the expect list of TODOs in org-agenda.
 I am stumped.
 
-In the meantime, enter ~C-c \~ inside JournalArticles.org to narrow the focus to the list of TODOs or enter ~C-c i b~ to get an indirect buffer.
+In the meantime, enter ~C-c \~ inside the appropriate org file to narrow the focus to the list of TODOs or enter ~C-c i b~ to get an indirect buffer with the subtree for the matched tag.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
@@ -4010,7 +4011,7 @@ In the meantime, enter ~C-c \~ inside JournalArticles.org to narrow the focus to
 	("b"
              "List of all active 402 tasks."
              tags-todo
-             "402\"/TODO|INITIATED|WAITING")
+             "402/TODO|INITIATED|WAITING")
 	("c"
              "List of all active 523 RNA-drug crystallization review paper tasks."
              tags-todo
@@ -4074,7 +4075,7 @@ You just hit tab to autocomplete its entry into the capture fomr.
 You might start the headline with the project ID number to ease prompting the autocompletion.
 
 I tried changing the "Headline" variable to "Tag", but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
-It would be great if this function could search on the tag but its is hardwired for headlines.
+It would be great if this function could search on the tag, but its is hardwired for headlines.
 
 If the headline is not matched, a new entry at the bottom of the file will be started.
 You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
@@ -4083,8 +4084,12 @@ Then start over with ~C-c C-c~.
 
 This protocol can be executed from inside the target org file or from a different buffer.
 
-I learned about the following function, which I modified by changing "Headline " to "Tag", from
+I learned about the following function from
 [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
+I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" Headline 
+I modified the ~org-capture-templates~ to write out ~*** TODO~.
+
+
 
 #+BEGIN_SRC emacs-lisp
 (defun org-ask-location ()
@@ -4100,7 +4105,7 @@ I learned about the following function, which I modified by changing "Headline "
         (goto-char (point-at-bol))
       (goto-char (point-max))
       (or (bolp) (insert "\n"))
-      (insert "** " hd "\n")))
+      (insert "** PROJ " hd "\n")))
   (end-of-line))
 #+END_SRC
 
