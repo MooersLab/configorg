@@ -1,6 +1,6 @@
 #+TITLE: Blaine Mooers's GNU Emacs Config
 #+AUTHOR: Blaine Mooers
-#+DATE: 30 September 2022
+#+DATE: 09 October 2022
 #+EMAIL: blaine-mooers at ouhsc.edu
 #+STARTUP:  showall
 
@@ -3963,7 +3963,12 @@ Each category has been assigned a range of 1000 numeric indices.
 ;;               entry
 ;;               (file org-default-notes-file)
 ;;               "* CAL %^{Description} %^g\n%^{Date and time}T "))
+#+END_SRC
 
+Set the target files for refiling. 
+The Projects are at headline level 2.
+
+#+BEGIN_SRC emacs-lisp
 (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Books.org" :maxlevel . 2)
@@ -4058,14 +4063,23 @@ There is a strong appeal to being able to collapse secitons of text.
 However, folded section are not for me; I have experienced too many catastrophes.
 I open all of my org files with all sections fully open.
 I can use swiper to navigate if I do not want to scroll.)
+
 Enter ~C-c c~ to start the capture menu.
-The settings below show a single letter option for selecting the appropriate org-file.
+The settings below show a single letter option for selecting the appropriate destination org-file.
 After entering the single-letter code, you are prompted for the headline name.
-You do not have to include the TODO keyword.
-However, I changed "Headline" to "Tag" because I have the project ID was one of the tags on the same line as the project headline.
-I am now prompted for the tag.
-After entering the tag, I fill out the task entry.
-I then enter ~C-c C-c~ to save the capture.
+You do not have to include the PROJ keyword.
+You should probably enter the full headline name the first time that you add a TODO.
+Then on the second submission, the headline name will be auto suggested after you start to type it.
+You just hit tab to autocomplete its entry into the capture fomr. 
+You might start the headline with the project ID number to ease prompting the autocompletion.
+
+I tried changing the "Headline" variable to "Tag", but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
+It would be great if this function could search on the tag but its is hardwired for headlines.
+
+If the headline is not matched, a new entry at the bottom of the file will be started.
+You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
+If it is going to the wrong place, enter ~C-c C-k~ to kill the process.
+Then start over with ~C-c C-c~.
 
 This protocol can be executed from inside the target org file or from a different buffer.
 
@@ -4076,7 +4090,7 @@ I learned about the following function, which I modified by changing "Headline "
 (defun org-ask-location ()
   (let* ((org-refile-targets '((nil :maxlevel . 9)))
          (hd (condition-case nil
-                 (car (org-refile-get-location "Tag" nil t))
+                 (car (org-refile-get-location "Headline" nil t))
                (error (car org-refile-history)))))
     (goto-char (point-min))
     (outline-next-heading)
@@ -4086,7 +4100,7 @@ I learned about the following function, which I modified by changing "Headline "
         (goto-char (point-at-bol))
       (goto-char (point-max))
       (or (bolp) (insert "\n"))
-      (insert "* " hd "\n")))
+      (insert "** " hd "\n")))
   (end-of-line))
 #+END_SRC
 
