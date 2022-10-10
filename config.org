@@ -1489,6 +1489,20 @@ You can customize the prefix by adding:
 #+END_SRC
 
 
+*** Dump-Jump
+
+This [[https://github.com/jacktasia/dumb-jump][package]] was recommended by Micky Petersen
+It is suppose to jump to definitions with ~M-.~ when the point is on a symbol.
+I need read up on [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Xref.html][xref]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package dump-jump
+  :ensure t)
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+#+END_SRC
+
+
 ** E
 
 
