@@ -1496,7 +1496,7 @@ It is suppose to jump to definitions with ~M-.~ when the point is on a symbol.
 I need read up on [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Xref.html][xref]]
 
 #+BEGIN_SRC emacs-lisp
-(use-package dump-jump
+(use-package dumb-jump
   :ensure t)
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
