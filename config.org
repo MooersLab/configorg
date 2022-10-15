@@ -216,6 +216,14 @@ Source: [[https://www.youtube.com/watch?v=51eSeqcaikM&list=PLEoMzSkcN8oNmd98m_6F
 #+END_SRC
 
 
+** Change file permissions in dired
+
+The filenames are editable by default. 
+With this setting, you can edit the file permissions.
+
+#+BEGIN_SRC emacs-lisp
+(setq wdired-allow-to-change-permissions t)
+#+END_SRC
 
 ** Suggested by Professor Chris Kauffman
 
@@ -4122,7 +4130,20 @@ I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
   (end-of-line))
 #+END_SRC
 
+Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][source]]
+
 #+BEGIN_SRC emacs-lisp
+
+(defun org-capture-pdf-active-region ()
+  "Capture the active region of the pdf-view buffer."
+  (let* ((pdf-buf-name (plist-get org-capture-plist :original-buffer))
+         (pdf-buf (get-buffer pdf-buf-name)))
+    (if (buffer-live-p pdf-buf)
+         (with-current-buffer pdf-buf
+            (car (pdf-view-active-region-text)))
+      (user-error "Buffer %S not alive." pdf-buf-name))))
+
+
 (setq org-capture-templates
  '(
    ("j" "JournalArticles" entry
@@ -4141,10 +4162,12 @@ I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
     (file+function "/Users/blaine/gtd/tasks/Talks.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
-    ("p" "Posters" entry
+    ("P" "Posters" entry
     (file+function "/Users/blaine/gtd/tasks/Posters.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
+    ("p" "PDF-Notes" entry (file "/Users/blaine/org/pdfnotes.org")
+    "* %?\n%(org-capture-pdf-active-region)\n")
     ("r" "ManuscriptReviews" entry
     (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
@@ -5023,6 +5046,16 @@ With a prefix ARG, remove start location."
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 #+END_SRC
 
+
+#. Let org know about pdftools.
+#. 
+#. #+BEGIN_SRC emacs-lisp
+#. (eval-after-load 'org '(require 'org-pdfview))
+#. 
+#. (add-to-list 'org-file-apps 
+#.              '("\\.pdf\\'" . (lambda (file link)
+#.                                      (org-pdfview-open link))))
+#. #+END_SRC
 
 *** org-pomodoro
 
