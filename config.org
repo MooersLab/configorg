@@ -218,7 +218,7 @@ Source: [[https://www.youtube.com/watch?v=51eSeqcaikM&list=PLEoMzSkcN8oNmd98m_6F
 
 ** Change file permissions in dired
 
-The filenames are editable by default. 
+The filenames are editable by default.
 With this setting, you can edit the file permissions.
 
 #+BEGIN_SRC emacs-lisp
@@ -332,7 +332,7 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
 
 
 
-** C
+
 
 *** Commenting Code
 
@@ -358,6 +358,8 @@ The calling up of a previously issued command in the minibuffer with ~M-p~ saves
         (comment-or-uncomment-region start end)))
 (global-set-key "\M-;" 'comment-eclipse)
 #+END_SRC
+
+
 
 *** PDF viewing with retina display
 
@@ -862,6 +864,38 @@ To enable the use of the minted package.
 
 ** B
 
+*** Bibtex from DOI
+
+Fetch bibtex entry for the given DOI. 
+Insert at point, which should be in your global.bib file.
+Needs code to reformat the bibtex key.
+You have to run the funciton with M-x first to activate the key-binding.
+
+[[source][https://www.anghyflawn.net/blog/2014/emacs-give-a-doi-get-a-bibtex-entry/]]
+
+#+BEGIN_SRC emacs-lisp
+(defun get-bibtex-from-doi (doi)
+ "Get a BibTeX entry from the DOI"
+ (interactive "MDOI: ")
+ (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
+   (with-current-buffer 
+     (url-retrieve-synchronously 
+       (format "http://dx.doi.org/%s" 
+       	(replace-regexp-in-string "http://dx.doi.org/" "" doi)))
+     (switch-to-buffer (current-buffer))
+     (goto-char (point-max))
+     (setq bibtex-entry 
+     	  (buffer-substring 
+          	(string-match "@" (buffer-string))
+              (point)))
+     (kill-buffer (current-buffer))))
+ (insert (decode-coding-string bibtex-entry 'utf-8))
+ (define-key bibtex-mode-map (kbd "C-c b") 'get-bibtex-from-doi)
+ (bibtex-fill-entry))
+
+#+END_SRC
+
+
 
 ** C
 
@@ -1211,6 +1245,10 @@ A list of predicate functions with no argument to enable Copilot in copilot-mode
 copilot-disable-predicates
 A list of predicate functions with no argument to disable Copilot in copilot-mode. Copilot will be disabled if any predicate returns t.
 #+END_COMMENT
+
+
+** C
+
 
 
 *** CUA-mode
@@ -3849,6 +3887,26 @@ Alias the new `flymake-report-status-slim' to `flymake-report-status'
 #+END_SRC
 
 
+
+
+
+*** multiple-cursors
+
+Package by Magnar Sveen, [[source][https://github.com/magnars/multiple-cursors.el]],
+the author of emacsrocks.com YouTube video series. 
+
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+    :ensure t)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+END_SRC
+
+
+
+
 ** N
 
 
@@ -3972,23 +4030,9 @@ Each category has been assigned a range of 1000 numeric indices.
 ;; Cycle through these keywords with shift right or left arrows.
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
-
-;; (setq org-capture-templates
-;;           '(("t" "Default capture" entry (file "~/gtd/inbox.org")
-;;              "*** TODO %?\n%u\n%a\n")))
-
-;; Prompt user for a description, displaying the string "Description"
-;; Also prompt for a set of tags (%^g) and a inactive timestamp,
-;; displaying "Date and time",
-;;(add-to-list 'org-capture-templates
-;;             '("c"
-;;              "Calendar entry"
-;;               entry
-;;               (file org-default-notes-file)
-;;               "* CAL %^{Description} %^g\n%^{Date and time}T "))
 #+END_SRC
 
-Set the target files for refiling. 
+Set the target files for refiling.
 The Projects are at headline level 2 while the TODOs are at headline level 3.
 
 #+BEGIN_SRC emacs-lisp
@@ -4093,7 +4137,7 @@ After entering the single-letter code, you are prompted for the PROJ headline.
 You do not have to include the PROJ keyword.
 You should probably enter the full headline name the first time that you capture a TODO.
 Then on the second submission, the headline name will be auto suggested after you start to type it.
-You just hit tab to autocomplete its entry into the capture form. 
+You just hit tab to autocomplete its entry into the capture form.
 You might start the headline with the project ID number to ease prompting the autocompletion.
 
 I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
@@ -4108,9 +4152,10 @@ This protocol can be executed from inside the target org file or from a differen
 
 I learned about the following function from
 [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
-I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" <headline>. 
+I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" <headline>.
 I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
 
+Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][source]]
 
 #+BEGIN_SRC emacs-lisp
 (defun org-ask-location ()
@@ -4128,21 +4173,6 @@ I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
       (or (bolp) (insert "\n"))
       (insert "** PROJ " hd "\n")))
   (end-of-line))
-#+END_SRC
-
-Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][source]]
-
-#+BEGIN_SRC emacs-lisp
-
-(defun org-capture-pdf-active-region ()
-  "Capture the active region of the pdf-view buffer."
-  (let* ((pdf-buf-name (plist-get org-capture-plist :original-buffer))
-         (pdf-buf (get-buffer pdf-buf-name)))
-    (if (buffer-live-p pdf-buf)
-         (with-current-buffer pdf-buf
-            (car (pdf-view-active-region-text)))
-      (user-error "Buffer %S not alive." pdf-buf-name))))
-
 
 (setq org-capture-templates
  '(
@@ -4189,6 +4219,20 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ))
+#+END_SRC
+
+
+*** Org-capture active region of pdf-view buffer
+
+#+BEGIN_SRC emacs-lisp
+(defun org-capture-pdf-active-region ()
+  "Capture the active region of the pdf-view buffer."
+  (let* ((pdf-buf-name (plist-get org-capture-plist :original-buffer))
+         (pdf-buf (get-buffer pdf-buf-name)))
+    (if (buffer-live-p pdf-buf)
+         (with-current-buffer pdf-buf
+            (car (pdf-view-active-region-text)))
+      (user-error "Buffer %S not alive." pdf-buf-name))))
 #+END_SRC
 
 
@@ -5048,11 +5092,11 @@ With a prefix ARG, remove start location."
 
 
 #. Let org know about pdftools.
-#. 
+#.
 #. #+BEGIN_SRC emacs-lisp
 #. (eval-after-load 'org '(require 'org-pdfview))
-#. 
-#. (add-to-list 'org-file-apps 
+#.
+#. (add-to-list 'org-file-apps
 #.              '("\\.pdf\\'" . (lambda (file link)
 #.                                      (org-pdfview-open link))))
 #. #+END_SRC
@@ -6336,52 +6380,52 @@ Enable by entering ~M-x super-agenda-org-mode~.
 [[https://github.com/alphapapa/org-super-agenda][Documentation is found on the github site]]
 
 
-#+BEGIN_SRC emacs-lisp
-(use-package org-super-agenda
-  :ensure t)
-(let ((org-super-agenda-groups
-       '(;; Each group has an implicit boolean OR operator between its selectors.
-         (:name "Today"  ; Optionally specify section name
-                :time-grid t  ; Items that appear on the time grid
-                :todo "TODAY")  ; Items that have this TODO keyword
-         (:name "Important"
-                ;; Single arguments given alone
-                :tag "bills"
-                :priority "A")
-         ;; Set order of multiple groups at once
-         (:order-multi (2 (:name "Shopping in town"
-                                 ;; Boolean AND group matches items that match all subgroups
-                                 :and (:tag "shopping" :tag "@town"))
-                          (:name "Food-related"
-                                 ;; Multiple args given in list with implicit OR
-                                 :tag ("food" "dinner"))
-                          (:name "Personal"
-                                 :habit t
-                                 :tag "personal")
-                          (:name "Space-related (non-moon-or-planet-related)"
-                                 ;; Regexps match case-insensitively on the entire entry
-                                 :and (:regexp ("space" "NASA")
-                                               ;; Boolean NOT also has implicit OR between selectors
-                                               :not (:regexp "moon" :tag "planet")))))
-         ;; Groups supply their own section names when none are given
-         (:todo "WAITING" :order 8)  ; Set order of this section
-         (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
-                ;; Show this group at the end of the agenda (since it has the
-                ;; highest number). If you specified this group last, items
-                ;; with these todo keywords that e.g. have priority A would be
-                ;; displayed in that group instead, because items are grouped
-                ;; out in the order the groups are listed.
-                :order 9)
-         (:priority<= "B"
-                      ;; Show this section after "Today" and "Important", because
-                      ;; their order is unspecified, defaulting to 0. Sections
-                      ;; are displayed lowest-number-first.
-                      :order 1)
-         ;; After the last group, the agenda will display items that didn't
-         ;; match any of these groups, with the default order position of 99
-         )))
-	 (org-agenda nil "a"))
-#+END_SRC
+# +BEGIN_SRC emacs-lisp
+# (use-package org-super-agenda
+#   :ensure t)
+# (let ((org-super-agenda-groups
+#        '(;; Each group has an implicit boolean OR operator between its selectors.
+#          (:name "Today"  ; Optionally specify section name
+#                 :time-grid t  ; Items that appear on the time grid
+#                 :todo "TODAY")  ; Items that have this TODO keyword
+#          (:name "Important"
+#                 ;; Single arguments given alone
+#                 :tag "bills"
+#                 :priority "A")
+#          ;; Set order of multiple groups at once
+#          (:order-multi (2 (:name "Shopping in town"
+#                                  ;; Boolean AND group matches items that match all subgroups
+#                                  :and (:tag "shopping" :tag "@town"))
+#                           (:name "Food-related"
+#                                  ;; Multiple args given in list with implicit OR
+#                                  :tag ("food" "dinner"))
+#                           (:name "Personal"
+#                                  :habit t
+#                                  :tag "personal")
+#                           (:name "Space-related (non-moon-or-planet-related)"
+#                                  ;; Regexps match case-insensitively on the entire entry
+#                                  :and (:regexp ("space" "NASA")
+#                                                ;; Boolean NOT also has implicit OR between selectors
+#                                                :not (:regexp "moon" :tag "planet")))))
+#          ;; Groups supply their own section names when none are given
+#          (:todo "WAITING" :order 8)  ; Set order of this section
+#          (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+#                 ;; Show this group at the end of the agenda (since it has the
+#                 ;; highest number). If you specified this group last, items
+#                 ;; with these todo keywords that e.g. have priority A would be
+#                 ;; displayed in that group instead, because items are grouped
+#                 ;; out in the order the groups are listed.
+#                 :order 9)
+#          (:priority<= "B"
+#                       ;; Show this section after "Today" and "Important", because
+#                       ;; their order is unspecified, defaulting to 0. Sections
+#                       ;; are displayed lowest-number-first.
+#                       :order 1)
+#          ;; After the last group, the agenda will display items that didn't
+#          ;; match any of these groups, with the default order position of 99
+#          )))
+# 	 (org-agenda nil "a"))
+# +END_SRC
 
 
 
