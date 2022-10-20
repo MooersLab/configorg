@@ -1452,6 +1452,19 @@ Customize the keywords
 #+END_COMMENT
 
 
+*** dired-subtree
+
+Source: https://xenodium.com/drill-down-emacs-dired-with-dired-subtree/
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-subtree :ensure t
+  :after dired
+  :config
+  (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
+  (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
+#+END_SRC
+
+
 *** direx
 
 ~direx.el~ is a simple directory explorer and a generic tree explorer.
@@ -3961,55 +3974,309 @@ See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
 
 
 *** org-agenda
-The following code configures the org-agenda menu.
-It is configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
-This is the best intoduction to org-agenda for academcis that I have read.
-I recommended starting with it.
-Eventually, you should read the org-agenda chapter in the Org-mode manual.
 
-Note that paths to the org files used by org-agenda are stored in init.el.
-I am not sure why.
+Org-agenda in my default emacs config is not showing the current day'a agenda view.
+I swapped in the config from latex-emacs where it is working.
 
-I was using /tasks.org/, /tickler.org/, and the /proj.org/.
-/ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
-I do not see the point of keeping projects separate from tasks.
-
-
-Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
-Run ~M-x org-lint~ to find the errors in the tasks.org file.
-You should run it on the config.org file too from time to time.
-
-Note that you should not worry about the default start date at 0800 in the agenda view.
-I wasted an hour or more trying to configure this feature.
-If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
-
-~C-c .~  is entered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
-Use this for most events.
-
-Use ~C-c C-s~ to set timestamps with the scheduled keyword.
-This is for events that are not to be started until the scheduled time.
-
-Use ~C-s C-d~ to set timestamps with the deadline keyword.
-The format of the data must by YYYY-MM-DD.
-Single digit months and days must be accompanied by a zero in the left position.
-
-
-**** Configuration of org-agenda that addresses the 10,000 folder hypothesis
-
-A project is an activity that is composed of more than one task.
-I hypothesized that most academics will not have more than 10,000 projects in a 30+ year career.
-That is about one new project per working day in a 30 year career.
-Most will probably have 2000 to 3000 projects.
-
-In analogy to the Dewy Decimal system, I have divided projects into ten categories.
-I use only a numeric codes for the indices.
-I also use 10,000 top level categories rather than 1000.
-The first category are journal articles.
-Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for establishing credibility in grant applications.
-Each category has been assigned a range of 1000 numeric indices.
-
-
+#  The following code configures the org-agenda menu.
+#  It is configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
+#  This is the best intoduction to org-agenda for academcis that I have read.
+#  I recommended starting with it.
+#  Eventually, you should read the org-agenda chapter in the Org-mode manual.
+#  
+#  Note that paths to the org files used by org-agenda are stored in init.el.
+#  I am not sure why.
+#  
+#  I was using /tasks.org/, /tickler.org/, and the /proj.org/.
+#  /ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
+#  I do not see the point of keeping projects separate from tasks.
+#  
+#  
+#  Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
+#  Run ~M-x org-lint~ to find the errors in the tasks.org file.
+#  You should run it on the config.org file too from time to time.
+#  
+#  Note that you should not worry about the default start date at 0800 in the agenda view.
+#  I wasted an hour or more trying to configure this feature.
+#  If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
+#  
+#  ~C-c .~  is entered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
+#  Use this for most events.
+#  
+#  Use ~C-c C-s~ to set timestamps with the scheduled keyword.
+#  This is for events that are not to be started until the scheduled time.
+#  
+#  Use ~C-s C-d~ to set timestamps with the deadline keyword.
+#  The format of the data must by YYYY-MM-DD.
+#  Single digit months and days must be accompanied by a zero in the left position.
+#  
+#  
+#  **** Configuration of org-agenda that addresses the 10,000 folder hypothesis
+#  
+#  A project is an activity that is composed of more than one task.
+#  I hypothesized that most academics will not have more than 10,000 projects in a 30+ year career.
+#  That is about one new project per working day in a 30 year career.
+#  Most will probably have 2000 to 3000 projects.
+#  
+#  In analogy to the Dewy Decimal system, I have divided projects into ten categories.
+#  I use only a numeric codes for the indices.
+#  I also use 10,000 top level categories rather than 1000.
+#  The first category are journal articles.
+#  Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for establishing credibility in grant applications.
+#  Each category has been assigned a range of 1000 numeric indices.
+#  
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (define-key global-map "\C-ca" 'org-agenda)
+#  (setq org-log-done t)
+#  ;; org-capture
+#  (define-key global-map "\C-cc" 'org-capture)
+#  (define-key global-map "\C-cl" 'org-store-link)
+#  
+#  (setq org-agenda-files '("/Users/blaine/gtd/tasks/JournalArticles.org"
+#   "/Users/blaine/gtd/tasks/Proposals.org"
+#   "/Users/blaine/gtd/tasks/Books.org"
+#   "/Users/blaine/gtd/tasks/Talks.org"
+#   "/Users/blaine/gtd/tasks/Posters.org"
+#   "/Users/blaine/gtd/tasks/ManuscriptReviews.org"
+#   "/Users/blaine/gtd/tasks/Private.org"
+#   "/Users/blaine/gtd/tasks/Service.org"
+#   "/Users/blaine/gtd/tasks/Teaching.org"
+#   "/Users/blaine/gtd/tasks/Workshops.org"))
+#  
+#  ;; Cycle through these keywords with shift right or left arrows.
+#  (setq org-todo-keywords
+#          '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
+#  #+END_SRC
+#  
+#  Set the target files for refiling.
+#  The Projects are at headline level 2 while the TODOs are at headline level 3.
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Books.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Talks.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Posters.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/ManuscriptReviews.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Private.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Service.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 2)
+#     ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 2)))
+#  (setq org-refile-use-outline-path 'file)
+#  #+END_SRC
+#  
+#  
+#  
+#  ***** Customized agenda views
+#  
+#  These are my customized agenda views by project.
+#  The letter is the last parameter.
+#  For example, enter ~C-c a b~ and then enter 402 at the prompt to list all active tasks related to 402 tasks.
+#  
+#  I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
+#  
+#  The CATEGORY keyword resides inside of a Properties drawer.
+#  The drawers are usually closed.
+#  I am having trouble opening my drawers in my org files.
+#  In addition, I do not want to have to add a drawer to each TODO.
+#  
+#  I am now loving Tags.
+#  I may switch to using Tags because they are visible in org files.
+#  I tried and they are not leading to the expect list of TODOs in org-agenda.
+#  I am stumped.
+#  
+#  In the meantime, enter ~C-c \~ inside the appropriate org file to narrow the focus to the list of TODOs or enter ~C-c i b~ to get an indirect buffer with the subtree for the matched tag.
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (setq org-agenda-custom-commands
+#        '(
+#  	("b"
+#               "List of all active 402 tasks."
+#               tags-todo
+#               "402/TODO|INITIATED|WAITING")
+#  	("c"
+#               "List of all active 523 RNA-drug crystallization review paper tasks."
+#               tags-todo
+#               "CATEGORY=\"523\"/TODO|INITIATED|WAITING")
+#  	("d"
+#               "List of all active 485PyMOLscGUI tasks."
+#               tags-todo
+#               "CATEGORY=\"485\"/TODO|INITIATED|WAITING")
+#  	("e"
+#               "List of all active 2104 Emacs tasks"
+#               tags-todo
+#               "2104+CATEGORY=\"2104\"/NEXT|TODO|INITIATED|WAITING")
+#  	("n"
+#               "List of all active 651 ENAX2 tasks"
+#               tags-todo
+#               "651+CATEGORY=\"651\"/NEXT|TODO|INITIATED|WAITING")
+#  	("q"
+#               "List of all active 561 charge density review"
+#               tags
+#               "561+CATEGORY=\"211\"/NEXT|TODO|INITIATED|WAITING")
+#  	("r"
+#               "List of all active 211 rcl/dnph tasks"
+#               tags-todo
+#               "211+CATEGORY=\"211\"/NEXT|TODO|INITIATED|WAITING")
+#  	("P"
+#           "List of all projects"
+#           tags
+#           "LEVEL=2/PROJ")))
+#  #+END_SRC
+#  
+#  
+#  ***** Customized org-captures with prompt for project headline
+#  
+#  I usually know the project to which I want to assign a task.
+#  I loathe having to come back latter to refile my tasks.
+#  I want to do the filing at the time of capture.
+#  I found a solution [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][here]].
+#  
+#  A project has two or more tasks.
+#  I believe that the 10,000 projects is the upper limit for a 30 year academic career.
+#  There are about 10,000 workdays in a 30 year career if you work six days a week.
+#  Of course, most academics work seven a week and many work longer than 30 years, some even reach 60 years.
+#  
+#  I have my projects split into ten org files.
+#  Each org file has a limit of 1000 projects for ease of scrolling.
+#  
+#  It is best to let Emacs insert new task because it is easy to accidently delete sectons in an org file, especially when sections are folded.
+#  (I know that many love folded sections.
+#  There is a strong appeal to being able to collapse secitons of text.
+#  However, folded section are not for me; I have experienced too many catastrophes.
+#  I open all of my org files with all sections fully open.
+#  I can use swiper to navigate if I do not want to scroll.)
+#  
+#  Enter ~C-c c~ to start the capture menu.
+#  The settings below show a single letter option for selecting the appropriate destination org-file.
+#  After entering the single-letter code, you are prompted for the PROJ headline.
+#  You do not have to include the PROJ keyword.
+#  You should probably enter the full headline name the first time that you capture a TODO.
+#  Then on the second submission, the headline name will be auto suggested after you start to type it.
+#  You just hit tab to autocomplete its entry into the capture form.
+#  You might start the headline with the project ID number to ease prompting the autocompletion.
+#  
+#  I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
+#  It would be great if this function could search on the tag, but its is hardwired for headlines.
+#  
+#  If the headline is not matched, a new entry at the bottom of the file will be started.
+#  You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
+#  If it is going to the wrong place, enter ~C-c C-k~ to kill the process.
+#  Then start over with ~C-c C-c~ with the correct headline.
+#  
+#  This protocol can be executed from inside the target org file or from a different buffer.
+#  
+#  I learned about the following function from
+#  [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
+#  I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" <headline>.
+#  I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
+#  
+#  Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][source]]
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (defun org-ask-location ()
+#    (let* ((org-refile-targets '((nil :maxlevel . 9)))
+#           (hd (condition-case nil
+#                   (car (org-refile-get-location "Headline" nil t))
+#                 (error (car org-refile-history)))))
+#      (goto-char (point-min))
+#      (outline-next-heading)
+#      (if (re-search-forward
+#           (format org-complex-heading-regexp-format (regexp-quote hd))
+#           nil t)
+#          (goto-char (point-at-bol))
+#        (goto-char (point-max))
+#        (or (bolp) (insert "\n"))
+#        (insert "** PROJ " hd "\n")))
+#    (end-of-line))
+#  
+#  (setq org-capture-templates
+#   '(
+#     ("j" "JournalArticles" entry
+#      (file+function "/Users/blaine/gtd/tasks/JournalArticles.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("g" "GrantProposals" entry
+#      (file+function "/Users/blaine/gtd/tasks/Proposals.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("b" "Books" entry
+#      (file+function "/Users/blaine/gtd/tasks/Books.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("t" "Talks" entry
+#      (file+function "/Users/blaine/gtd/tasks/Talks.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("P" "Posters" entry
+#      (file+function "/Users/blaine/gtd/tasks/Posters.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("p" "PDF-Notes" entry (file "/Users/blaine/org/pdfnotes.org")
+#      "* %?\n%(org-capture-pdf-active-region)\n")
+#      ("r" "ManuscriptReviews" entry
+#      (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("v" "Private" entry
+#      (file+function "/Users/blaine/gtd/tasks/Private.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("s" "Service" entry
+#      (file+function "/Users/blaine/gtd/tasks/Service.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("T" "Teaching" entry
+#      (file+function "/Users/blaine/gtd/tasks/Teaching.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ("w" "Workshop" entry
+#      (file+function "/Users/blaine/gtd/tasks/Workshops.org" org-ask-location)
+#      "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
+#      :empty-lines 1)
+#      ))
+#  #+END_SRC
+#  
+#  
+#  *** Org-capture active region of pdf-view buffer
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (defun org-capture-pdf-active-region ()
+#    "Capture the active region of the pdf-view buffer."
+#    (let* ((pdf-buf-name (plist-get org-capture-plist :original-buffer))
+#           (pdf-buf (get-buffer pdf-buf-name)))
+#      (if (buffer-live-p pdf-buf)
+#           (with-current-buffer pdf-buf
+#              (car (pdf-view-active-region-text)))
+#        (user-error "Buffer %S not alive." pdf-buf-name))))
+#  #+END_SRC
+#  
+#  
+#  **** calendar-insert-date
+#  
+#  We need a function to insert a date by clicking on the date in the calendar and hiting RET.
+#  Do we really have to exit the calendar after each selection?
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (defun calendar-insert-date ()
+#    "Capture the date at point, exit the Calendar, insert the date."
+#    (interactive)
+#    (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
+#      (calendar-exit)
+#      (insert (format "%d-%02d-%02d" year month day))))
+#  (define-key calendar-mode-map (kbd "RET") 'calendar-insert-date)
+#  #+END_SRC
+#  
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (add-to-list 'load-path "/Users/blaine/")
+#  #+END_SRC
+#  
+#  
 #+BEGIN_SRC emacs-lisp
+;; <<<<<<< BEGINNING of org-agenda from-latex emacs>>>>>>>>>>>>>>
+
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 ;; org-capture
@@ -4030,12 +4297,7 @@ Each category has been assigned a range of 1000 numeric indices.
 ;; Cycle through these keywords with shift right or left arrows.
 (setq org-todo-keywords
         '((sequence "TODO(t)" "INITIATED(i!)" "WAITING(w!)" "CAL(a)" "SOMEDAY(s!)" "PROJ(j)" "|" "DONE(d!)" "CANCELLED(c!)")))
-#+END_SRC
 
-Set the target files for refiling.
-The Projects are at headline level 2 while the TODOs are at headline level 3.
-
-#+BEGIN_SRC emacs-lisp
 (setq org-refile-targets '(("/Users/blaine/gtd/tasks/JournalArticles.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Proposals.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Books.org" :maxlevel . 2)
@@ -4047,37 +4309,34 @@ The Projects are at headline level 2 while the TODOs are at headline level 3.
    ("/Users/blaine/gtd/tasks/Teaching.org" :maxlevel . 2)
    ("/Users/blaine/gtd/tasks/Workshops.org" :maxlevel . 2)))
 (setq org-refile-use-outline-path 'file)
-#+END_SRC
 
+;; ***** customized agenda views
+;; 
+;; These are my customized agenda views by project.
+;; The letter is the last parameter.
+;; For example, enter ~C-c a b~ and then enter 402 at the prompt to list all active tasks related to 402 tasks.
+;; 
+;; I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
+;; 
+;; The CATEGORY keyword resides inside of a Properties drawer.
+;; The drawers are usually closed.
+;; I am having trouble opening my drawers in may org files.
+;; In addition, I do not want to have to add a drawer to each TODO.
+;; 
+;; I am loving Tags now.
+;; I may switch to using Tags because they are visible in org files.
+;; I tried and they are not leading to the expect list of TODOs in org-agenda.
+;; I am stumped.
+;; 
+;; In the meantime, enter ~C-c \~ inside JournalArticles.org to narrow the focus to the list of TODOs or enter ~C-c i b~ to get an indirect buffer.
+;; 
 
-
-***** Customized agenda views
-
-These are my customized agenda views by project.
-The letter is the last parameter.
-For example, enter ~C-c a b~ and then enter 402 at the prompt to list all active tasks related to 402 tasks.
-
-I learned about this approach [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][here]].
-
-The CATEGORY keyword resides inside of a Properties drawer.
-The drawers are usually closed.
-I am having trouble opening my drawers in my org files.
-In addition, I do not want to have to add a drawer to each TODO.
-
-I am now loving Tags.
-I may switch to using Tags because they are visible in org files.
-I tried and they are not leading to the expect list of TODOs in org-agenda.
-I am stumped.
-
-In the meantime, enter ~C-c \~ inside the appropriate org file to narrow the focus to the list of TODOs or enter ~C-c i b~ to get an indirect buffer with the subtree for the matched tag.
-
-#+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
       '(
 	("b"
              "List of all active 402 tasks."
              tags-todo
-             "402/TODO|INITIATED|WAITING")
+             "402\"/TODO|INITIATED|WAITING")
 	("c"
              "List of all active 523 RNA-drug crystallization review paper tasks."
              tags-todo
@@ -4106,62 +4365,45 @@ In the meantime, enter ~C-c \~ inside the appropriate org file to narrow the foc
          "List of all projects"
          tags
          "LEVEL=2/PROJ")))
-#+END_SRC
 
 
-***** Customized org-captures with prompt for project headline
-
-I usually know the project to which I want to assign a task.
-I loathe having to come back latter to refile my tasks.
-I want to do the filing at the time of capture.
-I found a solution [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][here]].
-
-A project has two or more tasks.
-I believe that the 10,000 projects is the upper limit for a 30 year academic career.
-There are about 10,000 workdays in a 30 year career if you work six days a week.
-Of course, most academics work seven a week and many work longer than 30 years, some even reach 60 years.
-
-I have my projects split into ten org files.
-Each org file has a limit of 1000 projects for ease of scrolling.
-
-It is best to let Emacs insert new task because it is easy to accidently delete sectons in an org file, especially when sections are folded.
-(I know that many love folded sections.
-There is a strong appeal to being able to collapse secitons of text.
-However, folded section are not for me; I have experienced too many catastrophes.
-I open all of my org files with all sections fully open.
-I can use swiper to navigate if I do not want to scroll.)
-
-Enter ~C-c c~ to start the capture menu.
-The settings below show a single letter option for selecting the appropriate destination org-file.
-After entering the single-letter code, you are prompted for the PROJ headline.
-You do not have to include the PROJ keyword.
-You should probably enter the full headline name the first time that you capture a TODO.
-Then on the second submission, the headline name will be auto suggested after you start to type it.
-You just hit tab to autocomplete its entry into the capture form.
-You might start the headline with the project ID number to ease prompting the autocompletion.
-
-I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
-It would be great if this function could search on the tag, but its is hardwired for headlines.
-
-If the headline is not matched, a new entry at the bottom of the file will be started.
-You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
-If it is going to the wrong place, enter ~C-c C-k~ to kill the process.
-Then start over with ~C-c C-c~ with the correct headline.
-
-This protocol can be executed from inside the target org file or from a different buffer.
-
-I learned about the following function from
-[[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
-I modified the function ~org-ask-location~ to write out at the bottom of the file new projects as "** PROJ" <headline>.
-I also modified the ~org-capture-templates~ to write out ~*** TODO ~.
-
-Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][source]]
-
-#+BEGIN_SRC emacs-lisp
+;; I usually know the project to which I want to assign a task.
+;; I loathe having to come back latter to refile my tasks.
+;; I want to do the filing at the time of capture.
+;; I found a solution [[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][here]].
+;; 
+;; A project has two or more tasks.
+;; I believe that the 10,000 projects is the upper limit for a 30 year academic career.
+;; There are about 10,000 workdays in a 30 year career if you work six days a week.
+;; Of course, most academics work seven a week and many work longer than 30 years, some even reach 60 years.
+;; 
+;; I have my projects split into ten org files.
+;; Each org file has a limit of 1000 projects for ease of scrolling.
+;; 
+;; It is best to let Emacs insert new task because it is easy to accidently delete sectons in an org file, especially when sections are folded.
+;; (I know that many love folded sections.
+;; There is a strong appeal to being able to collapse secitons of text.
+;; However, folded section are not for me; I have experienced too many catastrophes.
+;; I open all of my org files with all sections fully open.
+;; I can use swiper to navigate if I do not want to scroll.)
+;; Enter ~C-c c~ to start the capture menu.
+;; The settings below show a single letter option for selecting the appropriate org-file.
+;; After entering the single-letter code, you are prompted for the headline name.
+;; You do not have to include the TODO keyword.
+;; However, I changed "Headline" to "Tag" because I have the project ID was one of the tags on the same line as the project headline.
+;; I am now prompted for the tag.
+;; After entering the tag, I fill out the task entry.
+;; I then enter ~C-c C-c~ to save the capture.
+;; 
+;;This protocol can be executed from inside the target org file or from a different buffer.
+;;
+;;I learned about the following function, which I modified by changing "Headline " to "Tag", from
+;;[[https://stackoverflow.com/questions/9005843/interactively-enter-headline-under-which-to-place-an-entry-using-capture][Lionel Henry]] with the modification by Phil on July 1, 2018.
+;;
 (defun org-ask-location ()
   (let* ((org-refile-targets '((nil :maxlevel . 9)))
          (hd (condition-case nil
-                 (car (org-refile-get-location "Headline" nil t))
+                 (car (org-refile-get-location "Tag" nil t))
                (error (car org-refile-history)))))
     (goto-char (point-min))
     (outline-next-heading)
@@ -4171,7 +4413,7 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
         (goto-char (point-at-bol))
       (goto-char (point-max))
       (or (bolp) (insert "\n"))
-      (insert "** PROJ " hd "\n")))
+      (insert "* " hd "\n")))
   (end-of-line))
 
 (setq org-capture-templates
@@ -4192,12 +4434,10 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
     (file+function "/Users/blaine/gtd/tasks/Talks.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
-    ("P" "Posters" entry
+    ("p" "Posters" entry
     (file+function "/Users/blaine/gtd/tasks/Posters.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
-    ("p" "PDF-Notes" entry (file "/Users/blaine/org/pdfnotes.org")
-    "* %?\n%(org-capture-pdf-active-region)\n")
     ("r" "ManuscriptReviews" entry
     (file+function "/Users/blaine/gtd/tasks/ManuscriptReviews.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
@@ -4219,46 +4459,14 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
     ))
+
+;; <<<<<<< END of org-agenda >>>>>>>>>>>>>>
 #+END_SRC
 
-
-*** Org-capture active region of pdf-view buffer
-
-#+BEGIN_SRC emacs-lisp
-(defun org-capture-pdf-active-region ()
-  "Capture the active region of the pdf-view buffer."
-  (let* ((pdf-buf-name (plist-get org-capture-plist :original-buffer))
-         (pdf-buf (get-buffer pdf-buf-name)))
-    (if (buffer-live-p pdf-buf)
-         (with-current-buffer pdf-buf
-            (car (pdf-view-active-region-text)))
-      (user-error "Buffer %S not alive." pdf-buf-name))))
-#+END_SRC
-
-
-**** calendar-insert-date
-
-We need a function to insert a date by clicking on the date in the calendar and hiting RET.
-Do we really have to exit the calendar after each selection?
-
-#+BEGIN_SRC emacs-lisp
-(defun calendar-insert-date ()
-  "Capture the date at point, exit the Calendar, insert the date."
-  (interactive)
-  (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
-    (calendar-exit)
-    (insert (format "%d-%02d-%02d" year month day))))
-(define-key calendar-mode-map (kbd "RET") 'calendar-insert-date)
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/Users/blaine/")
-#+END_SRC
 
 **** Prioritization
 
-#+BEGIN_COMMENT
+# #+BEGIN_COMMENT
 #    #+BEGIN_SRC emacs-lisp
 #    (setq org-agenda-custom-commands
 #           `(("A" "Daily agenda and top priority tasks"
@@ -4304,7 +4512,7 @@ Do we really have to exit the calendar after each selection?
 #               (org-agenda-remove-tags t))
 #              ("agenda.txt")))
 #    #+END_SRC
-#+END_COMMENT
+# #+END_COMMENT
 
 
 *** org-babel
@@ -5266,13 +5474,71 @@ The configuration for org-roam, the most advanced zettlekasten system for Emacs.
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory "~/org-roam")
+  (org-roam-directory (file-truename "/Users/blaine/org-roam/"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
   :config
-  (org-roam-setup))
+  (org-roam-setup)
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 #+END_SRC
+
+;;## Basic org-roam config
+;; Following https://jethrokuan.github.io/org-roam-guide/
+
+(setq org-roam-capture-templates
+      '(("m" "main" plain
+         "%?"
+         :if-new (file+head "main/${slug}.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("r" "reference" plain "%?"
+         :if-new
+         (file+head "reference/${title}.org" "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("a" "article" plain "%?"
+         :if-new
+         (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
+         :immediate-finish t
+         :unnarrowed t)))
+
+
+(setq org-roam-node-display-template
+    (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+
+(defun jethro/org-roam-node-from-cite (keys-entries)
+    (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+                                                "${author editor} :: ${title}")))
+      (org-roam-capture- :templates
+                         '(("r" "reference" plain "%?" :if-new
+                            (file+head "reference/${citekey}.org"
+                                       ":PROPERTIES:
+:ROAM_REFS: [cite:@${citekey}]
+:END:
+#+title: ${title}\n")
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey (car keys-entries))
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file))))
+
+
+(defun jethro/tag-new-node-as-draft ()
+  (org-roam-tag-add '("draft")))
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+
 
 *** org-roam-bibtex (orb)
 
