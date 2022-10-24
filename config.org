@@ -312,6 +312,18 @@ I am back to using the option key as the super key.
 #+END_SRC
 
 
+
+** Switching buffers
+
+See discussion [[https://www.reddit.com/r/emacs/comments/ybqp3m/actually_utilizing_nextbuffer_and_previousbuffer/][here]].
+
+#+BEGIN_SRC emacs-lisp
+;; Switch to previous buffer
+(define-key global-map (kbd "s-<left>") 'previous-buffer)
+;; Switch to next buffer
+(define-key global-map (kbd "s-<right>") 'next-buffer)
+#+END_SRC
+
 ** Minibuffer history keybindings
 
 
@@ -4460,6 +4472,7 @@ I swapped in the config from latex-emacs where it is working.
     :empty-lines 1)
     ))
 
+(setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
 ;; <<<<<<< END of org-agenda >>>>>>>>>>>>>>
 #+END_SRC
 
