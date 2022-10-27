@@ -1488,6 +1488,24 @@ The source is in MELPA and on [GitHub](https://github.com/emacsorphanage/direx).
 ;; (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
 #+END_SRC
 
+*** dired-icons
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-icon
+  :ensure t
+)
+(add-hook 'dired-mode-hook 'dired-icon-mode)
+#+END_SRC
+
+
+*** dirvish
+
+#+BEGIN_SRC emacs-lisp
+(use-package dirvish
+  :ensure t
+)
+(dirvish-override-dired-mode)
+#+END_SRC
 
 *** Doom mode-line
 
