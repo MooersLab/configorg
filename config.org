@@ -3085,6 +3085,40 @@ Enhances the access to help information about keybindings, functions, and variab
 #+END_SRC
 
 
+*** LanguageTool
+
+I downloaded Language Tool and installed it in \url{~/.languagetool}.
+See the README.md file on the[[https://github.com/PillFall/languagetool.el][github repo site]] for installation details. 
+Invoke by entering ~M-x languagetool-check~.
+Enter ~M-x languagetool-correct-at-point~ with the point on the underlined word.
+This will invoke a transient minibuffer with all the suggestions.
+Enter ~M-x languagetool-correct-buffer~ to check all the buffer, suggestion by suggestion.
+To finish, enter ~M-x languagetool-clear-suggestions~.
+
+#+BEGIN_SRC emacs-lisp
+(use-package languagetool
+  :ensure t
+  :defer t
+  :commands (languagetool-check
+             languagetool-clear-suggestions
+             languagetool-correct-at-point
+             languagetool-correct-buffer
+             languagetool-set-language
+             languagetool-server-mode
+             languagetool-server-start
+             languagetool-server-stop)
+  :config
+  (setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-console-command "~/.languagetool/languagetool-commandline.jar"
+        languagetool-server-command "~/.languagetool/languagetool-server.jar"))
+
+        (setq languagetool-java-arguments '("-Dfile.encoding=UTF-8"))
+
+        (setq languagetool-console-command "~/.languagetool/languagetool-commandline.jar"
+              languagetool-server-command "~/.languagetool/languagetool-server.jar")
+#+END_SRC
+
+
 *** LaTeX customizations
 
 **** AUCTeX
