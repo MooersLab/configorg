@@ -503,6 +503,148 @@ Then run ~package-install RET <select or enter package name>~ to install a new p
 
 The /use-package/ package has a number of [[https://jwiegley.github.io/use-package/keywords/][keywords]].
 
+crafted-emacs completion.
+
+#+BEGIN_SRC emacs-lisp
+;;; crafted-completion.el --- Crafted Completion Configuration -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2022
+;; SPDX-License-Identifier: MIT
+
+;; Author: System Crafters Community
+
+;;; Commentary:
+
+;; Setup completion packages.  Completion in this sense is more like
+;; narrowing, allowing the user to find matches based on minimal
+;; inputs and "complete" the commands, variables, etc from the
+;; narrowed list of possible choices.
+
+;;; Code:
+
+
+(use-package cape :ensure t)
+(use-package consult :ensure t)
+(use-package corfu-doc :ensure t)
+(use-package corfu :ensure t)
+(use-package embark-consult :ensure t)
+(use-package embark :ensure t)
+(use-package orderless :ensure t)
+(use-package vertico :ensure t)
+(use-package marginalia :ensure t)
+(use-package cape :ensure t)
+
+
+(defun crafted-completion/minibuffer-backward-kill (arg)
+  "Delete word or delete up to parent folder when completion is a file.
+
+ARG is the thing being completed in the minibuffer."
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+    (backward-kill-word arg)))
+
+;;; Vertico
+(require 'vertico)
+
+;; Straight and Package bundle the vertico package differently. When
+;; using `package.el', the extensions are built into the package and
+;; available on the load-path. When using `straight.el', the
+;; extensions are not built into the package, so have to add that path
+;; to the load-path manually to enable the following require.
+;;(when (eq crafted-package-system 'straight)
+;;  (add-to-list 'load-path
+;;               (expand-file-name "straight/build/vertico/extensions"
+;;                                 straight-base-dir)))
+;;(require 'vertico-directory)
+
+(with-eval-after-load 'evil
+  (define-key vertico-map (kbd "C-j") 'vertico-next)
+  (define-key vertico-map (kbd "C-k") 'vertico-previous)
+  (define-key vertico-map (kbd "M-h") 'vertico-directory-up))
+
+;; Cycle back to top/bottom result when the edge is reached
+(customize-set-variable 'vertico-cycle t)
+
+;; Start Vertico
+(vertico-mode 1)
+
+;;; Marginalia
+
+;; Configure Marginalia
+(require 'marginalia)
+(customize-set-variable 'marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+(marginalia-mode 1)
+
+;; Set some consult bindings
+(global-set-key (kbd "C-s") 'consult-line)
+(define-key minibuffer-local-map (kbd "C-r") 'consult-history)
+
+(setq completion-in-region-function #'consult-completion-in-region)
+
+
+;;; Orderless
+
+;; Set up Orderless for better fuzzy matching
+(require 'orderless)
+(customize-set-variable 'completion-styles '(orderless basic))
+(customize-set-variable 'completion-category-overrides '((file (styles . (partial-completion)))))
+
+;;; Embark
+(require 'embark)
+(require 'embark-consult)
+
+(global-set-key [remap describe-bindings] #'embark-bindings)
+(global-set-key (kbd "C-.") 'embark-act)
+
+;; Use Embark to show bindings in a key prefix with `C-h`
+(setq prefix-help-command #'embark-prefix-help-command)
+
+(with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
+;;; Corfu
+
+;; Setup corfu for popup like completion
+(customize-set-variable 'corfu-cycle t) ; Allows cycling through candidates
+(customize-set-variable 'corfu-auto t)  ; Enable auto completion
+(customize-set-variable 'corfu-auto-prefix 2) ; Complete with less prefix keys
+(customize-set-variable 'corfu-auto-delay 0.0) ; No delay for completion
+(customize-set-variable 'corfu-echo-documentation 0.25) ; Echo docs for current completion option
+
+(global-corfu-mode 1)
+
+(add-hook 'corfu-mode-hook #'corfu-doc-mode)
+(define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
+(define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
+(define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
+
+;;; Cape
+
+;; Setup Cape for better completion-at-point support and more
+(require 'cape)
+
+;; Add useful defaults completion sources from cape
+(add-to-list 'completion-at-point-functions #'cape-file)
+(add-to-list 'completion-at-point-functions #'cape-dabbrev)
+
+;; Silence the pcomplete capf, no errors or messages!
+;; Important for corfu
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+
+;; Ensure that pcomplete does not write to the buffer
+;; and behaves as a pure `completion-at-point-function'.
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+(add-hook 'eshell-mode-hook
+          (lambda () (setq-local corfu-quit-at-boundary t
+                            corfu-quit-no-match t
+                            corfu-auto nil)
+            (corfu-mode)))
+#+END_SRC
+
 
 ** A
 
@@ -844,7 +986,7 @@ Consult users will also want the embark-consult package.
           :map minibuffer-local-map
           ("M-b" . citar-insert-preset))
    :custom
-   (citar-library-paths '("~/Documents/booksLabeled" "~/Documents/papersLabeled"))
+   (citar-library-paths '("~/0papersLabeled" "~/0booksLabeled"))
    (citar-file-extensions '("pdf" "epub"))
    (citar-bibliography '("~/Documents/global.bib")))
 #+END_SRC
@@ -2823,77 +2965,77 @@ Ivy is a popular autocompletion package.
 
 Make M-x and other mini-buffers sortable, filterable
 
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
- :ensure t
- :init
- (ivy-mode 1)
- (global-set-key "\C-s" 'swiper)
- (unbind-key "S-SPC" ivy-minibuffer-map)
- (setq ivy-height 15
-       ivy-use-virtual-buffers t
-       ivy-count-format "(%d/%d) "
-       ivy-use-selectable-prompt t))
-
-(use-package ivy-bibtex
-   :ensure t)
-#+END_SRC
-#+END_COMMENT
-
-
-Add vim key binding for use in ivy menus.
-
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package command-log-mode
-  :ensure t)
-(use-package ivy
-  :ensure t
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-   (setq ivy-height 15
-         ivy-use-virtual-buffers t
-         ivy-use-selectable-prompt t)
-   (ivy-mode 1))
-#+END_SRC
-#+END_COMMENT
-
-
-*** ivy-bibtex
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-bibtex
-  :ensure t)
-#+END_SRC
-#+END_COMMENT
-
-
-
-*** ivy-rich
-
-Display documentation strings with commands when running counsel-M-x.
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-rich
-  :ensure t
-  :init
-  (ivy-rich-mode 1))
-#+END_SRC
-#+END_COMMENT
+# #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (use-package ivy
+#  :ensure t
+#  :init
+#  (ivy-mode 1)
+#  (global-set-key "\C-s" 'swiper)
+#  (unbind-key "S-SPC" ivy-minibuffer-map)
+#  (setq ivy-height 15
+#        ivy-use-virtual-buffers t
+#        ivy-count-format "(%d/%d) "
+#        ivy-use-selectable-prompt t))
+# 
+# (use-package ivy-bibtex
+#    :ensure t)
+# #+END_SRC
+# #+END_COMMENT
+# 
+# 
+# Add vim key binding for use in ivy menus.
+# 
+# #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (use-package command-log-mode
+#   :ensure t)
+# (use-package ivy
+#   :ensure t
+#   :diminish
+#   :bind (("C-s" . swiper)
+#          :map ivy-minibuffer-map
+#          ("TAB" . ivy-alt-done)
+#          ("C-l" . ivy-alt-done)
+#          ("C-j" . ivy-next-line)
+#          ("C-k" . ivy-previous-line)
+#          :map ivy-switch-buffer-map
+#          ("C-k" . ivy-previous-line)
+#          ("C-l" . ivy-done)
+#          ("C-d" . ivy-switch-buffer-kill)
+#          :map ivy-reverse-i-search-map
+#          ("C-k" . ivy-previous-line)
+#          ("C-d" . ivy-reverse-i-search-kill))
+#   :config
+#    (setq ivy-height 15
+#          ivy-use-virtual-buffers t
+#          ivy-use-selectable-prompt t)
+#    (ivy-mode 1))
+# #+END_SRC
+# #+END_COMMENT
+# 
+# 
+# *** ivy-bibtex
+# #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (use-package ivy-bibtex
+#   :ensure t)
+# #+END_SRC
+# #+END_COMMENT
+# 
+# 
+# 
+# *** ivy-rich
+# 
+# Display documentation strings with commands when running counsel-M-x.
+# #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (use-package ivy-rich
+#   :ensure t
+#   :init
+#   (ivy-rich-mode 1))
+# #+END_SRC
+# #+END_COMMENT
 
 
 
@@ -3572,13 +3714,13 @@ Use lsp-treemacs.
 #+END_SRC
 
 
-**** For ivy users
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-#+END_SRC
-
+# **** For ivy users
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+# (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+# #+END_SRC
+# 
 **** To use debugger
 Invoke already under the Python config. dap works for only Python and Java.
 #+BEGIN_SRC emacs-lisp
@@ -3705,8 +3847,8 @@ have to be added after running the function.
 
 #+BEGIN_SRC emacs-lisp
 (defun description (beg end)
- "wrap the active region in an 'description' environment,
-  converting hyphens at the beginning of a line to \item"
+ "wrap the active region in an description environment,
+  converting hyphens at the beginning of a line to item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
@@ -3727,8 +3869,8 @@ The elements of the list must begin with a dash.
 
 #+BEGIN_SRC emacs-lisp
 (defun enumerate (beg end)
- "wrap the active region in an 'enumerate' environment,
-  converting hyphens at the beginning of a line to \item"
+  "wrap the active region in an enumerate environment,
+  converting hyphens at the beginning of a line to item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
@@ -3753,8 +3895,8 @@ Source: \url{https://tex.stackexchange.com/questions/118958/emacsauctex-prevent-
 
 #+BEGIN_SRC emacs-lisp
 (defun itemize (beg end)
- "wrap the active region in an 'itemize' environment,
-  converting hyphens at the beginning of a line to \item"
+ "wrap the active region in an itemize environment,
+  converting hyphens at the beginning of a line to item"
   (interactive "r")
   (save-restriction
     (narrow-to-region beg end)
@@ -5155,44 +5297,44 @@ Anyways, see pdftools for an improved experience for navigating PDFs in Emacs wi
 
 *** org-noter
 
-#+BEGIN_SRC emacs-lisp
-(use-package org-noter
-  :after org
-  :ensure t
-  :config
-  ;; Your org-noter config ........
-  :config
-  (setq
-    org_notes (concat (getenv "HOME") "/org-roam/")
-    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-    org-directory org_notes
-    deft-directory org_notes
-    org-roam-directory org_notes
-    ;; keep an empty line between headings and content in Org file
-    org-noter-separate-notes-from-heading t))
+#. #+BEGIN_SRC emacs-lisp
+#. (use-package org-noter
+#.   :after org
+#.   :ensure t
+#.   :config
+#.   ;; Your org-noter config ........
+#.   :config
+#.   (setq
+#.     org_notes (concat (getenv "HOME") "/org-roam/")
+#.     zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+#.     org-directory org_notes
+#.     deft-directory org_notes
+#.     org-roam-directory org_notes
+#.     ;; keep an empty line between headings and content in Org file
+#.     org-noter-separate-notes-from-heading t))
+#. 
+#. ;;(use-package org-noter-pdf-tools)
+#. #+END_SRC
 
-;;(use-package org-noter-pdf-tools)
-#+END_SRC
 
-
-**** Org-noter keybindings and commands @@html:<a name="keys">@@
-:PROPERTIES:
-:CUSTOM_ID: keys
-:END:
-| Key                                | Description                | Where?                    |
-| @@html:<kbd>@@i@@html:</kbd>@@     | Insert note                | Document buffer           |
-| @@html:<kbd>@@M-i@@html:</kbd>@@   | Insert precise note        | Document buffer           |
-| @@html:<kbd>@@q@@html:</kbd>@@     | Kill session               | Document buffer           |
-| @@html:<kbd>@@M-p@@html:</kbd>@@   | Sync previous page/chapter | Document and notes buffer |
-| @@html:<kbd>@@M-.@@html:</kbd>@@   | Sync current page/chapter  | Document and notes buffer |
-| @@html:<kbd>@@M-n@@html:</kbd>@@   | Sync next page/chapter     | Document and notes buffer |
-| @@html:<kbd>@@C-M-p@@html:</kbd>@@ | Sync previous notes        | Document and notes buffer |
-| @@html:<kbd>@@C-M-.@@html:</kbd>@@ | Sync selected notes        | Document and notes buffer |
-| @@html:<kbd>@@C-M-n@@html:</kbd>@@ | Sync next notes            | Document and notes buffer |
-
-You can use the usual keybindings to navigate the document
-(@@html:<kbd>@@n@@html:</kbd>@@, @@html:<kbd>@@p@@html:</kbd>@@,
-@@html:<kbd>@@SPC@@html:</kbd>@@, ...).
+#. **** Org-noter keybindings and commands @@html:<a name="keys">@@
+#. :PROPERTIES:
+#. :CUSTOM_ID: keys
+#. :END:
+#. | Key                                | Description                | Where?                    |
+#. | @@html:<kbd>@@i@@html:</kbd>@@     | Insert note                | Document buffer           |
+#. | @@html:<kbd>@@M-i@@html:</kbd>@@   | Insert precise note        | Document buffer           |
+#. | @@html:<kbd>@@q@@html:</kbd>@@     | Kill session               | Document buffer           |
+#. | @@html:<kbd>@@M-p@@html:</kbd>@@   | Sync previous page/chapter | Document and notes buffer |
+#. | @@html:<kbd>@@M-.@@html:</kbd>@@   | Sync current page/chapter  | Document and notes buffer |
+#. | @@html:<kbd>@@M-n@@html:</kbd>@@   | Sync next page/chapter     | Document and notes buffer |
+#. | @@html:<kbd>@@C-M-p@@html:</kbd>@@ | Sync previous notes        | Document and notes buffer |
+#. | @@html:<kbd>@@C-M-.@@html:</kbd>@@ | Sync selected notes        | Document and notes buffer |
+#. | @@html:<kbd>@@C-M-n@@html:</kbd>@@ | Sync next notes            | Document and notes buffer |
+#. 
+#. You can use the usual keybindings to navigate the document
+#. (@@html:<kbd>@@n@@html:</kbd>@@, @@html:<kbd>@@p@@html:</kbd>@@,
+#. @@html:<kbd>@@SPC@@html:</kbd>@@, ...).
 
 
 
@@ -5200,55 +5342,55 @@ You can use the usual keybindings to navigate the document
 
 *** helm-bibtex
 
-Source: https://github.com/tmalsburg/helm-bibtex
-
-JabRef can push the citekey of an entry into a LaTeX document as a cite key at the current position of the point.
-
-
-- Map the EDITOR to your Emacs binary
-- In JabRef's preferences, select Emacs as the external editor.
-- Restart JabRef
-- Select a citekey to push to Emacs.
-- Enter command-L. The citekey will show-up in LaTeX document enclosed in \verb|\cite{}|.
-
-
-The additional BibTeX fields that I want to use are as follows:
-
-- abstract
-- annote
-- url = {file:///Users/blaine/0papersLabeled} Should I be using the file filed instead??
-- doi
-- File = 
-
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-bibtex
-  :config
-  (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
-        bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
-        bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
-        bibtex-completion-pdf-field "File"
-        bibtex-completion-additional-search-fields '(keywords))
-        bibtex-completion-notes-template-multiple-files
-  (concat
-   "#+TITLE: ${title}\n"
-   "#+ROAM_KEY: cite:${=key=}\n"
-   "* TODO Notes\n"
-   ":PROPERTIES:\n"
-   ":Custom_ID: ${=key=}\n"
-   ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-   ":AUTHOR: ${author-abbrev}\n"
-   ":JOURNAL: ${journaltitle}\n"
-   ":DATE: ${date}\n"
-   ":YEAR: ${year}\n"
-   ":DOI: ${doi}\n"
-   ":URL: ${url}\n"
-   ":END:\n\n"
-   )
-  :bind (:map org-mode-map ("C-c n B" . helm-bibtex))
-)
-#+END_SRC
+#. Source: https://github.com/tmalsburg/helm-bibtex
+#. 
+#. JabRef can push the citekey of an entry into a LaTeX document as a cite key at the current position of the point.
+#. 
+#. 
+#. - Map the EDITOR to your Emacs binary
+#. - In JabRef's preferences, select Emacs as the external editor.
+#. - Restart JabRef
+#. - Select a citekey to push to Emacs.
+#. - Enter command-L. The citekey will show-up in LaTeX document enclosed in \verb|\cite{}|.
+#. 
+#. 
+#. The additional BibTeX fields that I want to use are as follows:
+#. 
+#. - abstract
+#. - annote
+#. - url = {file:///Users/blaine/0papersLabeled} Should I be using the file filed instead??
+#. - doi
+#. - File = 
+#. 
+#. 
+#. 
+#. #+BEGIN_SRC emacs-lisp
+#. (use-package helm-bibtex
+#.   :config
+#.   (setq bibtex-completion-notes-path "/Users/blaine/org-roam"
+#.         bibtex-completion-bibliography "/Users/blaine/Documents/global.bib"
+#.         bibtex-completion-library-path '("/Users/blaine/0booksLabeled/" "/Users/blaine/0papersLabeled/")
+#.         bibtex-completion-pdf-field "File"
+#.         bibtex-completion-additional-search-fields '(keywords))
+#.         bibtex-completion-notes-template-multiple-files
+#.   (concat
+#.    "#+TITLE: ${title}\n"
+#.    "#+ROAM_KEY: cite:${=key=}\n"
+#.    "* TODO Notes\n"
+#.    ":PROPERTIES:\n"
+#.    ":Custom_ID: ${=key=}\n"
+#.    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+#.    ":AUTHOR: ${author-abbrev}\n"
+#.    ":JOURNAL: ${journaltitle}\n"
+#.    ":DATE: ${date}\n"
+#.    ":YEAR: ${year}\n"
+#.    ":DOI: ${doi}\n"
+#.    ":URL: ${url}\n"
+#.    ":END:\n\n"
+#.    )
+#.   :bind (:map org-mode-map ("C-c n B" . helm-bibtex))
+#. )
+#. #+END_SRC
 
 
 If the file filed is used in the bibtex entry, use it.
@@ -5267,57 +5409,57 @@ File = {:/path/to/article.pdf:PDF;:/path/to/supplementary_materials.pdf:PDF}
 
 
 
-#+BEGIN_SRC emacs-lisp
-(setq bibtex-completion-pdf-field "File")
-#+END_SRC
-
-If the file field is not used but instead the naming scheme bibtex-key + .pdf, 
-search for the file.
-
-#+BEGIN_SRC emacs-lisp
-(setq bibtex-completion-find-additional-pdfs t)
-#+END_SRC
-
-
-**** Optional fields
-
-#+BEGIN_SRC emacs-lisp
-;; Spell checking (requires the ispell software)
-(add-hook 'bibtex-mode-hook 'flyspell-mode)
-
-;; Change fields and format
-(setq bibtex-user-optional-fields
-      '(("keywords" "Keywords to describe the entry" "")
-        ("abstract" "The abstract of the article" "")
-        ("url" "The url of the article" "")
-        ("doi" "The DOI of the article" "")
-        ("file" "Link to document file." ":"))
-      bibtex-align-at-equal-sign t)
-#+END_SRC
-
-
-All files whose name start with the BibTeX key will then be associated with an entry.
-Name your files accordingly. For example:
-
-- bibtex-key-annotated.pdf
-- bibtex-key-supplemental.pdf
-- bibtex-key-chapter1.pdf
-
-These additional files are only detected when triggering an action, such as “Open PDF file”.
-When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
-
-[[https://github.com/tmalsburg/helm-bibtex][Source]] on github.
-
-**** Set how to open PDFs linked to citation by mode
-
-#+BEGIN_SRC emacs-lisp
-(setq bibtex-completion-format-citation-functions
-  '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
-    (latex-mode    . bibtex-completion-format-citation-cite)
-    (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-    (default       . bibtex-completion-format-citation-default)))
-#+END_SRC
-
+# #+BEGIN_SRC emacs-lisp
+# (setq bibtex-completion-pdf-field "File")
+# #+END_SRC
+# 
+# If the file field is not used but instead the naming scheme bibtex-key + .pdf, 
+# search for the file.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (setq bibtex-completion-find-additional-pdfs t)
+# #+END_SRC
+# 
+# 
+# **** Optional fields
+# 
+# #+BEGIN_SRC emacs-lisp
+# ;; Spell checking (requires the ispell software)
+# (add-hook 'bibtex-mode-hook 'flyspell-mode)
+# 
+# ;; Change fields and format
+# (setq bibtex-user-optional-fields
+#       '(("keywords" "Keywords to describe the entry" "")
+#         ("abstract" "The abstract of the article" "")
+#         ("url" "The url of the article" "")
+#         ("doi" "The DOI of the article" "")
+#         ("file" "Link to document file." ":"))
+#       bibtex-align-at-equal-sign t)
+# #+END_SRC
+# 
+# 
+# All files whose name start with the BibTeX key will then be associated with an entry.
+# Name your files accordingly. For example:
+# 
+# - bibtex-key-annotated.pdf
+# - bibtex-key-supplemental.pdf
+# - bibtex-key-chapter1.pdf
+# 
+# These additional files are only detected when triggering an action, such as “Open PDF file”.
+# When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
+# 
+# [[https://github.com/tmalsburg/helm-bibtex][Source]] on github.
+# 
+# **** Set how to open PDFs linked to citation by mode
+# 
+# #+BEGIN_SRC emacs-lisp
+# (setq bibtex-completion-format-citation-functions
+#   '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
+#     (latex-mode    . bibtex-completion-format-citation-cite)
+#     (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+#     (default       . bibtex-completion-format-citation-default)))
+# #+END_SRC
+# 
 **** Reading list for org
 
 To use the title of the PDF file in the link used in a reading list in org-mode:
@@ -5360,76 +5502,76 @@ This search engine can scan org-roam entries.
 
 
 *** org-noter-pdftools
-
-This package integrates org-noter and pdftools.
-
-The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-noter
-  :after org
-  :ensure t
-  :config
-  ;; Your org-noter config ........
-  :config
-  (setq
-    org_notes (concat (getenv "HOME") "/org-roam/")
-    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-    org-directory org_notes
-    deft-directory org_notes
-    org-roam-directory org_notes
-    ;; keep an empty line between headings and content in Org file
-    org-noter-separate-notes-from-heading t)
-  (require 'org-noter-pdftools))
-
-(use-package org-pdftools
-  :hook (org-mode . org-pdftools-setup-link))
-
-(use-package org-noter-pdftools
-  :after org-noter
-  :config
-  ;; Add a function to ensure precise note is inserted
-  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-                                                   (not org-noter-insert-note-no-questions)
-                                                 org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
-           (org-pdftools-use-freepointer-annot t))
-       (org-noter-insert-note (org-noter--get-precise-info)))))
-
-  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-  (defun org-noter-set-start-location (&optional arg)
-    "When opening a session with this document, go to the current location.
-With a prefix ARG, remove start location."
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((inhibit-read-only t)
-           (ast (org-noter--parse-root))
-           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-       (with-current-buffer (org-noter--session-notes-buffer session)
-         (org-with-wide-buffer
-          (goto-char (org-element-property :begin ast))
-          (if arg
-              (org-entry-delete nil org-noter-property-note-location)
-            (org-entry-put nil org-noter-property-note-location
-                           (org-noter--pretty-print-location location))))))))
-  (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-#+END_SRC
-
-
-#. Let org know about pdftools.
-#.
-#. #+BEGIN_SRC emacs-lisp
-#. (eval-after-load 'org '(require 'org-pdfview))
-#.
-#. (add-to-list 'org-file-apps
-#.              '("\\.pdf\\'" . (lambda (file link)
-#.                                      (org-pdfview-open link))))
-#. #+END_SRC
+#  
+#  This package integrates org-noter and pdftools.
+#  
+#  The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
+#  
+#  
+#  #+BEGIN_SRC emacs-lisp
+#  (use-package org-noter
+#    :after org
+#    :ensure t
+#    :config
+#    ;; Your org-noter config ........
+#    :config
+#    (setq
+#      org_notes (concat (getenv "HOME") "/org-roam/")
+#      zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+#      org-directory org_notes
+#      deft-directory org_notes
+#      org-roam-directory org_notes
+#      ;; keep an empty line between headings and content in Org file
+#      org-noter-separate-notes-from-heading t)
+#    (require 'org-noter-pdftools))
+#  
+#  (use-package org-pdftools
+#    :hook (org-mode . org-pdftools-setup-link))
+#  
+#  (use-package org-noter-pdftools
+#    :after org-noter
+#    :config
+#    ;; Add a function to ensure precise note is inserted
+#    (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+#      (interactive "P")
+#      (org-noter--with-valid-session
+#       (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+#                                                     (not org-noter-insert-note-no-questions)
+#                                                   org-noter-insert-note-no-questions))
+#             (org-pdftools-use-isearch-link t)
+#             (org-pdftools-use-freepointer-annot t))
+#         (org-noter-insert-note (org-noter--get-precise-info)))))
+#  
+#    ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+#    (defun org-noter-set-start-location (&optional arg)
+#      "When opening a session with this document, go to the current location.
+#  With a prefix ARG, remove start location."
+#      (interactive "P")
+#      (org-noter--with-valid-session
+#       (let ((inhibit-read-only t)
+#             (ast (org-noter--parse-root))
+#             (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+#         (with-current-buffer (org-noter--session-notes-buffer session)
+#           (org-with-wide-buffer
+#            (goto-char (org-element-property :begin ast))
+#            (if arg
+#                (org-entry-delete nil org-noter-property-note-location)
+#              (org-entry-put nil org-noter-property-note-location
+#                             (org-noter--pretty-print-location location))))))))
+#    (with-eval-after-load 'pdf-annot
+#      (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#  #+END_SRC
+#  
+#  
+#  #. Let org know about pdftools.
+#  #.
+#  #. #+BEGIN_SRC emacs-lisp
+#  #. (eval-after-load 'org '(require 'org-pdfview))
+#  #.
+#  #. (add-to-list 'org-file-apps
+#  #.              '("\\.pdf\\'" . (lambda (file link)
+#  #.                                      (org-pdfview-open link))))
+#  #. #+END_SRC
 
 *** org-pomodoro
 
@@ -5478,48 +5620,48 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 
 **** org-ref
 
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-ref)
-(require 'org-ref-helm)
-(require 'bibtex)
-(setq bibtex-completion-bibliography '("/Users/blaine/Documents/global.bib")
-	bibtex-completion-library-path '("/Users/blaine/0papersLabeled/")
-	bibtex-completion-notes-path "/Users/blaine/Documents/notes/"
-	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
-	bibtex-completion-additional-search-fields '(keywords)
-	bibtex-completion-display-formats
-	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-	bibtex-completion-pdf-open-function
-	(lambda (fpath)
-	  (call-process "open" nil 0 nil fpath)))
-      
-(use-package bibtex
-  :config
-    (setq
-    bibtex-autokey-year-length 4
-	bibtex-autokey-name-year-separator "-"
-	bibtex-autokey-year-title-separator "-"
-	bibtex-autokey-titleword-separator "-"
-	bibtex-autokey-titlewords 2
-	bibtex-autokey-titlewords-stretch 1
-	bibtex-autokey-titleword-length 5
-	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
-
-(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
-
-(define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
-(define-key org-mode-map (kbd "H-c") org-ref-insert-cite-function)
-(define-key org-mode-map (kbd "H-r") org-ref-insert-ref-function)
-(define-key org-mode-map (kbd "H-l") org-ref-insert-label-function)
-(define-key org-mode-map (kbd "H-d") 'doi-add-bibtex-entry)
-#+END_SRC
-
-*** function for opening the PDF linked to the citation under the point
+# 
+# #+BEGIN_SRC emacs-lisp
+# (require 'org-ref)
+# (require 'org-ref-helm)
+# (require 'bibtex)
+# (setq bibtex-completion-bibliography '("/Users/blaine/Documents/global.bib")
+# 	bibtex-completion-library-path '("/Users/blaine/0papersLabeled/")
+# 	bibtex-completion-notes-path "/Users/blaine/Documents/notes/"
+# 	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
+# 	bibtex-completion-additional-search-fields '(keywords)
+# 	bibtex-completion-display-formats
+# 	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+# 	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+# 	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+# 	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+# 	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+# 	bibtex-completion-pdf-open-function
+# 	(lambda (fpath)
+# 	  (call-process "open" nil 0 nil fpath)))
+#       
+# (use-package bibtex
+#   :config
+#     (setq
+#     bibtex-autokey-year-length 4
+# 	bibtex-autokey-name-year-separator "-"
+# 	bibtex-autokey-year-title-separator "-"
+# 	bibtex-autokey-titleword-separator "-"
+# 	bibtex-autokey-titlewords 2
+# 	bibtex-autokey-titlewords-stretch 1
+# 	bibtex-autokey-titleword-length 5
+# 	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
+# 
+# (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+# 
+# (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
+# (define-key org-mode-map (kbd "H-c") org-ref-insert-cite-function)
+# (define-key org-mode-map (kbd "H-r") org-ref-insert-ref-function)
+# (define-key org-mode-map (kbd "H-l") org-ref-insert-label-function)
+# (define-key org-mode-map (kbd "H-d") 'doi-add-bibtex-entry)
+# #+END_SRC
+# 
+# *** function for opening the PDF linked to the citation under the point
 
 [[http://www.wouterspekkink.org/academia/writing/tool/doom-emacs/2021/02/27/writing-academic-papers-with-org-mode.html][source]]
 
@@ -5653,20 +5795,20 @@ Following https://jethrokuan.github.io/org-roam-guide/
 #+END_SRC
 #+END_COMMENT
 
-*** org-roam-bibtex (orb)
-
-This package provides an interface between helm and org-roam.
-From [[https://lucidmanager.org/productivity/emacs-bibtex-mode/][Prevos]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-roam-bibtex
-  :after (org-roam helm-bibtex)
-  :bind (:map org-mode-map ("C-c n b" . orb-note-actions))
-  :config
-  (require 'org-ref))
-  (org-roam-bibtex-mode)
-#+END_SRC
-
+# *** org-roam-bibtex (orb)
+# 
+# This package provides an interface between helm and org-roam.
+# From [[https://lucidmanager.org/productivity/emacs-bibtex-mode/][Prevos]].
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package org-roam-bibtex
+#   :after (org-roam helm-bibtex)
+#   :bind (:map org-mode-map ("C-c n b" . orb-note-actions))
+#   :config
+#   (require 'org-ref))
+#   (org-roam-bibtex-mode)
+# #+END_SRC
+# 
 
 
 
@@ -5892,7 +6034,7 @@ selected instead of creating a new buffer."
 (global-set-key (kbd "C-c i b") 'my-org-tree-to-indirect-buffer)
 #+END_SRC
 
-Note: a similar effect is had using a tag vai (e.g., C-c \ m and enter tag at the prompt in the minibuffer).
+Note: a similar effect is had using a tag via (e.g., C-c \ m and enter tag at the prompt in the minibuffer).
 
 
 *** org-wc
@@ -6175,7 +6317,7 @@ Projectile uses ag, fd, or rg (ripgrep) for searches.
   :config
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map) ; recommended for Mac OS
   (setq projectile-enable-caching t ; Much better performance on large projects
-        projectile-completion-system 'ivy)) ; Ideally the minibuffer should aways look similar. Three options are helm, ido, and ivy. I like ido.
+        projectile-completion-system 'ido)) ; Ideally the minibuffer should aways look similar. Three options are helm, ido, and ivy. I like ido.
 #+END_SRC
 
 
@@ -6595,22 +6737,22 @@ I could not figure out where sbt installed scala.
 #+END_SRC
 
 
-*** scholar-import
-
-[[Source][https://github.com/teeann/scholar-import]]
-
-You must install the Scholar to Emacs Chrome extension first.
-You must have the paths to the global.bib file and the PDF folder defined elsewhere.
-They are defined in the helm-bibtex configuration in my case.
-
-#+BEGIN_SRC emacs-lisp
-(use-package scholar-import
-  :after helm-bibtex
-  :config
-  ;; change accordingly if these bibtex variables are lists
-  (setq scholar-import-bibliography bibtex-completion-bibliography
-        scholar-import-library-path bibtex-completion-library-path))
-#+END_SRC
+# *** scholar-import
+# 
+# [[Source][https://github.com/teeann/scholar-import]]
+# 
+# You must install the Scholar to Emacs Chrome extension first.
+# You must have the paths to the global.bib file and the PDF folder defined elsewhere.
+# They are defined in the helm-bibtex configuration in my case.
+# 
+# #+BEGIN_SRC emacs-lisp
+# (use-package scholar-import
+#   :after helm-bibtex
+#   :config
+#   ;; change accordingly if these bibtex variables are lists
+#   (setq scholar-import-bibliography bibtex-completion-bibliography
+#         scholar-import-library-path bibtex-completion-library-path))
+# #+END_SRC
 
 
 *** search
