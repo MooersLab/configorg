@@ -471,7 +471,7 @@ We are modifying the behavior of a built-in package.
 #+END_SRC
 
 
-** Use rainbow-delimiters
+*** Use rainbow-delimiters
 
 These aid in the matching of parenthesis in lisp family computer code.
 
@@ -479,12 +479,12 @@ These aid in the matching of parenthesis in lisp family computer code.
 (use-package rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
-            :foreground "magenta"
+            :foreground "cyan"
             :inherit 'error
             :box t)
 #+END_SRC
 
-** recentf
+*** recentf
 
 List recently opened files.
 
@@ -492,8 +492,17 @@ List recently opened files.
 (recentf-mode 1)
 #+END_SRC
 
+*** highlight current line
 
-** revert buffers
+#+BEGIN_SRC emacs-lisp
+;; highlight current line
+(global-hl-line-mode +1)
+(set-face-background hl-line-face "cyan")
+(set-face-attribute 'mode-line nil  :height 360)
+#+END_SRC
+
+
+*** revert buffers
 
 Revert buffers when the underlying file has changed.
 
@@ -502,7 +511,7 @@ Revert buffers when the underlying file has changed.
 #+END_SRC
 
 
-** save history
+*** save history
 
 Save history going back 25 commands.
 To long of a history slows startup.
@@ -934,21 +943,61 @@ You have to run the funciton with M-x first to activate the key-binding.
 Cider supports running a Clojure REPL in a parallel window.
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-babel-clojure-backend 'cider)
+(setq org-babel-clojure-backend 'cider)
 (use-package cider
  :ensure t)
 (setq org-edit-src-content-indentation 0
      org-src-tab-acts-natively t
      org-src-fontify-natively t
      org-confirm-babel-evaluate nil)
-(require 'cider)
 (setq nrepl-hide-special-buffers t
      cider-repl-pop-to-buffer-on-connect nil
      cider-popup-stacktraces nil
      cider-repl-popup-stacktraces t)
+
 ;; Useful keybindings when using Clojure from Org
 (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
 (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+
+
+;; git clone --single-branch --branch correlations-heatmap https://github.com/BlaineMooersLab/clojure-sandbox.git
+;; (inspired by: https://github.com/clojure-emacs/cider/issues/3094)
+;;(require 'cider-mode)
+
+(defun cider-tap (&rest r) ; inspired by https://github.com/clojure-emacs/cider/issues/3094
+  (cons (concat "(let [__value "
+                (caar r)
+                "] (tap> {:clay-tap? true :form (quote " (caar r) ") :value __value}) __value)")
+        (cdar r)))
+
+(advice-add 'cider-nrepl-request:eval
+:filter-args #'cider-tap)
+
+
+;; Clay related functions from Daniel Slutsky
+;; https://scicloj.github.io/clay/#Setup
+
+(defun scittle-show ()
+  (interactive)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/show-doc! \"" filename "\" {})")))))
+(define-key clojure-mode-map "\C-c\C-s" 'scittle-show)
+
+(defun scittle-show-and-write ()
+  (interactive)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/show-doc-and-write-html! \"" filename "\" {:toc? true})")))))
+(define-key clojure-mode-map "\C-c\C-w" 'scittle-show-and-write)
 #+END_SRC
 
 
