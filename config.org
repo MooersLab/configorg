@@ -4208,28 +4208,28 @@ You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-t
 #
 # There is a github gist of a org-pomodoro-plus.el file that has more configurations.
 #
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-pomodoro
-#     :ensure t
-#     :commands (org-pomodoro)
-#     :config
-#     (setq alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))))
-#
-# ;; (use-package sound-wav)
-# ;; (setq org-pomodoro-ticking-sound-p nil)
-# ;; ; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
-# ;; (setq org-pomodoro-ticking-sound-states '(:pomodoro))
-# ;; (setq org-pomodoro-ticking-frequency 1)
-# ;; (setq org-pomodoro-audio-player "mplayer")
-# ;; (setq org-pomodoro-finished-sound-args "-volume 0.9")
-# ;; (setq org-pomodoro-long-break-sound-args "-volume 0.9")
-# ;; (setq org-pomodoro-short-break-sound-args "-volume 0.9")
-# ;; (setq org-pomodoro-ticking-sound-args "-volume 0.3")
-#
-# (global-set-key (kbd "C-c o") 'org-pomodoro)
-# #+END_SRC
-#
-#
+#+BEGIN_SRC emacs-lisp
+(use-package org-pomodoro
+    :ensure t
+    :commands (org-pomodoro)
+    :config
+    (setq alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))))
+
+;; (use-package sound-wav)
+;; (setq org-pomodoro-ticking-sound-p nil)
+;; ; (setq org-pomodoro-ticking-sound-states '(:pomodoro :short-break :long-break))
+;; (setq org-pomodoro-ticking-sound-states '(:pomodoro))
+;; (setq org-pomodoro-ticking-frequency 1)
+;; (setq org-pomodoro-audio-player "mplayer")
+;; (setq org-pomodoro-finished-sound-args "-volume 0.9")
+;; (setq org-pomodoro-long-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-short-break-sound-args "-volume 0.9")
+;; (setq org-pomodoro-ticking-sound-args "-volume 0.3")
+
+(global-set-key (kbd "C-c o") 'org-pomodoro)
+#+END_SRC
+
+
 # **** org-ref
 #
 # #
@@ -4530,6 +4530,22 @@ Min. config. from  https://gist.github.com/thriveth/f961e42dea4988f464ea67d2d6fe
   (require 'org-ref)
   (require 'doi-utils)
   )
+#+END_SRC
+
+
+
+*** Org-transclusion
+
+The source is here: \url{https://github.com/nobiot/org-transclusion}.
+The README includes links to tutorial videos on YouTube.
+
+I installed the package with MELPA.
+
+This is the only required configuration:
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map (kbd "<f12>") #'org-transclusion-add)
+(define-key global-map (kbd "C-c t") #'org-transclusion-mode)
 #+END_SRC
 
 # *** org-show-headings
