@@ -105,13 +105,13 @@ You have to do these steps in reverse order when updating your configuration.
 You use ~emacsclient~ to connect to the server and to upload your configuration.
 This command starts the server if it is not already running.
 
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
-(server-start)
-;;(unless (server-running-p) (server-start))
-#+END_SRC
-#+END_COMMENT
-
+# #+BEGIN_COMMENT
+# #+BEGIN_SRC emacs-lisp
+# (server-start)
+# ;;(unless (server-running-p) (server-start))
+# #+END_SRC
+# #+END_COMMENT
+# 
 In general, the emacsclient is great when your configuration is stable.
 If you are tweaking you config.org file frequently, it is not worth the trouble because you have to kill and restart the server frequently.
 Long-time Emacs users just reload the init.el after editing thier configuration rather than restart Emacs.
@@ -808,10 +808,8 @@ You can also configure atomic-chrome to set the major mode by website.
 ;;     :commands lsp
 ;;     :config (add-hook 'atomic-chrome-edit-mode-hook 'enable-atomic-lsp)
 ;;  )
-
-
 (use-package atomic-chrome)
-(atomic-chrome-start-server)
+;; (atomic-chrome-start-server)
 (setq atomic-chrome-default-major-mode 'python-mode)
 (setq atomic-chrome-extension-type-list '(ghost-text))
 ;;(atomic-chrome-start-httpd)
