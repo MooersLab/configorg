@@ -4402,6 +4402,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 # #   #+END_COMMENT
 
 *** org-roam
+#+Name: Target
 
 The configuration for org-roam, the most advanced zettelkasten system for Emacs.
 There are alternatives such as denote, Rollo in hyperbole, logi-sech(?), and others. 
@@ -4436,10 +4437,44 @@ This is not suprising because org-roam is more mature, although only several yea
 
 
 
+*** org-bibtex
+
+Min. config. from  https://gist.github.com/thriveth/f961e42dea4988f464ea67d2d6febbb1
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam-bibtex
+  :ensure t
+  :config
+  (setq orb-note-actions-interface 'hydra)
+  (setq orb-preformat-keywords
+	'("citekey" "title" "url" "author-or-editor" "keywords" "file")
+	orb-process-file-keyword t
+	orb-file-field-extensions '("pdf")
+	)
+  (org-roam-bibtex-mode)
+  )
+
+;; Org-ref: More better citation and reference handling.
+;;(use-package org-ref
+;;  :ensure t
+;;  :config
+;;  (setq bibtex-completion-bibliography "~/Documents/global.bib" )
+;;  (setq bibtex-completion-library-path "~/0papersLabeled/")
+;;  (setq biblio-download-directory "/home/user/0papersLabeled/")
+;;  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+;;  (require 'org-ref)
+;;  (require 'doi-utils)
+;;  )
+#+END_SRC
+
+
+
+
 *** org-roam capture templates
-This configuratin follows that of Jethro Kuan https://jethrokuan.github.io/org-roam-guide/, 
+This configuratin follows that of [[https://jethrokuan.github.io/org-roam-guide/][Jethro Kuan]] , 
 excpet that I have embellished it with timestamps for date of creation and last modification.
-I obtained this code from the following blog post by Peter Prevos (https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/)
+I obtained this code from the following blog post by [[https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/][Peter Prevos]].
 I have also added a line for tags, a section for backlinks, and a section for citations for the reference zettel.
 
 Jethro is the lead developer of org-roam.
@@ -4456,7 +4491,7 @@ According to Luhman, the literature and article zettels were to be temporary.
 However, retaining the article zettels may be useful to retain.
 You could refer to them to help you avoid repeating yourself in the Introduction and Discussion sections of a series of articles.
 The package zetteldesk is used to filter the zettels in a buffer for the purpose of article assembly.
-My configuration for zetteldesk is [[below]][]].
+My configuration for zetteldesk is [[#zetteldesk]].
 
 
 #+BEGIN_SRC emacs-lisp
@@ -4596,44 +4631,6 @@ Start by entering ~M-x org-roam-ui-mode~.
 
 
 
-*** org-roam minimum
-
-Min. config. from  https://gist.github.com/thriveth/f961e42dea4988f464ea67d2d6febbb1
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory (file-truename "~/org-roam"))
-  :config
-  (org-roam-setup)
-  )
-
-(use-package org-roam-bibtex
-  :ensure t
-  :config
-  (setq orb-note-actions-interface 'hydra)
-  (setq orb-preformat-keywords
-	'("citekey" "title" "url" "author-or-editor" "keywords" "file")
-	orb-process-file-keyword t
-	orb-file-field-extensions '("pdf")
-	)
-  (org-roam-bibtex-mode)
-  )
-
-;; Org-ref: More better citation and reference handling.
-(use-package org-ref
-  :ensure t
-  :config
-  (setq bibtex-completion-bibliography "~/Documents/global.bib" )
-  (setq bibtex-completion-library-path "~/0papersLabeled/")
-  (setq biblio-download-directory "/home/user/0papersLabeled/")
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-  (require 'org-ref)
-  (require 'doi-utils)
-  )
-#+END_SRC
 
 
 
@@ -6627,6 +6624,27 @@ See this [[https://blog.iany.me/2012/03/use-popup-isearch-for-yasnippet-prompt/]
 #
 #
 ** Z
+
+
+*** Zetteldesk
+#+NAME: Zetteldesk
+
+Zetteldesk provides a buffer for gathering the zettels related to an article.
+It integrates with [[#org-roam]].
+It was developed by a fourth year chemical engineering student in Greece, Vidianos Giannitsis, who has been using Emacs for 2.5 years. 
+He gave a [[https://emacsconf.org/2022/talks/science/][talk]] about his workflow at emacsconf 2022 on December 3.
+The ethernet and IRC chat have yet to be archived. 
+The zetteldesk was at the end of his workflow.
+An audience member suggested a FOSS [[https://jermolene.com/cecily/][project]] amd a proprietry [[https://www.napkin.one/][project]] where objects could be sorted on a webpage.
+
+His [[https://github.com/Vidianos-Giannitsis/zetteldesk.el][project]] is in MELPA and on GitHub 
+He had provided an extensive [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Github]] website with 11 pages that explain his workflow in more depth.
+Note that his approach using Zotero.
+His reference zettel capture template is more complex than mine.
+
+Zetteldesk seems to be redundant with the artilce zettel.
+It would be cool to be able to export the collected zettels to a format that could be imported into iThoughtsX for reorganizing.
+
 
 
 #+BEGIN_SRC emacs-lisp
