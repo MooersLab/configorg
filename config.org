@@ -588,7 +588,70 @@ The /use-package/ package has a number of [[https://jwiegley.github.io/use-packa
 ** A
 
 
-*** Autocmpletion
+*** ac autocompletion packag
+
+This is a 11-year fold package that extends Emacs's built in autocompletion system.
+
+#+BEGIN_SRC emacs-lisp
+(ac-config-default)
+
+;; source: https://www.emacswiki.org/emacs/EshellCompletion
+(defun ac-pcomplete ()
+  ;; eshell uses `insert-and-inherit' to insert a \t if no completion
+  ;; can be found, but this must not happen as auto-complete source
+  (flet ((insert-and-inherit (&rest args)))
+    ;; this code is stolen from `pcomplete' in pcomplete.el
+    (let* (tramp-mode ;; do not automatically complete remote stuff
+           (pcomplete-stub)
+           (pcomplete-show-list t) ;; inhibit patterns like * being deleted
+           pcomplete-seen pcomplete-norm-func
+           pcomplete-args pcomplete-last pcomplete-index
+           (pcomplete-autolist pcomplete-autolist)
+           (pcomplete-suffix-list pcomplete-suffix-list)
+           (candidates (pcomplete-completions))
+           (beg (pcomplete-begin))
+           ;; note, buffer text and completion argument may be
+           ;; different because the buffer text may bet transformed
+           ;; before being completed (e.g. variables like $HOME may be
+           ;; expanded)
+           (buftext (buffer-substring beg (point)))
+           (arg (nth pcomplete-index pcomplete-args)))
+      ;; we auto-complete only if the stub is non-empty and matches
+      ;; the end of the buffer text
+      (when (and (not (zerop (length pcomplete-stub)))
+                 (or (string= pcomplete-stub ; Emacs 23
+                              (substring buftext
+                                         (max 0
+                                              (- (length buftext)
+                                                 (length pcomplete-stub)))))
+                     (string= pcomplete-stub ; Emacs 24
+                              (substring arg
+                                         (max 0
+                                              (- (length arg)
+                                                 (length pcomplete-stub)))))))
+        ;; Collect all possible completions for the stub. Note that
+        ;; `candidates` may be a function, that's why we use
+        ;; `all-completions`.
+        (let* ((cnds (all-completions pcomplete-stub candidates))
+               (bnds (completion-boundaries pcomplete-stub
+                                            candidates
+                                            nil
+                                            ""))
+               (skip (- (length pcomplete-stub) (car bnds))))
+          ;; We replace the stub at the beginning of each candidate by
+          ;; the real buffer content.
+          (mapcar #'(lambda (cand) (concat buftext (substring cand skip)))
+                  cnds))))))
+
+(defvar ac-source-pcomplete
+  '((candidates . ac-pcomplete)))
+
+(add-hook 'eshell-mode-hook #'(lambda () (setq ac-sources '(ac-source-pcomplete))))
+(add-to-list 'ac-modes 'eshell-mode)
+#+END_SRC
+
+
+*** Autocmpletion via crafted-emacs
 
 This is the crafted-emacs autocompletion stack.
 Do not use ivy or helm if you use this stack.
@@ -614,7 +677,6 @@ Do not use ivy or helm if you use this stack.
 
 (use-package cape :ensure t)
 (use-package consult :ensure t)
-(use-package corfu-doc :ensure t)
 (use-package corfu :ensure t)
 (use-package embark-consult :ensure t)
 (use-package embark :ensure t)
@@ -707,11 +769,6 @@ ARG is the thing being completed in the minibuffer."
 (customize-set-variable 'corfu-echo-documentation 0.25) ; Echo docs for current completion option
 
 (global-corfu-mode 1)
-
-(add-hook 'corfu-mode-hook #'corfu-doc-mode)
-(define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
-(define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
-(define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
 
 ;;; Cape
 
@@ -996,6 +1053,21 @@ Cider supports running a Clojure REPL in a parallel window.
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/show-doc-and-write-html! \"" filename "\" {:toc? true})")))))
 (define-key clojure-mode-map "\C-c\C-w" 'scittle-show-and-write)
+
+
+;; Clerk is another "notebook"--really a brower interface
+;;
+
+(defun clerk-show ()
+  (interactive)
+  (when-let
+      ((filename
+        (buffer-file-name)))
+    (save-buffer)
+    (cider-interactive-eval
+     (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+(define-key clojure-mode-map (kbd "<M-return>") 'clerk-show)
 #+END_SRC
 
 
@@ -2819,7 +2891,7 @@ I want to avoid the use of straight.el.
 I downloaded via git clone the mathpix.el repo.
 
 I renamed it mathpix.
-I am getting the need for five arguments witht the require command.
+I am getting the need for five arguments with the require command.
 I have only three.
 I need a use-package version.
 I am stumped
@@ -4183,29 +4255,29 @@ You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-t
 # #  #.                                      (org-pdfview-open link))))
 # #  #. #+END_SRC
 #
-# *** org-pomodoro
-#
-# Place the point (cursor) on the task you are to work on and then enter ~C-c o
-# ~ to start a 25-minute pomodoro.
-# The time remaining on the pomodoro appears to the right of the clock on the modeline.
-# To the right of this is the total time spent on the task and the name of the task.
-# A :LOGBOOK: property will appear in tasks.org below the task.
-# The logbook is closed by default.
-# Open the logbook by placing the cursor on it and entering TAB.
-# If that fails, enter ~M-x outline-show-entry RET~  or ~M-x ou-s-e~.
-#
-# A ding occurs at the end of a pomodoro.
-# A second ding occurs at the end of a break.
-# You have to enter ~C-c o~ to start the next pomodoro.
-#
-# The tickling timer sound is too erractic right now.
-# This needs to be optimized.
-# You might be better off using a stand-a-lone timer or timer app.
-# I turn down the volume on to about 10% of maximum, and I can still hear the ding at the end of the pomodoro.
-#
-#
-# There is a github gist of a org-pomodoro-plus.el file that has more configurations.
-#
+*** org-pomodoro
+
+Place the point (cursor) on the task you are to work on and then enter ~C-c o
+~ to start a 25-minute pomodoro.
+The time remaining on the pomodoro appears to the right of the clock on the modeline.
+To the right of this is the total time spent on the task and the name of the task.
+A :LOGBOOK: property will appear in tasks.org below the task.
+The logbook is closed by default.
+Open the logbook by placing the cursor on it and entering TAB.
+If that fails, enter ~M-x outline-show-entry RET~  or ~M-x ou-s-e~.
+
+A ding occurs at the end of a pomodoro.
+A second ding occurs at the end of a break.
+You have to enter ~C-c o~ to start the next pomodoro.
+
+The tickling timer sound is too erractic right now.
+This needs to be optimized.
+You might be better off using a stand-a-lone timer or timer app.
+I turn down the volume on to about 10% of maximum, and I can still hear the ding at the end of the pomodoro.
+
+
+There is a github gist of a org-pomodoro-plus.el file that has more configurations.
+
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
     :ensure t
@@ -4328,56 +4400,89 @@ You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-t
 # #     (setq bibtex-dialect 'bibtex))
 # # #+END_SRC
 # #   #+END_COMMENT
-#
-# *** org-roam
-#
-# The configuration for org-roam, the most advanced zettlekasten system for Emacs.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package org-roam
-#   :ensure t
-#   :custom
-#   (org-roam-directory (file-truename "/Users/blaine/org-roam/"))
-#   :bind (("C-c n l" . org-roam-buffer-toggle)
-#          ("C-c n f" . org-roam-node-find)
-#          ("C-c n g" . org-roam-graph)
-#          ("C-c n i" . org-roam-node-insert)
-#          ("C-c n c" . org-roam-capture)
-#          ;; Dailies
-#          ("C-c n j" . org-roam-dailies-capture-today))
-#   :config
-#   (org-roam-setup)
-#   ;; If you're using a vertical completion framework, you might want a more informative completion interface
-#   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-#   (org-roam-db-autosync-mode)
-#   ;; If using org-roam-protocol
-#   (require 'org-roam-protocol))
-# #+END_SRC
-#
-# *** Basic org-roam config
-# Following https://jethrokuan.github.io/org-roam-guide/
-#
-# #+BEGIN_COMMENT
-# #+BEGIN_SRC emacs-lisp
-# (setq org-roam-capture-templates
-#       '(("m" "main" plain
-#          "%?"
-#          :if-new (file+head "main/${slug}.org"
-#                             "#+title: ${title}\n")
-#          :immediate-finish t
-#          :unnarrowed t)
-#         ("r" "reference" plain "%?"
-#          :if-new
-#          (file+head "reference/${title}.org" "#+title: ${title}\n")
-#          :immediate-finish t
-#          :unnarrowed t)
-#         ("a" "article" plain "%?"
-#          :if-new
-#          (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
-#          :immediate-finish t
-#          :unnarrowed t)))
-#
-#
+
+*** org-roam
+
+The configuration for org-roam, the most advanced zettelkasten system for Emacs.
+There are alternatives such as denote, Rollo in hyperbole, logi-sech(?), and others. 
+
+This blog post compares dentoe and org-roam (https://whhone.com/posts/denote-vs-org-roam/). 
+The author concluded that denote is for Elisp masters and org-roam is for the org-mode cult. 
+He found org-roam to have more robust support for filtering and searching for zettels. 
+This is not suprising because org-roam is more mature, although only several years old.
+
+**** org-roam basic config
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "/Users/blaine/org-roam/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-setup)
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
+#+END_SRC
+
+
+
+*** org-roam capture templates
+This configuratin follows that of Jethro Kuan https://jethrokuan.github.io/org-roam-guide/, 
+excpet that I have embellished it with timestamps for date of creation and last modification.
+I obtained this code from the following blog post by Peter Prevos (https://lucidmanager.org/productivity/taking-notes-with-emacs-org-mode-and-org-roam/)
+I have also added a line for tags, a section for backlinks, and a section for citations for the reference zettel.
+
+Jethro is the lead developer of org-roam.
+He divided his zettelkasten into three parts:
+
+- main: these house original thoughts
+- reference: these are contain atoms of knowledge gleaned from cited literature
+- article: these seem to be "structure zettels" that contain an index or list of links to zettels of relevance to a article.
+
+I had already started my zettelkasten.
+I left the existing zettels outside of the three folders for the three kinds of zettels.
+
+According to Luhman, the literature and article zettels were to be temporary.
+However, retaining the article zettels may be useful to retain.
+You could refer to them to help you avoid repeating yourself in the Introduction and Discussion sections of a series of articles.
+The package zetteldesk is used to filter the zettels in a buffer for the purpose of article assembly.
+My configuration for zetteldesk is [[below]][]].
+
+
+#+BEGIN_SRC emacs-lisp
+(setq org-roam-capture-templates
+      '(("m" "main" plain
+         "%?"
+         :if-new (file+head "main/${slug}.org"
+                            "#+title: ${title}\n#+date: %u\n#+lastmod: %t\n#+filetags: :permanent: \n\n\n\n\n ** Backlinks\n\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("r" "reference" plain "%?"
+         :if-new
+         (file+head "reference/${title}.org" "#+title: ${title}\n#+date: %u\n#+lastmod: %t\n#+filetags: :reference: \n\n** Backlinks\n\n\n ** Citations ")
+         :immediate-finish t
+         :unnarrowed t)
+        ("a" "article" plain "%?"
+         :if-new
+         (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
+         :immediate-finish t
+         :unnarrowed t))
+         time-stamp-start "#\\+lastmod: [\t]*")
+#+END_SRC
+
+
+
+## #+BEGIN_COMMENT
 # (setq org-roam-node-display-template
 #     (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
 #
@@ -4449,16 +4554,16 @@ You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-t
 # :END:")))
 # #+END_SRC
 #
-# *** org-roam-ui
-#
-# This package displays the zettelkasten as a graph in your default browser.
-# It only work with version 2 of org-roam.
-# If installed from MELPA, no configuration is required.
-# Start by entering ~M-x org-roam-ui-mode~.
-#
-# [[https://github.com/org-roam/org-roam-ui][source]]
-#
-#
+*** org-roam-ui
+
+This package displays the zettelkasten as a graph in your default browser.
+It only work with version 2 of org-roam.
+If installed from MELPA, no configuration is required.
+Start by entering ~M-x org-roam-ui-mode~.
+
+[[https://github.com/org-roam/org-roam-ui][source]]
+
+
 # **** Visualize with igraph and R
 #
 # [[https://lucidmanager.org/data-science/visualise-org-roam/][See this post]] on how to visualize parts of your zettelkasten in igraph.
@@ -6375,9 +6480,58 @@ It has a nice table view of the snippets available for the current mode and a fu
    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . R-mode))
    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . ess-r-mode))
    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . poly-gfm+r-mode))
+   :bind
+   ("C-c y i" . yas-insert-snippet)
+   ("C-c y n" . yas-new-snippet)
 )
+
+;;  (use-package yasnippet-snippets)
 #+END_SRC
-#
+
+**** Resolving tab ambiguity
+
+(Source: https://blog.iany.me/2012/03/fix-tab-binding-for-yasnippet-and-auto-complete/)
+Emacs has two TAB’s in Emacs: (kbd "TAB") (\t, [9]) and (kbd "<tab>") ([tab]). 
+Modes like yasnippet and auto-complete want to bind on TAB.
+Their trigger key must be the same with the original Tab command. 
+Emacs binds indent-for-tab-command on (kbd "TAB").
+Yasnippet binds to it by default.
+You can etup auto-complete to trigger using Tab.
+
+
+#+BEGIN_SRC emacs-lisp
+;; trigger using TAB and disable auto start
+(custom-set-variables
+ '(ac-trigger-key "TAB")
+ '(ac-auto-start nil)
+ '(ac-use-menu-map t))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(defun iy-tab-noconflict ()
+  (let ((command (key-binding [tab]))) ; remember command
+    (local-unset-key [tab]) ; unset from (kbd "<tab>")
+    (local-set-key (kbd "TAB") command))) ; bind to (kbd "TAB")
+(add-hook 'ruby-mode-hook 'iy-ac-tab-noconflict)
+(add-hook 'markdown-mode-hook 'iy-ac-tab-noconflict)
+(add-hook 'org-mode-hook 'iy-ac-tab-noconflict)
+#+END_SRC
+
+In some modes (ruby-mode, markdown-mode, org-mode), the command is bound to (kbd "<tab>")).
+When the real Tab key is typed, the function bound on (kbd "<tab>) has higher priority, so yasnippet and auto-complete are not invoked.
+The following code resolves this issue:
+
+#+BEGIN_SRC emacs-lisp
+(defun iy-tab-noconflict ()
+  (let ((command (key-binding [tab]))) ; remember command
+    (local-unset-key [tab]) ; unset from (kbd "<tab>")
+    (local-set-key (kbd "TAB") command))) ; bind to (kbd "TAB")
+(add-hook 'ruby-mode-hook 'iy-ac-tab-noconflict)
+(add-hook 'markdown-mode-hook 'iy-ac-tab-noconflict)
+(add-hook 'org-mode-hook 'iy-ac-tab-noconflict)
+#+END_SRC
+
 #
 #
 # ***** Function to insert a fence code block
@@ -6394,13 +6548,13 @@ It has a nice table view of the snippets available for the current mode and a fu
 # #+END_SRC
 #
 #
-# **** keybinding to insert snippet
-#
-# Insert snippet with C-o. This normally mapped to TAB.
-#
-# #+BEGIN_SRC emacs-lisp
-# (global-set-key "\C-o" 'yas-expand)
-# #+END_SRC
+**** keybinding to insert snippet
+
+Insert snippet with C-o. This normally mapped to TAB.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-o" 'yas-expand)
+#+END_SRC
 #
 # # **** Tab triggers in org code blocks
 # #
@@ -6425,40 +6579,39 @@ It has a nice table view of the snippets available for the current mode and a fu
 # #
 #
 #
-# **** Yasnippet pop-up menu to aid snippet selection
-#
-# [[https://blog.iany.me/2012/03/use-popup-isearch-for-yasnippet-prompt/][Blogpost]] about the pop-up menu
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package popup
-#   :ensure t)
-# (require 'yasnippet)
-# ;; add some shotcuts in popup menu mode
-# (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
-# (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-# (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
-# (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
-# (define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
-#
-# (defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
-#   (when (featurep 'popup)
-#     (popup-menu*
-#      (mapcar
-#       (lambda (choice)
-#         (popup-make-item
-#          (or (and display-fn (funcall display-fn choice))
-#              choice)
-#          :value choice))
-#       choices)
-#      :prompt prompt
-#      ;; start isearch mode immediately
-#      :isearch t
-#      )))
-# (setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
-# #+END_SRC
-#
-#
+**** Yasnippet pop-up menu to aid snippet selection
+
+See this [[https://blog.iany.me/2012/03/use-popup-isearch-for-yasnippet-prompt/][Blogpost]] about the pop-up menu
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'popup)
+;; (require 'yasnippet)
+;; add some shotcuts in popup menu mode
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+(define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+(define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+(defun yas/popup-isearch-prompt (prompt choices &optional display-fn)
+  (when (featurep 'popup)
+    (popup-menu*
+     (mapcar
+      (lambda (choice)
+        (popup-make-item
+         (or (and display-fn (funcall display-fn choice))
+             choice)
+         :value choice))
+      choices)
+     :prompt prompt
+     ;; start isearch mode immediately
+     :isearch t
+     )))
+(setq yas/prompt-functions '(yas/popup-isearch-prompt yas/no-prompt))
+#+END_SRC
+
+
 # **** Automatically trigger completion at each snippet tabstop
 #
 # #+BEGIN_SRC emacs-lisp
@@ -6473,4 +6626,38 @@ It has a nice table view of the snippets available for the current mode and a fu
 # #+END_SRC
 #
 #
-# ** Z
+** Z
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'zetteldesk)
+(zetteldesk-mode 1)
+(setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
+(require 'zetteldesk-kb)
+(require 'zetteldesk-ref)
+(require 'zetteldesk-info)
+(require 'zetteldesk-remark)
+
+(pretty-hydra-define+ zetteldesk-insert-hydra ()
+  ("Org-Roam"
+   (("r" zetteldesk-ref-citar-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
+
+(pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+  ("Org-Roam UI"
+   (("r" zetteldesk-ref-find-ref-node))
+
+   "Citar UI"
+   (("c" zetteldesk-ref-citar-open-note))))
+
+(pretty-hydra-define+ zetteldesk-add-hydra ()
+  ("Org-Roam"
+   (("l" zetteldesk-ref-citar-add-node-to-desktop "Add Literature Node"))))
+
+(pretty-hydra-define+ zetteldesk-remove-hydra ()
+  ("Org-Roam"
+   (("l" zetteldesk-ref-citar-remove-node-from-desktop "Remove Literature Node"))))
+
+(pretty-hydra-define+ zetteldesk-main-hydra ()
+  ("Filter Functions"
+   (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
+#+END_SRC
