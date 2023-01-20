@@ -369,7 +369,7 @@ Thank you to DivineDomain for the suggested upgrade.  Source: https://www.emacsw
       (forward-line arg)
       (move-to-column column t)
       (set-mark (point))
-      (insert text)
+      ( text)
       (exchange-point-and-mark)
       (setq deactivate-mark nil)))
    (t
@@ -404,15 +404,6 @@ Thank you to DivineDomain for the suggested upgrade.  Source: https://www.emacsw
 (global-display-line-numbers-mode))
 #+END_SRC
 
-
-
-#+BEGIN_SRC emacs-lisp
-;; Highlight current line (Needs more tweaking with current dark theme.)
-(global-hl-line-mode +1)
-;;(add-to-list 'default-frame-alist '(background-color . "lightmagenta"))
-(set-face-background 'hl-line "dark cyan")
-(set-face-attribute 'mode-line nil :height 260)
-#+END_SRC
 
 
 
@@ -597,9 +588,9 @@ This is a 11-year fold package that extends Emacs's built in autocompletion syst
 
 ;; source: https://www.emacswiki.org/emacs/EshellCompletion
 (defun ac-pcomplete ()
-  ;; eshell uses `insert-and-inherit' to insert a \t if no completion
+  ;; eshell uses `-and-inherit' to  a \t if no completion
   ;; can be found, but this must not happen as auto-complete source
-  (flet ((insert-and-inherit (&rest args)))
+  (flet ((-and-inherit (&rest args)))
     ;; this code is stolen from `pcomplete' in pcomplete.el
     (let* (tramp-mode ;; do not automatically complete remote stuff
            (pcomplete-stub)
@@ -890,50 +881,6 @@ frame: Create a new frame and window in it. Must be using some windowing pacakge
 
 
 
-**** citar
-
-/citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
-Its functionality overlaps with bibtex-ivy and bibtex company.
-It works in markdown, org, and LaTeX.
-
-The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
-
-#+BEGIN_SRC emacs-lisp
- (use-package citar
-   :ensure t
-   :bind (("C-c b" . citar-insert-citation)
-          :map minibuffer-local-map
-          ("M-b" . citar-insert-preset))
-   :custom
-   (citar-open-note-function 'orb-citar-edit-note)
-   (citar-select-multiple t)
-   (citar-notes-paths '("~/org-roam/"))
-   (citar-library-paths '("~/0papersLabeled" "~/0booksLabeled"))
-   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-   (citar-file-extensions '("pdf" "epub"))
-   (org-cite-follow-processor 'citar)
-   (citar-bibliography '("~/Documents/global.bib")))
-
-(use-package citar-embark
-  :ensure t
-  :after citar embark
-  :no-require
-  :config (citar-embark-mode)
-  )
-
-(use-package citar-org-roam
-  :ensure t
-  :after citar org-roam
-  :no-require
-  :custom
-  (citar-org-roam-subdir nil)
-  :config (citar-org-roam-mode)
-  )
-
-
-#+END_SRC
-Note that scholar-import is configured to work with citar.
-
 
 *** AUCTeX
 [[source][https://stackoverflow.com/questions/3300497/using-minted-source-code-latex-package-with-emacs-auctex]]
@@ -952,7 +899,7 @@ To enable the use of the minted package.
 *** awesome-tab
 
 #+BEGIN_SRC emacs-lisp
-  (use-package awesome-tab
+(use-package awesome-tab
     :load-path "~/.emacs.default/elisp/awesome-tab"
     :config
     (awesome-tab-mode t))
@@ -986,8 +933,8 @@ You have to run the funciton with M-x first to activate the key-binding.
           	(string-match "@" (buffer-string))
               (point)))
      (kill-buffer (current-buffer))))
- (insert (decode-coding-string bibtex-entry 'utf-8))
- (define-key bibtex-mode-map (kbd "C-c b") 'get-bibtex-from-doi)
+ ( (decode-coding-string bibtex-entry 'utf-8))
+ (define-key bibtex-mode-map (kbd "C-c C-b") 'get-bibtex-from-doi)
  (bibtex-fill-entry))
 #+END_SRC
 
@@ -1109,6 +1056,53 @@ Then if you try to evaluate something from a cljs file, CIDER looks for a cljs R
 Enter ~M-x clojure-mode~ to fix this issue.
 
 Note, you can run ~lein repl :connect 1337~ from the terminal.
+
+
+
+**** citar
+
+/citar/ is a citation manager that plays well with /selectrum/ or /vertico/.
+Its functionality overlaps with bibtex-ivy and bibtex company.
+It works in markdown, org, and LaTeX.
+
+The documentation is a bit spartan and not beginner-friendly [[https://github.com/bdarcus/citar][Source]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package citar
+   :ensure t
+   :bind (("C-c b" . citar--citation)
+          :map minibuffer-local-map
+          ("M-b" . citar--preset))
+   :custom
+   (citar-open-note-function 'orb-citar-edit-note)
+   (citar-select-multiple t)
+   (citar-notes-paths '("~/org-roam/"))
+   (citar-library-paths '("~/0papersLabeled" "~/0booksLabeled"))
+   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+   (citar-file-extensions '("pdf" "epub"))
+   (org-cite-follow-processor 'citar)
+   (citar-bibliography '("~/Documents/global.bib")))
+
+(use-package citar-embark
+  :ensure t
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode)
+  )
+
+(use-package citar-org-roam
+  :ensure t
+  :after citar org-roam
+  :no-require
+  :custom
+  (citar-org-roam-subdir nil)
+  :config (citar-org-roam-mode)
+  )
+
+
+#+END_SRC
+Note that scholar-import is configured to work with citar.
+
 
 
 
@@ -1286,7 +1280,7 @@ The same goes for the other CUA keys.
   :config
   (dashboard-setup-startup-hook))
 (setq dashboard-center-content t)
-(setq dashboard-insert-ascii-banner-centered t)
+(setq dashboard--ascii-banner-centered t)
 (setq dashboard-banner-logo-title "Loxo or selpercatinib. FDA-approved RET kinase inhibitor to treat non-small cell lung cancer in 2020.")
 (use-package all-the-icons)
 ;;(insert (all-the-icons-icon-for-buffer))
@@ -1516,7 +1510,7 @@ ew
 (setq elfeed-curl-program-name "/opt/local/bin/curl")
 (setq elfeed-search-title-max-width 130)
 (use-package elfeed-org)
-(setq rmh-elfeed-org-files (list "~/.emacs.default/elfeed.org"))
+(setq rmh-elfeed-org-files (list "~/.emacs.default30/elfeed.org"))
 (elfeed-org)
 ;;
 ;;(setq elfeed-feeds '("https://planet.emacslife.com/atom.xml" "http://feeds.nature.com/nchem/rss/current"
@@ -2898,7 +2892,7 @@ I am stumped
 
 #+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.default/elisp/mathpix")
+(add-to-list 'load-path "~/.emacs.default30/elisp/mathpix")
 (use-package mathpix
   :ensure t
   :custom ((mathpix-app-id "app-id")
@@ -3074,15 +3068,6 @@ Setting to open dvi in place of pdf-tools for a sharper view.
 #+END_SRC
 
 
-*** org-ac
-
-See the GitHUb [[https://github.com/aki2o/org-ac][repo]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-ac)
-(org-ac/config-default)
-#+END_SRC
-
 
 *** org-agenda
 
@@ -3243,7 +3228,7 @@ Show deadlines in org-agenda buffers by actvating this minor mode.
 [[Source][https://github.com/legalnonsense/org-agenda-show-deadlines]].
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.default/manual-packages/org-agenda-show-deadlines/")
+(add-to-list 'load-path "~/.emacs.default30/manual-packages/org-agenda-show-deadlines/")
 (require 'org-agenda-show-deadlines)
 (setq org-agenda-show-deadlines-column 44)
 #+END_SRC
@@ -3279,13 +3264,23 @@ Then on the second submission, the headline name will be auto suggested after yo
 You just hit tab to autocomplete its entry into the capture form.
 You might start the headline with the project ID number to ease prompting the autocompletion.
 
-I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
+I tried changing the "Headline" variable to "Tag" in the org-ask-location fuction, 
+but this lead to confusing mix of success and failure because I had some headlines with the project number which I was also using as a tag.
 It would be great if this function could search on the tag, but its is hardwired for headlines.
 
 If the headline is not matched, a new entry at the bottom of the file will be started.
 You can open the destinaton org file in a separate buffer and watch where the new TODO entry is being placed.
 If it is going to the wrong place, enter ~C-c C-k~ to kill the process.
 Then start over with ~C-c C-c~ with the correct headline.
+
+The erractic behavior of this approach is disappointing for those who want to do capture and filing on one operation.
+One partial solution is to use assigned keys to specific projects and to use the headline rather than the tag to find the place to insert the new item.
+This solution works well.
+
+The code can be edited as new projects are added and old projects are retired.
+The limit to this approach is 26 lower case, 26 upper case, and 10 digits: 62.
+A way of out of this limit is to use hydras.
+
 
 This protocol can be executed from inside the target org file or from a different buffer.
 
@@ -3313,12 +3308,24 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
       (insert "** PROJ " hd "\n")))
   (end-of-line))
 
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
 (setq org-capture-templates
  '(
    ("j" "JournalArticles" entry
     (file+function "/Users/blaine/gtd/tasks/JournalArticles.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
     :empty-lines 1)
+    ("0" "018 JournalArticle" entry
+     (file+headline "/Users/blaine/gtd/tasks/JournalArticles.org" "PROJ 018FrancisRNAdrug")
+     "*** TODO %^{title}\n:Properties:\n:CATEGORY: 018\n:END:\n <%<%Y-%m-%d %a %T>>\n%^{Add your notes here. Enter C-c C-c when finished.}\n %?"
+     :empty-lines 1)
+
+     ("1" "523 JournalArticle" entry
+      (file+headline "/Users/blaine/gtd/tasks/JournalArticles.org" "PROJ 523 RNA drug crystallization")
+      "*** TODO %^{title}\n:Properties:\n:CATEGORY: 523\n:END:\n <%<%Y-%m-%d %a %T>>\n%^{Add your notes here. Enter C-c C-c when finished.}\n %?"
+      :empty-lines 1)
+
     ("g" "GrantProposals" entry
     (file+function "/Users/blaine/gtd/tasks/Proposals.org" org-ask-location)
     "\n\n*** TODO %?\n<%<%Y-%m-%d %a %T>>"
@@ -3361,6 +3368,9 @@ Emacs Notes Capture From PDF [[https://www.youtube.com/watch?v=51bvZH9qjBw][sour
 #+END_SRC
 
 
+
+
+
 *** Org-capture active region of pdf-view buffer
 
 #+BEGIN_SRC emacs-lisp
@@ -3394,17 +3404,6 @@ Do we really have to exit the calendar after each selection?
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "/Users/blaine/")
 #+END_SRC
-
-
-# ;; <<<<<<< BEGINNING of org-agenda from-latex emacs>>>>>>>>>>>>>>
-#+BEGIN_SRC emacs-lisp
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
-;; org-capture
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-cl" 'org-store-link)
-#+END_SRC
-
 
 
 *** org-babel
@@ -4156,105 +4155,105 @@ You can use org tables to generate [[https://github.com/chrisbarrett/org-drill-t
 #
 #
 #
-# *** deft
-#
-# This search engine can scan org-roam entries.
-#
-# #+BEGIN_SRC emacs-lisp
-# (use-package deft
-#   :commands deft
-#   :init
-#   (setq deft-default-extension "org"
-#         ;; de-couples filename and note title:
-#         deft-use-filename-as-title nil
-#         deft-use-filter-string-for-filename t
-#         ;; disable auto-save
-#         deft-auto-save-interval -1.0
-#         ;; converts the filter string into a readable file-name using kebab-case:
-#         deft-file-naming-rules
-#         '((noslash . "-")
-#           (nospace . "-")
-#           (case-fn . downcase)))
-#   :config
-#   (add-to-list 'deft-extensions "tex")
-#   )
-# #+END_SRC
-#
-#
-#
-#
-# *** org-noter-pdftools
-# #
-# #  This package integrates org-noter and pdftools.
-# #
-# #  The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
-# #
-# #
-# #  #+BEGIN_SRC emacs-lisp
-# #  (use-package org-noter
-# #    :after org
-# #    :ensure t
-# #    :config
-# #    ;; Your org-noter config ........
-# #    :config
-# #    (setq
-# #      org_notes (concat (getenv "HOME") "/org-roam/")
-# #      zot_bib (concat (getenv "HOME") "/Documents/global.bib")
-# #      org-directory org_notes
-# #      deft-directory org_notes
-# #      org-roam-directory org_notes
-# #      ;; keep an empty line between headings and content in Org file
-# #      org-noter-separate-notes-from-heading t)
-# #    (require 'org-noter-pdftools))
-# #
-# #  (use-package org-pdftools
-# #    :hook (org-mode . org-pdftools-setup-link))
-# #
-# #  (use-package org-noter-pdftools
-# #    :after org-noter
-# #    :config
-# #    ;; Add a function to ensure precise note is inserted
-# #    (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-# #      (interactive "P")
-# #      (org-noter--with-valid-session
-# #       (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-# #                                                     (not org-noter-insert-note-no-questions)
-# #                                                   org-noter-insert-note-no-questions))
-# #             (org-pdftools-use-isearch-link t)
-# #             (org-pdftools-use-freepointer-annot t))
-# #         (org-noter-insert-note (org-noter--get-precise-info)))))
-# #
-# #    ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-# #    (defun org-noter-set-start-location (&optional arg)
-# #      "When opening a session with this document, go to the current location.
-# #  With a prefix ARG, remove start location."
-# #      (interactive "P")
-# #      (org-noter--with-valid-session
-# #       (let ((inhibit-read-only t)
-# #             (ast (org-noter--parse-root))
-# #             (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-# #         (with-current-buffer (org-noter--session-notes-buffer session)
-# #           (org-with-wide-buffer
-# #            (goto-char (org-element-property :begin ast))
-# #            (if arg
-# #                (org-entry-delete nil org-noter-property-note-location)
-# #              (org-entry-put nil org-noter-property-note-location
-# #                             (org-noter--pretty-print-location location))))))))
-# #    (with-eval-after-load 'pdf-annot
-# #      (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-# #  #+END_SRC
-# #
-# #
-# #  #. Let org know about pdftools.
-# #  #.
-# #  #. #+BEGIN_SRC emacs-lisp
-# #  #. (eval-after-load 'org '(require 'org-pdfview))
-# #  #.
-# #  #. (add-to-list 'org-file-apps
-# #  #.              '("\\.pdf\\'" . (lambda (file link)
-# #  #.                                      (org-pdfview-open link))))
-# #  #. #+END_SRC
-#
+*** deft
+
+This search engine can scan org-roam entries.
+
+#+BEGIN_SRC emacs-lisp
+(use-package deft
+  :commands deft
+  :init
+  (setq deft-default-extension "org"
+        ;; de-couples filename and note title:
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t
+        ;; disable auto-save
+        deft-auto-save-interval -1.0
+        ;; converts the filter string into a readable file-name using kebab-case:
+        deft-file-naming-rules
+        '((noslash . "-")
+          (nospace . "-")
+          (case-fn . downcase)))
+  :config
+  (add-to-list 'deft-extensions "tex")
+  )
+#+END_SRC
+
+
+
+
+*** org-noter-pdftools
+
+This package integrates org-noter and pdftools.
+
+The following configuration follows the example located in the ~README.org~ file for this [[https://github.com/fuxialexander/org-pdftools][project]].
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-noter
+  :after org
+  :ensure t
+  :config
+  ;; Your org-noter config ........
+  :config
+  (setq
+    org_notes (concat (getenv "HOME") "/org-roam/")
+    zot_bib (concat (getenv "HOME") "/Documents/global.bib")
+    org-directory org_notes
+    deft-directory org_notes
+    org-roam-directory org_notes
+    ;; keep an empty line between headings and content in Org file
+    org-noter-separate-notes-from-heading t)
+  (require 'org-noter-pdftools))
+
+(use-package org-pdftools
+  :hook (org-mode . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :after org-noter
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freepointer-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+END_SRC
+
+
+Let org know about pdftools.
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'org '(require 'org-pdfview))
+
+(add-to-list 'org-file-apps
+             '("\\.pdf\\'" . (lambda (file link)
+                                     (org-pdfview-open link))))
+#+END_SRC
+
 *** org-pomodoro
 
 Place the point (cursor) on the task you are to work on and then enter ~C-c o
@@ -4402,7 +4401,7 @@ There is a github gist of a org-pomodoro-plus.el file that has more configuratio
 # #   #+END_COMMENT
 
 *** org-roam
-#+Name: Target
+#+Name: org-roam
 
 The configuration for org-roam, the most advanced zettelkasten system for Emacs.
 There are alternatives such as denote, Rollo in hyperbole, logi-sech(?), and others. 
@@ -4437,7 +4436,7 @@ This is not suprising because org-roam is more mature, although only several yea
 
 
 
-*** org-bibtex
+*** org-roam-bibtex
 
 Min. config. from  https://gist.github.com/thriveth/f961e42dea4988f464ea67d2d6febbb1
 
@@ -4515,6 +4514,66 @@ My configuration for zetteldesk is [[#zetteldesk]].
          time-stamp-start "#\\+lastmod: [\t]*")
 #+END_SRC
 
+It’d of course also be useful to differentiate the different types of zettels at completion time. 
+This used to be a feature in Org-roam v1, which I’d removed. 
+Thankfully, the code is architectured such that you could define your own properties on nodes. 
+In this case, I want to define the “type” of note based on its file path. This is simple enough:
+
+
+#+BEGIN_SRC emacs-lisp
+(cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
+#+END_SRC
+
+
+Modifying the display template to show the node “type”
+
+#+BEGIN_SRC emacs-lisp
+(setq org-roam-node-display-template
+      (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+#+END_SRC
+
+
+**** Reference zettels
+
+- Call jethro/org-roam-node-from-cite.
+- Select the correct reference.
+- A new reference zettel is created.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun jethro/org-roam-node-from-cite (keys-entries)
+    (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+                                                "${author editor} :: ${title}")))
+      (org-roam-capture- :templates
+                         '(("r" "reference" plain "%?" :if-new
+                            (file+head "reference/${citekey}.org"
+                                       ":PROPERTIES:
+:ROAM_REFS: [cite:@${citekey}]
+:END:
+#+title: ${title}\n")
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey (car keys-entries))
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file))))
+#+END_SRC
+
+
+**** Zettels are drafts until declared otherwise
+
+#+BEGIN_SRC emacs-lisp
+(defun jethro/tag-new-node-as-draft ()
+  (org-roam-tag-add '("draft")))
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+#+END_SRC
 
 
 ## #+BEGIN_COMMENT
@@ -6008,39 +6067,39 @@ See org-noter section
 #
 # **** ef-theme from Prot
 #
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "~/.emacs.default/elisp/ef-themes")
-#
-# (require 'ef-themes)
-# ;; If you like two specific themes and want to switch between them, you
-# ;; can specify them in `ef-themes-to-toggle' and then invoke the command
-# ;; `ef-themes-toggle'.  All the themes are included in the variable
-# ;; `ef-themes-collection'.
-# (setq ef-themes-to-toggle '(ef-summer ef-winter))
-#
-# ;; Make customisations that affect Emacs faces BEFORE loading a theme
-# ;; (any change needs a theme re-load to take effect).
-#
-# (setq ef-themes-headings ; read the manual's entry or the doc string
-#       '((0 . (variable-pitch light 1.9))
-#         (1 . (variable-pitch light 1.8))
-#         (2 . (variable-pitch regular 1.7))
-#         (3 . (variable-pitch regular 1.6))
-#         (4 . (variable-pitch regular 1.5))
-#         (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
-#         (6 . (variable-pitch 1.3))
-#         (7 . (variable-pitch 1.2))
-#         (t . (variable-pitch 1.1))))
-#
-# ;; They are nil by default...
-# (setq ef-themes-mixed-fonts t
-#       ef-themes-variable-pitch-ui t)
-#
-# ;; Disable all other themes to avoid awkward blending:
-# (mapc #'disable-theme custom-enabled-themes)
-#
-# ;; Load the theme of choice:
-# (load-theme 'ef-summer :no-confirm)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.default30/elisp/ef-themes")
+
+(require 'ef-themes)
+;; If you like two specific themes and want to switch between them, you
+;; can specify them in `ef-themes-to-toggle' and then invoke the command
+;; `ef-themes-toggle'.  All the themes are included in the variable
+;; `ef-themes-collection'.
+(setq ef-themes-to-toggle '(ef-summer ef-winter))
+
+;; Make customisations that affect Emacs faces BEFORE loading a theme
+;; (any change needs a theme re-load to take effect).
+
+(setq ef-themes-headings ; read the manual's entry or the doc string
+      '((0 . (variable-pitch light 1.9))
+        (1 . (variable-pitch light 1.8))
+        (2 . (variable-pitch regular 1.7))
+        (3 . (variable-pitch regular 1.6))
+        (4 . (variable-pitch regular 1.5))
+        (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
+        (6 . (variable-pitch 1.3))
+        (7 . (variable-pitch 1.2))
+        (t . (variable-pitch 1.1))))
+
+;; They are nil by default...
+(setq ef-themes-mixed-fonts t
+      ef-themes-variable-pitch-ui t)
+
+;; Disable all other themes to avoid awkward blending:
+(mapc #'disable-theme custom-enabled-themes)
+
+;; Load the theme of choice:
+(load-theme 'ef-summer :no-confirm)
 
 ;; The themes we provide:
 ;;
@@ -6505,16 +6564,6 @@ You can etup auto-complete to trigger using Tab.
 #+END_SRC
 
 
-#+BEGIN_SRC emacs-lisp
-(defun iy-tab-noconflict ()
-  (let ((command (key-binding [tab]))) ; remember command
-    (local-unset-key [tab]) ; unset from (kbd "<tab>")
-    (local-set-key (kbd "TAB") command))) ; bind to (kbd "TAB")
-(add-hook 'ruby-mode-hook 'iy-ac-tab-noconflict)
-(add-hook 'markdown-mode-hook 'iy-ac-tab-noconflict)
-(add-hook 'org-mode-hook 'iy-ac-tab-noconflict)
-#+END_SRC
-
 In some modes (ruby-mode, markdown-mode, org-mode), the command is bound to (kbd "<tab>")).
 When the real Tab key is typed, the function bound on (kbd "<tab>) has higher priority, so yasnippet and auto-complete are not invoked.
 The following code resolves this issue:
@@ -6635,7 +6684,7 @@ It was developed by a fourth year chemical engineering student in Greece, Vidian
 He gave a [[https://emacsconf.org/2022/talks/science/][talk]] about his workflow at emacsconf 2022 on December 3.
 The ethernet and IRC chat have yet to be archived. 
 The zetteldesk was at the end of his workflow.
-An audience member suggested a FOSS [[https://jermolene.com/cecily/][project]] amd a proprietry [[https://www.napkin.one/][project]] where objects could be sorted on a webpage.
+An audience member suggested a FOSS [[https://jermolene.com/cecily/][project]] and a proprietry [[https://www.napkin.one/][project]] where objects could be sorted on a webpage.
 
 His [[https://github.com/Vidianos-Giannitsis/zetteldesk.el][project]] is in MELPA and on GitHub 
 He had provided an extensive [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Github]] website with 11 pages that explain his workflow in more depth.
@@ -6645,37 +6694,43 @@ His reference zettel capture template is more complex than mine.
 Zetteldesk seems to be redundant with the artilce zettel.
 It would be cool to be able to export the collected zettels to a format that could be imported into iThoughtsX for reorganizing.
 
+From the etherpad discussion of his talk: 
+``The Koutliner in the GNU Hyperbole package can be used for this where all notes would be organized, autonumbered and automatically have a per-file unique hyperanchor ID. 
+You can move notes/ideas around the same way you do in Org outlines. 
+Besides collapsing and expanding trees of notes, you can also clip the view to a particular number of lines per note for overviews. 
+It supports Org tables too.''
 
+The workflow and configuration for the other packages in the workflow are of greater interest to me.
 
-#+BEGIN_SRC emacs-lisp
-(require 'zetteldesk)
-(zetteldesk-mode 1)
-(setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
-(require 'zetteldesk-kb)
-(require 'zetteldesk-ref)
-(require 'zetteldesk-info)
-(require 'zetteldesk-remark)
-
-(pretty-hydra-define+ zetteldesk-insert-hydra ()
-  ("Org-Roam"
-   (("r" zetteldesk-ref-citar-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
-
-(pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
-  ("Org-Roam UI"
-   (("r" zetteldesk-ref-find-ref-node))
-
-   "Citar UI"
-   (("c" zetteldesk-ref-citar-open-note))))
-
-(pretty-hydra-define+ zetteldesk-add-hydra ()
-  ("Org-Roam"
-   (("l" zetteldesk-ref-citar-add-node-to-desktop "Add Literature Node"))))
-
-(pretty-hydra-define+ zetteldesk-remove-hydra ()
-  ("Org-Roam"
-   (("l" zetteldesk-ref-citar-remove-node-from-desktop "Remove Literature Node"))))
-
-(pretty-hydra-define+ zetteldesk-main-hydra ()
-  ("Filter Functions"
-   (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (require 'zetteldesk)
+# (zetteldesk-mode 1)
+# (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
+# (require 'zetteldesk-kb)
+# (require 'zetteldesk-ref)
+# (require 'zetteldesk-info)
+# (require 'zetteldesk-remark)
+# 
+# (pretty-hydra-define+ zetteldesk-insert-hydra ()
+#   ("Org-Roam"
+#    (("r" zetteldesk-ref-citar-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
+# 
+# (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+#   ("Org-Roam UI"
+#    (("r" zetteldesk-ref-find-ref-node))
+# 
+#    "Citar UI"
+#    (("c" zetteldesk-ref-citar-open-note))))
+# 
+# (pretty-hydra-define+ zetteldesk-add-hydra ()
+#   ("Org-Roam"
+#    (("l" zetteldesk-ref-citar-add-node-to-desktop "Add Literature Node"))))
+# 
+# (pretty-hydra-define+ zetteldesk-remove-hydra ()
+#   ("Org-Roam"
+#    (("l" zetteldesk-ref-citar-remove-node-from-desktop "Remove Literature Node"))))
+# 
+# (pretty-hydra-define+ zetteldesk-main-hydra ()
+#   ("Filter Functions"
+#    (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
+# #+END_SRC
