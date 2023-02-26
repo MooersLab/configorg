@@ -3061,7 +3061,7 @@ This is a great [[https://www.youtube.com/watch?v=hnMntOQjs7Q][demo]] of the bas
 #+END_SRC
 
 
-Setting to open dvi in place of pdf-tools for a sharper view.
+Setting to open dvi in place of pdf-toolsfor a sharper view.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-latex-create-formula-image-program 'dvisvgm)
@@ -3074,52 +3074,52 @@ Setting to open dvi in place of pdf-tools for a sharper view.
 Org-agenda in my default emacs config is not showing the current day'a agenda view.
 I swapped in the config from latex-emacs where it is working.
 
-# The following code configures the org-agenda menu.
-# It is configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
-# This is the best intoduction to org-agenda for academcis that I have read.
-# I recommended starting with it.
-# Eventually, you should read the org-agenda chapter in the Org-mode manual.
-# 
-# Note that paths to the org files used by org-agenda are stored in init.el.
-# I am not sure why.
-# 
-# I was using /tasks.org/, /tickler.org/, and the /proj.org/.
-# /ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
-# I do not see the point of keeping projects separate from tasks.
-# 
-# 
-# Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
-# Run ~M-x org-lint~ to find the errors in the tasks.org file.
-# You should run it on the config.org file too from time to time.
-# 
-# Note that you should not worry about the default start date at 0800 in the agenda view.
-# I wasted an hour or more trying to configure this feature.
-# If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
-# 
-# ~C-c .~  is entered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
-# Use this for most events.
-# 
-# Use ~C-c C-s~ to set timestamps with the scheduled keyword.
-# This is for events that are not to be started until the scheduled time.
-# 
-# Use ~C-s C-d~ to set timestamps with the deadline keyword.
-# The format of the data must by YYYY-MM-DD.
-# Single digit months and days must be accompanied by a zero in the left position.
-# 
-# 
-# **** Configuration of org-agenda that addresses the 10,000 folder hypothesis
-# 
-# A project is an activity that is composed of more than one task.
-# I hypothesized that most academics will not have more than 10,000 projects in a 30+ year career.
-# That is about one new project per working day in a 30 year career.
-# Most will probably have 2000 to 3000 projects.
-# 
-# In analogy to the Dewy Decimal system, I have divided projects into ten categories.
-# I use only a numeric codes for the indices.
-# I also use 10,000 top level categories rather than 1000.
-# The first category are journal articles.
-# Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for establishing credibility in grant applications.
-# Each category has been assigned a range of 1000 numeric indices.
+The following code configures the org-agenda menu.
+It is configured following the great blog post by a research software engineer, [[https://tlestang.github.io/blog/keeping-track-of-tasks-and-projects-using-emacs-and-org-mode.html][Thibault Lestang]].
+This is the best intoduction to org-agenda for academcis that I have read.
+I recommended starting with it.
+Eventually, you should read the org-agenda chapter in the Org-mode manual.
+
+Note that paths to the org files used by org-agenda are stored in init.el.
+I am not sure why.
+
+I was using /tasks.org/, /tickler.org/, and the /proj.org/.
+/ticker.org/ has the recurring events programmed to pop up in agenda several days or several in advance of the events.
+I do not see the point of keeping projects separate from tasks.
+
+
+Note that errors in time format in tasks.org will choke the startup of config.org because tasks.org is read on startup to setup org-agenda.
+Run ~M-x org-lint~ to find the errors in the tasks.org file.
+You should run it on the config.org file too from time to time.
+
+Note that you should not worry about the default start date at 0800 in the agenda view.
+I wasted an hour or more trying to configure this feature.
+If you schedule an event at 0400, it will show up in the agenda as starting at 0400.
+
+~C-c .~  is entered on an event line will open the calendar for selecting the date with the mouse to set a plain time stamp.
+Use this for most events.
+
+Use ~C-c C-s~ to set timestamps with the scheduled keyword.
+This is for events that are not to be started until the scheduled time.
+
+Use ~C-s C-d~ to set timestamps with the deadline keyword.
+The format of the data must by YYYY-MM-DD.
+Single digit months and days must be accompanied by a zero in the left position.
+
+
+**** Configuration of org-agenda that addresses the 10,000 folder hypothesis
+
+A project is an activity that is composed of more than one task.
+I hypothesized that most academics will not have more than 10,000 projects in a 30+ year career.
+That is about one new project per working day in a 30 year career.
+Most will probably have 2000 to 3000 projects.
+
+In analogy to the Dewy Decimal system, I have divided projects into ten categories.
+I use only a numeric codes for the indices.
+I also use 10,000 top level categories rather than 1000.
+The first category are journal articles.
+Other than your graduate students and books, peer-reviewed journal articles are your legacy and your currency for establishing credibility in grant applications.
+Each category has been assigned a range of 1000 numeric indices.
 
 
 #+BEGIN_SRC emacs-lisp
