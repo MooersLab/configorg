@@ -3492,41 +3492,40 @@ I add to add ~:results value scalar~ to get the appropriate output.
              '(:results . "output"))
 #+END_SRC
 
+#+BEGIN_COMMENT
+*** Turn off security confirmation for langs in list.
 
-# *** Turn off security confirmation for langs in list.
-#
-# #+BEGIN_SRC emacs-lisp
-# ;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
-# (defun my-org-confirm-babel-evaluate (lang body)
-#   (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
-# (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-# #+END_SRC
-#
-#
-# *** consult-org-headings
-#
-# Eric Fraga's wrapper for the consult-org-heading function.
-# Gives plain text headers listed in minibuffer.
-#
-# #+BEGIN_SRC emacs-lisp
-# (defun esf/consult-org-heading ()
-#   "Eric's wrapper about consult-org-heading."
-#   (interactive)
-#   (let ((org-level-faces nil))
-#     (consult-org-heading)))
-# (global-set-key (kbd "C-c s") 'esf/consult-org-heading)
-# #+END_SRC
-#
-# I like the default settings with color coding.
-# I have mapped these to the ~C-c s~.
-#
-# #+BEGIN_SRC emacs-lisp
-# (global-set-key (kbd "C-c s") 'consult-org-heading)
-# ;;(add-hook 'org-mode-hook
-# ;;          (lambda ()
-# ;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+;; source: https://emacs.stackexchange.com/questions/21124/execute-org-mode-source-blocks-without-security-confirmation
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("C" "clojure" "sh" "jupyter-python" "jupyter-julia"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+END_SRC
 
+
+*** consult-org-headings
+Eric Fraga's wrapper for the consult-org-heading function.
+Gives plain text headers listed in minibuffer.
+
+#+BEGIN_SRC emacs-lisp
+(defun esf/consult-org-heading ()
+  "Eric's wrapper about consult-org-heading."
+  (interactive)
+  (let ((org-level-faces nil))
+    (consult-org-heading)))
+(global-set-key (kbd "C-c s") 'esf/consult-org-heading)
+#+END_SRC
+
+I like the default settings with color coding.
+I have mapped these to the ~C-c s~.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c s") 'consult-org-heading)
+;;(add-hook 'org-mode-hook
+;;          (lambda ()
+;;                  (local-set-key (kbd "C-c s") 'consult-org-heading)))
+#+END_SRC
+#+END_COMMENT
 
 *** org-drill for spaced repetition learning in org-mode
 
@@ -3560,262 +3559,269 @@ To drag and drop images into org files, see the associate [[https://github.com/a
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+END_SRC
 
+#+BEGIN_COMMENT
+*** org gantt plots
 
-# *** org gantt plots
-#
-# There is a number of ways to make these type of plots in Emacs.
-# The ~elgantt.el~ project is promising due to its integration with org.
-# The [[plantuml-mode][https://github.com/skuro/plantuml-mode]] can also be used to make a GANTT plot with the plantuml code in a code block and the output below.
-#
-# The simplist and most robust is the generate a table in an org document of the events, days of effort, their start date, and their end date.
-# The latter two columns were columns three and four of the table that I used with the script below.
-# Then use a gnuplot script to call this table and write out a plot.
-#
-# I obtained the inspiration for this plot from [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-# I needed only the first four columns to generate the GANTT plot.
-# The remaining columns were left for later work.
-#
-# Enter ~TAB, RET~ or ~C-c C-c~ to auto-adjust the Table as you enter values and to complete the dates.
-# The numerical value of the date can be entered and the day of the week will be determined automatically after entering ~C-c C-c~.
-# The date needs to be added in the YYYY-MM-DD format.
-# Single-digit dates must be preceded by a 0.
-#
-# Enter ~S-M-down~ to add a row above.
-# Enter ~M-up~ to move a row up.
-#
-# The column formula calculates the end date.
-# I included shorten version of the table with the minimum configuration as a template.
-# I deleted a number of rows of sensitive information under the manuscript and grant proposal preparation categories.
-#
-#
-# #+tblname: gantt-table
-# | Task                                  | Effort in Days | Start date       | End date         | Responsible | Spent | Progress | Projected Effort | Over/Under time |
-# |---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
-# | Service:                              |                |                  |                  |             |       |          |                  |                 |
-# | MRAB study section                    |             30 | <2022-06-01 Wed> | <2022-06-28 Tue> |             |       |          |                  |                 |
-# | MRAB study section                    |             30 | <2022-10-01 Sat> | [2022-10-31 Mon] |             |       |          |                  |                 |
-# | MRAB study section                    |             30 | <2023-02-10 Thu> | <2023-03-08 Tue> |             |       |          |                  |                 |
-# | Meetings:                             |                |                  |                  |             |       |          |                  |                 |
-# | SciPy22 Mtg                           |              6 | <2022-07-11 Mon> | [2022-07-18 Sun] |             |       |          |                  |                 |
-# | ACA abstract                          |             15 | <2022-04-03 Sun> | <2022-04-15 Fri> |             |       |          |                  |                 |
-# | ACA Mtg                               |              5 | <2022-07-29 Fri> | <2022-08-02 Tue> |             |       |          |                  |                 |
-# | GRC abstract                          |             15 | <2022-06-01 Wed> | <2022-06-15 Wed> |             |       |          |                  |                 |
-# | GRC Mtg                               |              7 | <2022-07-24 Sun> | <2022-07-29 Fri> |             |       |          |                  |                 |
-# | SSRL/LCLS Mtg                         |              6 | <2022-09-26 Mon> | <2022-09-30 Fri> |             |       |          |                  |                 |
-# | JuptyerCon 2023 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
-# | JupyterCon 2023                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
-# | EmacsConf22 abstract                  |             15 | <2022-09-01 Thu> | <2022-09-15 Mon> |             |       |          |                  |                 |
-# | EmacsConf22                           |              2 | <2022-11-26 Sat> | <2022-11-27 Sun> |             |       |          |                  |                 |
-# | Grant reports:                        |                |                  |                  |             |       |          |                  |                 |
-# | NIH/NCI R01 grant                     |              2 | <2022-03-21 Mon> | <2022-04-15 Fri> |             |       |          |                  |                 |
-# | NIH/NGMS COBRE phase 2                |              5 | <2022-06-01 Wed> | <2022-07-31 Sun> |             |       |          |                  |                 |
-# | PHF Year 2                            |              5 | <2022-07-01 Fri> | <2022-07-31 Sun> |             |       |          |                  |                 |
-# | OCAST Year 2                          |              2 | <2022-07-25 Mon> | <2022-07-29 Fri> |             |       |          |                  |                 |
-# | COBRE ECA mid-yr                      |              5 | <2022-05-21 Sat> | <2022-05-31 Tue> |             |       |          |                  |                 |
-# | COBRE ECA CY2022                      |              5 | <2022-12-06 Tue> | <2022-12-10 Sat> |             |       |          |                  |                 |
-# |---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
-# #+TBLFM: $4=if("$-1"!="",date(<$-1>)+<$-2>,string(""));E
-#
-# The source of the Gnuplot code below is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-# I modifed the code to accommodate a GANTT plot with 60 events and to write it out to a PDF.
-# This plot takes up a full page (7 by 9 inches).
-# I switched to using PNG for this demo because PDFs can be hard to display in some browsers.
-#
-# Enter ~C-c C-c~ in the code block to run it.
-# Change the line width of the arrow sytle line to change the thickness of the bars.
-#
-# March 2022 appears on the x-axis.
-# I have not figured out how to start from April.
-# Maybe the x-range has to be set.
-#
-# #+BEGIN_SRC gnuplot :var DATA=gantt-table :file gantt-short.png
-# OneMonth = strptime("%m","2")
-# timeformat = "%Y-%m-%d"
-# T(N) = timecolumn(N,timeformat)
-#
-# set term png size 700,900 enhanced font "Helvetica"
-# #set term pdfcairo size 7in,9in
-# set xtics font ",10"
-# set ytics font ",10"
-# set xdata time
-# set format x "%b\n'%y"
-# set xtics OneMonth nomirror
-# set xtics scale 2, 0.5
-# set mxtics 4
-#
-#
-# skiptorow=3
-# set yrange [(skiptorow-2):] reverse
-# set ytics nomirror
-#
-# unset key
-# set title "{/=10 GANTT Chart of Mooers Lab: April 2022 - March 2023\n {/=8 (minus teaching duties)}}"
-# set grid x y
-# set border 3
-# set style arrow 1 nohead filled size screen 0.02, 15 fixed lt 3 lw 12
-#
-# plot DATA using (T(3)) : ($0) : (T(4)-T(3)) : (0.0) : yticlabel(1) with vector as 1
+There is a number of ways to make these type of plots in Emacs.
+The ~elgantt.el~ project is promising due to its integration with org.
+The [[plantuml-mode][https://github.com/skuro/plantuml-mode]] can also be used to make a GANTT plot with the plantuml code in a code block and the output below.
+
+The simplist and most robust is the generate a table in an org document of the events, days of effort, their start date, and their end date.
+The latter two columns were columns three and four of the table that I used with the script below.
+Then use a gnuplot script to call this table and write out a plot.
+
+I obtained the inspiration for this plot from [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+I needed only the first four columns to generate the GANTT plot.
+The remaining columns were left for later work.
+
+Enter ~TAB, RET~ or ~C-c C-c~ to auto-adjust the Table as you enter values and to complete the dates.
+The numerical value of the date can be entered and the day of the week will be determined automatically after entering ~C-c C-c~.
+The date needs to be added in the YYYY-MM-DD format.
+Single-digit dates must be preceded by a 0.
+
+Enter ~S-M-down~ to add a row above.
+Enter ~M-up~ to move a row up.
+
+The column formula calculates the end date.
+I included shorten version of the table with the minimum configuration as a template.
+I deleted a number of rows of sensitive information under the manuscript and grant proposal preparation categories.
+
+
+#+tblname: gantt-table
+| Task                                  | Effort in Days | Start date       | End date         | Responsible | Spent | Progress | Projected Effort | Over/Under time |
+|---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
+| Service:                              |                |                  |                  |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2022-06-01 Wed> | <2022-06-28 Tue> |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2022-10-01 Sat> | [2022-10-31 Mon] |             |       |          |                  |                 |
+| MRAB study section                    |             30 | <2023-02-10 Thu> | <2023-03-08 Tue> |             |       |          |                  |                 |
+| Meetings:                             |                |                  |                  |             |       |          |                  |                 |
+| SciPy22 Mtg                           |              6 | <2022-07-11 Mon> | [2022-07-18 Sun] |             |       |          |                  |                 |
+| ACA abstract                          |             15 | <2022-04-03 Sun> | <2022-04-15 Fri> |             |       |          |                  |                 |
+| ACA Mtg                               |              5 | <2022-07-29 Fri> | <2022-08-02 Tue> |             |       |          |                  |                 |
+| GRC abstract                          |             15 | <2022-06-01 Wed> | <2022-06-15 Wed> |             |       |          |                  |                 |
+| GRC Mtg                               |              7 | <2022-07-24 Sun> | <2022-07-29 Fri> |             |       |          |                  |                 |
+| SSRL/LCLS Mtg                         |              6 | <2022-09-26 Mon> | <2022-09-30 Fri> |             |       |          |                  |                 |
+| JuptyerCon 2023 abstract              |             14 | <2022-07-01 Sun> | <2022-07-14 Thu> |             |       |          |                  |                 |
+| JupyterCon 2023                       |              5 | <2022-10-10 Mon> | <2022-10-14 Fri> |             |       |          |                  |                 |
+| EmacsConf22 abstract                  |             15 | <2022-09-01 Thu> | <2022-09-15 Mon> |             |       |          |                  |                 |
+| EmacsConf22                           |              2 | <2022-11-26 Sat> | <2022-11-27 Sun> |             |       |          |                  |                 |
+| Grant reports:                        |                |                  |                  |             |       |          |                  |                 |
+| NIH/NCI R01 grant                     |              2 | <2022-03-21 Mon> | <2022-04-15 Fri> |             |       |          |                  |                 |
+| NIH/NGMS COBRE phase 2                |              5 | <2022-06-01 Wed> | <2022-07-31 Sun> |             |       |          |                  |                 |
+| PHF Year 2                            |              5 | <2022-07-01 Fri> | <2022-07-31 Sun> |             |       |          |                  |                 |
+| OCAST Year 2                          |              2 | <2022-07-25 Mon> | <2022-07-29 Fri> |             |       |          |                  |                 |
+| COBRE ECA mid-yr                      |              5 | <2022-05-21 Sat> | <2022-05-31 Tue> |             |       |          |                  |                 |
+| COBRE ECA CY2022                      |              5 | <2022-12-06 Tue> | <2022-12-10 Sat> |             |       |          |                  |                 |
+|---------------------------------------+----------------+------------------+------------------+-------------+-------+----------+------------------+-----------------|
+#+TBLFM: $4=if("$-1"!="",date(<$-1>)+<$-2>,string(""));E
+
+The source of the Gnuplot code below is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+I modifed the code to accommodate a GANTT plot with 60 events and to write it out to a PDF.
+This plot takes up a full page (7 by 9 inches).
+I switched to using PNG for this demo because PDFs can be hard to display in some browsers.
+
+Enter ~C-c C-c~ in the code block to run it.
+Change the line width of the arrow sytle line to change the thickness of the bars.
+
+March 2022 appears on the x-axis.
+I have not figured out how to start from April.
+Maybe the x-range has to be set.
+
+#+BEGIN_SRC gnuplot :var DATA=gantt-table :file gantt-short.png
+OneMonth = strptime("%m","2")
+timeformat = "%Y-%m-%d"
+T(N) = timecolumn(N,timeformat)
+
+set term png size 700,900 enhanced font "Helvetica"
+#set term pdfcairo size 7in,9in
+set xtics font ",10"
+set ytics font ",10"
+set xdata time
+set format x "%b\n'%y"
+set xtics OneMonth nomirror
+set xtics scale 2, 0.5
+set mxtics 4
+
+
+skiptorow=3
+set yrange [(skiptorow-2):] reverse
+set ytics nomirror
+
+unset key
+set title "{/=10 GANTT Chart of Mooers Lab: April 2022 - March 2023\n {/=8 (minus teaching duties)}}"
+set grid x y
+set border 3
+set style arrow 1 nohead filled size screen 0.02, 15 fixed lt 3 lw 12
+
+plot DATA using (T(3)) : ($0) : (T(4)-T(3)) : (0.0) : yticlabel(1) with vector as 1
+#+END_SRC
+
+[[gantt-short.png][Click here to see the resulting Gantt plot]]
+
+SVG files are opened by Inkscape.
+PS files are not writing output.
+PNG files work ok.
+PDF works well, but it is opened by the system default PDF viewer.
+Close the prior version of the file to allow the new version to open.
+PNG files, once loaded, will update automatically.
+
+The source of this code is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
+Enter ~C-c C-c~ in the code block to run it.
+Change the line width of the arrow style line to change the thickness of the bars.
+
+March 2022 appears on the x-axis.
+I have not figured out how to start from April.
+Maybe the x-range has to be set.
+
+This file can be added to the list of files in the init.el file that are opened on start-up of org.
+This may be a practice to facilitate the updating and tuning of the plot and to keep remind you to look at it from time-to-time.
+I tend to make annual plans and then forget about them until annual-review time a year later.
+
+This plot took several hours to figure out.
+I probably spent another 5-6 hours making and adjusting the entries.
+Maybe Monday.com or asana would be better for team planning on a shorter time horizon, but this is plot works for annual planning and is under my local control.
+
+I tried to deploy the column formula shown on the video, but I had a typo that held me back for a long time.
+I had to add the set term, set xtics, and set ytics to expand the size of the plot and to adjust the size of the labels to accommodate 55 entries.
+#+END_COMMENT
+
+
+#+BEGIN_COMMENT
+**** elgantt
+
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/elgantt") ;; Or wherever it is located
+(require 'elgantt)
+(setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org")
+
+(setq elgantt-user-set-color-priority-counter 0)
+(elgantt-create-display-rule draw-scheduled-to-deadline
+  :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
+                               (s-split " " colors)))))
+  :args (elgantt-scheduled elgantt-color elgantt-org-id)
+  :body ((when elgantt-scheduled
+           (let ((point1 (point))
+                 (point2 (save-excursion
+                           (elgantt--goto-date elgantt-scheduled)
+                           (point)))
+                 (color1 (or (car elgantt-color)
+                             "black"))
+                 (color2 (or (cadr elgantt-color)
+                             "red")))
+             (when (/= point1 point2)
+               (elgantt--draw-gradient
+                color1
+                color2
+                (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
+                (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
+                nil
+                `(priority ,(setq elgantt-user-set-color-priority-counter
+                                  (1- elgantt-user-set-color-priority-counter))
+                           ;; Decrease the priority so that earlier entries take
+                           ;; precedence over later ones (note: it doesn’t matter if the number is negative)
+                           :elgantt-user-overlay ,elgantt-org-id)))))))
+(setq elgantt-header-type 'outline
+      elgantt-insert-blank-line-between-top-level-header t
+      elgantt-startup-folded nil
+      elgantt-show-header-depth t
+      elgantt-draw-overarching-headers t)
+
+(setq elgantt-header-type 'hashtag
+      elgantt-insert-blank-line-between-top-level-header nil
+      elgantt-startup-folded t)
+#+END_SRC
+#+END_COMMENT
+
+#+BEGIN_COMMENT
+*** org-latex minted
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-minted-options
+     '(("frame" "lines") ("linenos=false") ("framerule=2pt") ("breaklines")))
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-src-fontify-natively t)
+#+END_SRC
+#+END_COMMENT
+
+#+BEGIN_COMMENT
+*** org-latex-classes by document class
+
+From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
+For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~.
+Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "taken".
+
+I am stumped on the configuration.
+Did ox-latex get renamed to org-latex?
+No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
+
+To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
+
+
+[[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load "ox-latex"
+  (add-to-list 'org-latex-classes
+               '("koma-article" "\\documentclass{scrartcl}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("apa6" "\\documentclass{apa6}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("report" "\\documentclass{report}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("memoir" "\\documentclass{memoir}"
+                 ("\\book{%s}" . "\\book*{%s}")
+                 ("\\part{%s}" . "\\part*{%s}")
+                 ("\\chapter{%s} .\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("paper" "\\documentclass{paper}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+            '("Springer"
+               "\\documentclass[natbib]{svjour3}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+)
 # #+END_SRC
-#
-# [[gantt-short.png][Click here to see the resulting Gantt plot]]
-#
-# SVG files are opened by Inkscape.
-# PS files are not writing output.
-# PNG files work ok.
-# PDF works well, but it is opened by the system default PDF viewer.
-# Close the prior version of the file to allow the new version to open.
-# PNG files, once loaded, will update automatically.
-#
-# The source of this code is from the comments section of [[https://www.youtube.com/watch?v=5ViUBaarsbw][GANTT chart in Emacs]] on YouTube.
-# Enter ~C-c C-c~ in the code block to run it.
-# Change the line width of the arrow style line to change the thickness of the bars.
-#
-# March 2022 appears on the x-axis.
-# I have not figured out how to start from April.
-# Maybe the x-range has to be set.
-#
-# This file can be added to the list of files in the init.el file that are opened on start-up of org.
-# This may be a practice to facilitate the updating and tuning of the plot and to keep remind you to look at it from time-to-time.
-# I tend to make annual plans and then forget about them until annual-review time a year later.
-#
-# This plot took several hours to figure out.
-# I probably spent another 5-6 hours making and adjusting the entries.
-# Maybe Monday.com or asana would be better for team planning on a shorter time horizon, but this is plot works for annual planning and is under my local control.
-#
-# I tried to deploy the column formula shown on the video, but I had a typo that held me back for a long time.
-# I had to add the set term, set xtics, and set ytics to expand the size of the plot and to adjust the size of the labels to accommodate 55 entries.
-#
-# **** elgantt
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'load-path "/Users/blaine/.emacs.default/elisp/elgantt") ;; Or wherever it is located
-# (require 'elgantt)
-# (setq elgantt-agenda-files "/Users/blaine/.emacs.default/elisp/elgantt/test.org")
-#
-# (setq elgantt-user-set-color-priority-counter 0)
-# (elgantt-create-display-rule draw-scheduled-to-deadline
-#   :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
-#                                (s-split " " colors)))))
-#   :args (elgantt-scheduled elgantt-color elgantt-org-id)
-#   :body ((when elgantt-scheduled
-#            (let ((point1 (point))
-#                  (point2 (save-excursion
-#                            (elgantt--goto-date elgantt-scheduled)
-#                            (point)))
-#                  (color1 (or (car elgantt-color)
-#                              "black"))
-#                  (color2 (or (cadr elgantt-color)
-#                              "red")))
-#              (when (/= point1 point2)
-#                (elgantt--draw-gradient
-#                 color1
-#                 color2
-#                 (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
-#                 (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
-#                 nil
-#                 `(priority ,(setq elgantt-user-set-color-priority-counter
-#                                   (1- elgantt-user-set-color-priority-counter))
-#                            ;; Decrease the priority so that earlier entries take
-#                            ;; precedence over later ones (note: it doesn’t matter if the number is negative)
-#                            :elgantt-user-overlay ,elgantt-org-id)))))))
-# (setq elgantt-header-type 'outline
-#       elgantt-insert-blank-line-between-top-level-header t
-#       elgantt-startup-folded nil
-#       elgantt-show-header-depth t
-#       elgantt-draw-overarching-headers t)
-#
-# (setq elgantt-header-type 'hashtag
-#       elgantt-insert-blank-line-between-top-level-header nil
-#       elgantt-startup-folded t)
-# #+END_SRC
-#
-#
-# *** org-latex minted
-#
-# #+BEGIN_SRC emacs-lisp
-# (add-to-list 'org-latex-packages-alist '("" "minted"))
-# (setq org-latex-listings 'minted)
-#
-# (setq org-latex-minted-options
-#      '(("frame" "lines") ("linenos=false") ("framerule=2pt") ("breaklines")))
-# (setq org-latex-pdf-process
-#       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-#         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-#         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-# (setq org-src-fontify-natively t)
-# #+END_SRC
-#
-#
-# *** org-latex-classes by document class
-#
-# From [[https://github.com/WouterSpekkink/dotfiles/edit/master/doom/config.el][github]].
-# For the per-file class, you need to have ox-latex loaded and then evaluate the code block with ~C-c C-c~.
-# Check the value of org-export-latex-classes using ~C-h v~ to make sure it's "taken".
-#
-# I am stumped on the configuration.
-# Did ox-latex get renamed to org-latex?
-# No, it is a built in file https://github.com/yyr/org-mode/blob/master/lisp/ox-latex.el.
-#
-# To use this setup in your org file, reference the name you gave it (e.g., ~#+LATEX_CLASS: Springer~).
-#
-#
-# [[https://tex.stackexchange.com/questions/364914/using-koma-script-article-with-org-mode][Source]]
-# #+BEGIN_SRC emacs-lisp
-# (with-eval-after-load "ox-latex"
-#   (add-to-list 'org-latex-classes
-#                '("koma-article" "\\documentclass{scrartcl}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("apa6" "\\documentclass{apa6}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("report" "\\documentclass{report}"
-#                  ("\\chapter{%s}" . "\\chapter*{%s}")
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("memoir" "\\documentclass{memoir}"
-#                  ("\\book{%s}" . "\\book*{%s}")
-#                  ("\\part{%s}" . "\\part*{%s}")
-#                  ("\\chapter{%s} .\\chapter*{%s}")
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-#   (add-to-list 'org-latex-classes
-#                '("paper" "\\documentclass{paper}"
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#
-# (add-to-list 'org-latex-classes
-#             '("Springer"
-#                "\\documentclass[natbib]{svjour3}"
-#                ("\\section{%s}" . "\\section*{%s}")
-#                ("\\subsection{%s}" . "\\subsection*{%s}")
-#                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-# )
-# #+END_SRC
-#
+#+END_COMMENT
+
+
 # *** org-export-latex-no-toc
 #
 # #+BEGIN_SRC emacs-lisp
