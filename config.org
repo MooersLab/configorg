@@ -4667,7 +4667,7 @@ Start by entering ~M-x org-roam-ui-mode~.
 
 [[https://github.com/org-roam/org-roam-ui][source]]
 
-
+#+BEGIN_COMMENT
 # **** Visualize with igraph and R
 #
 # [[https://lucidmanager.org/data-science/visualise-org-roam/][See this post]] on how to visualize parts of your zettelkasten in igraph.
@@ -4697,7 +4697,7 @@ Start by entering ~M-x org-roam-ui-mode~.
 # # #+END_SRC
 #
 #
-
+#+END_COMMENT
 
 
 
@@ -4717,6 +4717,7 @@ This is the only required configuration:
 (define-key global-map (kbd "C-c t") #'org-transclusion-mode)
 #+END_SRC
 
+#+BEGIN_COMMENT
 # *** org-show-headings
 #
 # [[https://stackoverflow.com/questions/25161792/emacs-org-mode-how-can-i-fold-everything-but-the-current-headline][source]]
@@ -4985,7 +4986,8 @@ This is the only required configuration:
 # #+END_SRC
 #
 #
-#
+#+END_COMMENT
+
 *** pdf-tools
 
 This is an alternative to the built-in DocView package.
@@ -5081,7 +5083,7 @@ See org-noter section
 (setq markdown-code-block-braces t)
 #+END_SRC
 
-
+#+BEGIN_COMMENT
 *** projectile
 [[https://docs.projectile.mx][Documentation:]]
 A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
@@ -6053,7 +6055,9 @@ A more in-depth introdction is provided by Dave Wilson of System Crafters fame s
 #     ;; default
 #     (string-inflection-java-style-cycle))))
 # #+END_SRC
-#
+#+END_COMMENT
+
+
 ** T
 *** Timers
 Use the pomodoto.app. It is hard to beat.
