@@ -4576,34 +4576,38 @@ Modifying the display template to show the node “type”
 #+END_SRC
 
 
-## #+BEGIN_COMMENT
-# (setq org-roam-node-display-template
-#     (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-#
-#
-# (defun jethro/org-roam-node-from-cite (keys-entries)
-#     (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
-#     (let ((title (citar--format-entry-no-widths (cdr keys-entries)
-#                                                 "${author editor} :: ${title}")))
-#       (org-roam-capture- :templates
-#                          '(("r" "reference" plain "%?" :if-new
-#                             (file+head "reference/${citekey}.org"
-#                                        ":PROPERTIES:
-# :ROAM_REFS: [cite:@${citekey}]
-# :END:
-# #+title: ${title}\n")
-#                             :immediate-finish t
-#                             :unnarrowed t))
-#                          :info (list :citekey (car keys-entries))
-#                          :node (org-roam-node-create :title title)
-#                          :props '(:finalize find-file))))
-#
-# (defun jethro/tag-new-node-as-draft ()
-#   (org-roam-tag-add '("draft")))
-# (add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
-# #+END_SRC
-# #+END_COMMENT
-#
+#+BEGIN_COMMENT
+#+BEGIN_SOURCE
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+
+(setq org-roam-node-display-template
+    (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+
+(defun jethro/org-roam-node-from-cite (keys-entries)
+    (interactive (list (citar-select-ref :multiple nil :rebuild-cache t)))
+    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+                                                "${author editor} :: ${title}")))
+      (org-roam-capture- :templates
+                         '(("r" "reference" plain "%?" :if-new
+                            (file+head "reference/${citekey}.org"
+                                       ":PROPERTIES:
+:ROAM_REFS: [cite:@${citekey}]
+:END:
+#+title: ${title}\n")
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey (car keys-entries))
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file))))
+
+(defun jethro/tag-new-node-as-draft ()
+  (org-roam-tag-add '("draft")))
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
+#+END_SRC
+#+END_COMMENT
+
+
 # # *** org-roam-bibtex (orb)
 # #
 # # This package provides an interface between helm and org-roam.
@@ -5072,12 +5076,10 @@ See org-noter section
 #+END_SRC
 
 
-# *** projectile
-#
-# [[https://docs.projectile.mx][Documentation:]]
-#
-# A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
-# A more in-depth introdction is provided by Dave Wilson of System Crafters fame starting at 1:40 [[https://www.youtube.com/watch?v=INTu30BHZGk][here]].
+*** projectile
+[[https://docs.projectile.mx][Documentation:]]
+A eight-minute introduction by Lukewh on YouTube to projectile is found [[https://www.youtube.com/channel/UC7FpGodjczWY8mDV1KvP2pQ][here]].
+A more in-depth introdction is provided by Dave Wilson of System Crafters fame starting at 1:40 [[https://www.youtube.com/watch?v=INTu30BHZGk][here]].
 #
 # Projectile is used to manage projects and for common functionality like project-wide searching, fuzzy file finding, etc.
 #
