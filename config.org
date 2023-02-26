@@ -4613,7 +4613,7 @@ Modifying the display template to show the node “type”
 #+END_SRC
 #+END_COMMENT
 
-
+#+BEGIN_COMMENT
 # # *** org-roam-bibtex (orb)
 # #
 # # This package provides an interface between helm and org-roam.
@@ -4657,7 +4657,8 @@ Modifying the display template to show the node “type”
 # :NOTER_PAGE:
 # :END:")))
 # #+END_SRC
-#
+#+END_COMMENT
+
 *** org-roam-ui
 
 This package displays the zettelkasten as a graph in your default browser.
@@ -4718,30 +4719,30 @@ This is the only required configuration:
 #+END_SRC
 
 #+BEGIN_COMMENT
-# *** org-show-headings
-#
-# [[https://stackoverflow.com/questions/25161792/emacs-org-mode-how-can-i-fold-everything-but-the-current-headline][source]]
-#
-#
-# #+BEGIN_SRC emacs-lisp
-# (defun org-show-current-heading-tidily ()
-#   (interactive)  ;Inteactive
-#   "Show next entry, keeping other entries closed."
-#   (if (save-excursion (end-of-line) (outline-invisible-p))
-#       (progn (org-show-entry) (show-children))
-#     (outline-back-to-heading)
-#     (unless (and (bolp) (org-on-heading-p))
-#       (org-up-heading-safe)
-#       (hide-subtree)
-#       (error "Boundary reached"))
-#     (org-overview)
-#     (let ((current-prefix-arg '(4))) (call-interactively 'org-reveal))
-#     (org-show-entry)
-#     (show-children)))
-# (add-hook 'org-mode-hook (lambda () (local-set-key "\M-=" 'org-show-current-heading-tidily)))
-#  #+END_SRC
-#
-#
+*** org-show-headings
+
+[[https://stackoverflow.com/questions/25161792/emacs-org-mode-how-can-i-fold-everything-but-the-current-headline][source]]
+
+
+#+BEGIN_SRC emacs-lisp
+(defun org-show-current-heading-tidily ()
+  (interactive)  ;Inteactive
+  "Show next entry, keeping other entries closed."
+  (if (save-excursion (end-of-line) (outline-invisible-p))
+      (progn (org-show-entry) (show-children))
+    (outline-back-to-heading)
+    (unless (and (bolp) (org-on-heading-p))
+      (org-up-heading-safe)
+      (hide-subtree)
+      (error "Boundary reached"))
+    (org-overview)
+    (let ((current-prefix-arg '(4))) (call-interactively 'org-reveal))
+    (org-show-entry)
+    (show-children)))
+(add-hook 'org-mode-hook (lambda () (local-set-key "\M-=" 'org-show-current-heading-tidily)))
+#+END_SRC
+#+END_COMMENT
+
 # *** org, tables
 #
 # This is not a package.
